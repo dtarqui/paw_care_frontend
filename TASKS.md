@@ -10,7 +10,7 @@
 
 ## Progreso
 
-> Actualizado a partir del modo demo (datos estáticos, sin PostgreSQL real todavía — ver `backend/README.md`). `[x]` = construido y funcionando en la demo; `[ ]` con nota "parcial" = existe algo pero no cumple la HU completa; sin nota = no empezado.
+> El backend ahora persiste en PostgreSQL real (Supabase) vía Prisma — ver `backend/TASKS.md`. El frontend no cambió: siempre consumió la API real por HTTP, nunca datos mockeados en el propio frontend, así que la migración de datos en memoria a base de datos fue transparente para esta capa. `[x]` = construido y funcionando; `[ ]` con nota "parcial" = existe algo pero no cumple la HU completa; sin nota = no empezado.
 
 - [x] Tarea 00 — Setup del frontend
 - [x] Tarea 01 — HU1: Login y layout por rol — completa, incluyendo **Gestión de Usuarios** (`/app/usuarios`, solo Administrador): alta con rol, y campos de matrícula/especialidad condicionales cuando rol=Veterinario (crea también el registro de Veterinario vinculado por `usuarioId`)
