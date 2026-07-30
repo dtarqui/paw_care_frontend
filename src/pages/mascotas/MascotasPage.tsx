@@ -1,11 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useAuth } from "@/features/auth/AuthContext";
 import { useMascotas } from "@/features/mascotas/useMascotas";
 import { PawPrint } from "lucide-react";
+import { ImportarClientesDialog } from "./ImportarClientesDialog";
 import { NuevaMascotaDialog } from "./NuevaMascotaDialog";
 
 export function MascotasPage() {
+  const { usuario } = useAuth();
   const { data: mascotas, isLoading, isError } = useMascotas();
 
   return (
@@ -15,7 +18,10 @@ export function MascotasPage() {
           <h1 className="text-2xl font-semibold tracking-tight">Mascotas</h1>
           <p className="text-muted-foreground">Gestión de mascotas registradas</p>
         </div>
-        <NuevaMascotaDialog />
+        <div className="flex gap-2">
+          {usuario?.rol === "ADMINISTRADOR" && <ImportarClientesDialog />}
+          <NuevaMascotaDialog />
+        </div>
       </div>
 
       <Card>

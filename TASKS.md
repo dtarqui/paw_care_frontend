@@ -19,23 +19,23 @@
 - [x] Tarea 04 — HU4: Registrar Pagos
 - [x] Tarea 05 — HU5: Agendar, Reprogramar y Cancelar Citas — completa: agendar, **reprogramar** (la pestaña "Nueva Cita" cambia a modo edición, solo permite mover fecha/hora), cambiar estado, disponibilidad agrupada Mañana/Tarde, y la restricción de rol aplicada también a Reprogramar (un veterinario no reprograma citas ajenas)
 - [x] Tarea 06 — HU6: Control de Vacunación y Desparasitación — completa: panel "Próximos a vencer" (30 días) + búsqueda por CI + historial por mascota con badge "Vencido" + registro de nuevo control
-- [ ] Tarea 07 — HU7: Reporte de Ingresos Económicos — no empezada
-- [ ] Tarea 08 — HU8: Reportes Clínicos y Administrativos — no empezada
-- [ ] Tarea 09 — HU9: Gestión de Inventario de Medicamentos — no empezada
-- [ ] Tarea 11 (opcional) — HU11 Track A: Panel de recordatorios WhatsApp — no empezada
-- [ ] Tarea 12 (opcional) — HU11 Track B: Panel de entregabilidad — no empezada
-- [ ] Tarea 13 (opcional) — HU12: Pago por QR — el método "QR" ya existe en el modelo y en los selects de pago; falta el resto de HU12 (filtrar reportes por QR, cuando exista HU7)
-- [ ] Tarea 14 (opcional) — HU13: Importación desde Excel — no empezada
-- [ ] Tarea 15 (opcional) — HU14: PWA instalable — no empezada
-- [ ] Tarea 16 (opcional) — HU15: Exportación completa de datos — no empezada
+- [x] Tarea 07 — HU7: Reporte de Ingresos Económicos — completa: filtros (fecha, tipo de servicio, método de pago), totales, tabla — pestaña "Ingresos" en `/app/reportes`
+- [x] Tarea 08 — HU8: Reportes Clínicos y Administrativos — completa: selector de reporte, gráfico de barras (Recharts) de ingresos por tipo de servicio, tabla de atenciones por período, exportar PDF/Excel — pestaña "Clínicos y Administrativos" en `/app/reportes`
+- [x] Tarea 09 — HU9: Gestión de Inventario de Medicamentos — completa: listado + alerta de bajo stock + registrar entrada en `/app/inventario`; el formulario de Nueva Atención permite seleccionar medicamentos consumidos (descuenta stock automáticamente)
+- [x] Tarea 11 (opcional) — HU11 Track A: Panel de recordatorios WhatsApp — completa: `/app/recordatorios` lista citas <24h y controles <7 días, botón abre `wa.me` con mensaje precargado, "Marcar como enviado"
+- [ ] Tarea 12 (opcional) — HU11 Track B: Panel de entregabilidad — **fuera de alcance a propósito**: requiere credenciales reales de WhatsApp Cloud API (Meta), no se puede simular sin engañar
+- [x] Tarea 13 (opcional) — HU12: Pago por QR — completo: "QR" disponible como método de pago y como filtro en el Reporte de Ingresos (HU7)
+- [x] Tarea 14 (opcional) — HU13: Importación desde Excel — completa: botón "Importar Excel" en Mascotas (solo Admin), muestra importados vs. filas con error
+- [x] Tarea 15 (opcional) — HU14: PWA instalable — completa: `vite-plugin-pwa` configurado, manifest + service worker verificados con `npm run build`
+- [x] Tarea 16 (opcional) — HU15: Exportación completa de datos — completa: botón en Configuración (solo Admin), descarga un Excel con una hoja por entidad
 
-**Must Have completo.** Las Tareas 01–06 (todo lo prioridad Must Have del plan) ya están construidas y verificadas en los tres roles. Lo que queda son las HU "Should Have" (07–09, reportes e inventario) y la Fase 7 opcional.
+**Todo lo planeado está construido**, salvo HU11 Track B (documentado como fuera de alcance por depender de un servicio externo real).
 
-**Construido y no estaba en esta lista original:** pantalla de **Configuración** (`/app/configuracion` — tema claro/oscuro/sistema + datos de cuenta) y **Dashboard con KPIs reales** (mascotas registradas, citas de hoy, pagos pendientes), agregados durante la iteración de diseño.
+**Construido y no estaba en esta lista original:** pantalla de **Configuración** (`/app/configuracion` — tema claro/oscuro/sistema + datos de cuenta + exportación completa) y **Dashboard con KPIs reales** (mascotas registradas, citas de hoy, pagos pendientes), agregados durante la iteración de diseño.
 
 **Gestión de Horarios** (turnos semanales de cada veterinario, mencionada en HU1) sigue sin tarea propia — el alta de Veterinario (matrícula/especialidad) ya vive dentro de Gestión de Usuarios, pero definir sus horarios de atención para HU5 queda pendiente.
 
-*(HU10 — Alertas Automáticas — es un job de backend sin pantalla propia; su resultado se vería en el panel de la Tarea 12.)*
+*(HU10 — Alertas Automáticas — es el job de backend detrás de la Tarea 11; no tiene pantalla propia.)*
 
 ---
 

@@ -51,7 +51,9 @@ export function HistorialAtenciones({ mascota }: { mascota: Mascota }) {
             {atenciones.map((atencion) => (
               <div key={atencion.id} className="flex flex-col gap-1 py-3">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-medium">{formatearFecha(atencion.fecha)}</span>
+                  <span className="text-sm font-medium">
+                    {formatearFecha(atencion.fecha)} <span className="font-normal text-muted-foreground">· {atencion.tipoServicio}</span>
+                  </span>
                   <StatusBadge status={atencion.estadoPago} />
                 </div>
                 <p className="text-sm">

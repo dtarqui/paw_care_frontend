@@ -5,6 +5,7 @@ export interface AtencionMedica {
   mascota: { id: number; nombre: string; especie: string };
   veterinario: { id: number; nombre: string; apellidoPaterno: string };
   fecha: string;
+  tipoServicio: string;
   diagnostico: string;
   tratamiento: string;
   examenesExternos?: string;
@@ -15,8 +16,10 @@ export interface AtencionMedica {
 export interface NuevaAtencionInput {
   mascotaId: number;
   veterinarioId: number;
+  tipoServicio: string;
   diagnostico: string;
   tratamiento: string;
   examenesExternos?: string;
   montoConsulta: number;
+  medicamentos?: { medicamentoId: number; cantidad: number }[];
 }

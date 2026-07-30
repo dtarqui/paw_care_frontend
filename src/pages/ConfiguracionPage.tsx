@@ -1,11 +1,15 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/features/auth/AuthContext";
+import { exportacionApi } from "@/features/exportacion/api";
 import { ROL_LABEL } from "@/lib/roles";
 import { cn } from "@/lib/utils";
-import { Laptop, Moon, Sun } from "lucide-react";
+import { Download, Laptop, Loader2, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const OPCIONES_TEMA = [
   { value: "light", label: "Claro", icon: Sun },
@@ -16,8 +20,21 @@ const OPCIONES_TEMA = [
 export function ConfiguracionPage() {
   const { usuario } = useAuth();
   const { theme, setTheme } = useTheme();
+  const [exportando, setExportando] = useState(false);
 
   const iniciales = usuario ? `${usuario.nombre[0]}${usuario.apellidoPaterno[0]}` : "?";
+
+  async function handleExportar() {
+    setExportando(true);
+    try {
+      await exportacionApi.descargarCompleta();
+      toast.success("Datos exportados correctamente");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "No se pudo exportar");
+    } finally {
+      setExportando(false);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -76,6 +93,21 @@ export function ConfiguracionPage() {
           </div>
         </CardContent>
       </Card>
+
+      {usuario?.rol === "ADMINISTRADOR" && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Datos</CardTitle>
+            <CardDescription>Exporta toda la información de la clínica en cualquier momento, sin depender de PawCare</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" onClick={handleExportar} disabled={exportando}>
+              {exportando ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+              Exportar todos mis datos
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

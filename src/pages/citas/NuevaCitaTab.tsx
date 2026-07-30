@@ -10,11 +10,10 @@ import { useMascotas } from "@/features/mascotas/useMascotas";
 import { useMiVeterinario } from "@/features/veterinarios/useMiVeterinario";
 import { useVeterinarios } from "@/features/veterinarios/useVeterinarios";
 import { todayISO } from "@/lib/date";
+import { TIPOS_SERVICIO } from "@/lib/tipos-servicio";
 import { cn } from "@/lib/utils";
 import { CalendarCheck2, Loader2, ShieldCheck, Sunrise, Sunset } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
-
-const TIPOS_CONSULTA = ["Consulta General", "Vacunación", "Control", "Cirugía", "Desparasitación"];
 
 function formatearFechaLarga(fechaISO: string) {
   const [yyyy, mm, dd] = fechaISO.split("-").map(Number);
@@ -167,7 +166,7 @@ export function NuevaCitaTab({ citaEnEdicion, onCompletado }: NuevaCitaTabProps)
                   <SelectValue placeholder="Seleccione tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  {TIPOS_CONSULTA.map((tipo) => (
+                  {TIPOS_SERVICIO.map((tipo) => (
                     <SelectItem key={tipo} value={tipo}>
                       {tipo}
                     </SelectItem>

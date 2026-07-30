@@ -6,9 +6,12 @@ import { CitasPage } from "@/pages/citas/CitasPage";
 import { ConfiguracionPage } from "@/pages/ConfiguracionPage";
 import { ControlPreventivoPage } from "@/pages/control-preventivo/ControlPreventivoPage";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { InventarioPage } from "@/pages/inventario/InventarioPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { MascotasPage } from "@/pages/mascotas/MascotasPage";
 import { PagosPage } from "@/pages/pagos/PagosPage";
+import { RecordatoriosPage } from "@/pages/recordatorios/RecordatoriosPage";
+import { ReportesPage } from "@/pages/reportes/ReportesPage";
 import { UsuariosPage } from "@/pages/usuarios/UsuariosPage";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -26,6 +29,9 @@ export function App() {
             <Route path="citas" element={<CitasPage />} />
             <Route path="control-preventivo" element={<ControlPreventivoPage />} />
             <Route path="pagos" element={<PagosPage />} />
+            <Route path="recordatorios" element={<RecordatoriosPage />} />
+            <Route path="reportes" element={<ReportesPage />} />
+            <Route path="inventario" element={<InventarioPage />} />
             <Route path="usuarios" element={<UsuariosPage />} />
             <Route path="configuracion" element={<ConfiguracionPage />} />
           </Route>

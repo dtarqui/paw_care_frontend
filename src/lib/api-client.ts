@@ -52,4 +52,51 @@ export const apiClient = {
     request<T>(path, { method: "PATCH", body: data ? JSON.stringify(data) : undefined }),
   put: <T>(path: string, data?: unknown) =>
     request<T>(path, { method: "PUT", body: data ? JSON.stringify(data) : undefined }),
+
+  /** POST con multipart/form-data (subida de archivos) — sin fijar Content-Type,
+   * el navegador arma el boundary correcto solo cuando el body es un FormData real. */
+  async postForm<T>(path: string, formData: FormData): Promise<T> {
+    const token = tokenStorage.get();
+    const headers = new Headers();
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+
+    const response = await fetch(`${API_URL}${path}`, { method: "POST", headers, body: formData });
+    if (response.status === 401) {
+      tokenStorage.clear();
+      window.location.href = "/login";
+      throw new ApiError("Sesión expirada", 401);
+    }
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new ApiError(body.error ?? "Error inesperado del servidor", response.status);
+    }
+    return body as T;
+  },
+
+  /** Descarga un archivo (Excel/PDF) que el backend genera al vuelo, adjuntando el
+   * token — un <a href> normal no puede mandar el header Authorization. */
+  async download(path: string, filenameFallback: string): Promise<void> {
+    const token = tokenStorage.get();
+    const headers = new Headers();
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+
+    const response = await fetch(`${API_URL}${path}`, { headers });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new ApiError(body.error ?? "No se pudo descargar el archivo", response.status);
+    }
+
+    const blob = await response.blob();
+    const disposicion = response.headers.get("Content-Disposition");
+    const nombre = disposicion?.match(/filename="(.+)"/)?.[1] ?? filenameFallback;
+
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = nombre;
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+    URL.revokeObjectURL(url);
+  },
 };
