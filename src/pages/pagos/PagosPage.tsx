@@ -1,0 +1,84 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { usePagosPendientes } from "@/features/pagos/usePagos";
+import type { PagoPendiente } from "@/features/pagos/types";
+import { Wallet } from "lucide-react";
+import { useState } from "react";
+import { RegistrarPagoDialog } from "./RegistrarPagoDialog";
+
+export function PagosPage() {
+  const { data: pendientes, isLoading, isError } = usePagosPendientes();
+  const [seleccionado, setSeleccionado] = useState<PagoPendiente | null>(null);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Pagos</h1>
+        <p className="text-muted-foreground">Atenciones pendientes de cobro</p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Pendientes de pago</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading && (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          )}
+
+          {isError && (
+            <p className="py-8 text-center text-sm text-destructive">No se pudo cargar la lista de pagos.</p>
+          )}
+
+          {!isLoading && !isError && pendientes?.length === 0 && (
+            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
+              <Wallet className="size-8" />
+              <p>No hay pagos pendientes. Todo al día.</p>
+            </div>
+          )}
+
+          {!isLoading && !isError && pendientes && pendientes.length > 0 && (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Mascota</TableHead>
+                    <TableHead>Propietario</TableHead>
+                    <TableHead>Motivo</TableHead>
+                    <TableHead>Monto</TableHead>
+                    <TableHead className="text-right">Acción</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendientes.map((pendiente) => (
+                    <TableRow key={pendiente.atencionId}>
+                      <TableCell className="font-medium">{pendiente.mascota.nombre}</TableCell>
+                      <TableCell>
+                        {pendiente.propietario.nombre} {pendiente.propietario.apellidoPaterno}
+                      </TableCell>
+                      <TableCell>{pendiente.motivoConsulta}</TableCell>
+                      <TableCell>Bs. {pendiente.monto.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" onClick={() => setSeleccionado(pendiente)}>
+                          Registrar pago
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <RegistrarPagoDialog pendiente={seleccionado} onClose={() => setSeleccionado(null)} />
+    </div>
+  );
+}
