@@ -61,6 +61,29 @@
 
 **Datos demo regenerados** — ver `backend/TASKS.md` para el detalle de conteos; usuarios/mascotas/veterinarios/etc. tienen nombres nuevos, el doble de contenido.
 
+---
+
+## Correcciones y mejoras (sesión 4 — login, alta de veterinarios, contraseñas, temas de color, modales)
+
+- [x] **Bug corregido: contraseña incorrecta recargaba la página** — causa real en `lib/api-client.ts` (ver `backend/TASKS.md`), no en `LoginPage.tsx`.
+- [x] **Login rediseñado** — mostrar/ocultar contraseña (ícono de ojo), enlace "¿Eres veterinario y no tienes cuenta? Solicita tu acceso" hacia `/registro`, pulido visual general; se quitó la línea de credenciales demo de veterinario (el username ya no es estable, cambia en cada reseed).
+- [x] **Pantalla pública de preregistro de Veterinario** (`/registro`, `RegistroVeterinarioPage.tsx`) — formulario completo (datos personales + matrícula/especialidad + contraseña), envía a `POST /api/usuarios/preregistro` y muestra una pantalla de confirmación ("un Administrador debe aprobar tu cuenta") en vez de loguear automáticamente, porque la cuenta queda `INACTIVO` hasta la aprobación.
+- [x] **Aprobar veterinarios pendientes y restablecer contraseñas** (`/app/usuarios`, solo Administrador) — badge "Pendiente de aprobación" (en vez de "Inactivo") y el botón cambia a "Aprobar" para las cuentas autorregistradas (`esPendienteDeAprobacion()`); nuevo botón "Restablecer contraseña" por fila (`RestablecerPasswordDialog.tsx`) para cuando un usuario perdió el acceso.
+- [x] **Cambiar mi contraseña** — nueva card en `/app/configuracion` (`CambiarPasswordDialog.tsx`), pide la contraseña actual + la nueva, disponible para cualquier rol.
+- [x] **Temas de color** (`/app/configuracion` → Apariencia) — además de Claro/Oscuro/Sistema, ahora hay 3 acentos de color (Violeta/Océano/Rosa) combinables con cualquiera de los tres modos. Sistema nuevo e independiente de `next-themes`: `features/color-theme/ColorThemeContext.tsx` (`data-color-theme` en `<html>`, persistido en `localStorage`), variables CSS por tema en `index.css`. Los tres pasaron por validación de contraste WCAG real (no a ojo) contra el mismo baseline que ya tenía el violeta original.
+- [x] **Modales largos ya no se cortan** — bug real: `NuevaAtencionDialog` (y por el mismo motivo, potencialmente cualquier formulario largo) podía crecer más alto que la ventana, dejando el botón "Guardar" inalcanzable, con un scroll interno mal armado encima. Se arregló en la base (`components/ui/dialog.tsx`: `DialogContent` ahora tiene `max-h` + `flex-col` + scroll de respaldo, aplica a **todos** los diálogos automáticamente) y se rediseñaron a fondo los tres formularios más largos (`NuevaAtencionDialog`, `NuevoUsuarioDialog`, `NuevaMascotaDialog`): más anchos, con cabecera y pie fijos y solo el cuerpo de campos con scroll.
+- [x] **Componente `Textarea` compartido** (`components/ui/textarea.tsx`) — reemplazó 4 `<textarea>` escritos a mano con estilos ligeramente distintos entre sí (y distintos de `Input`); ahora un solo componente, mismos tokens que `Input`.
+- [x] **Auditoría de `alert()`/`confirm()`/`prompt()` nativos** — cero resultados en todo `frontend/src`; toda confirmación ya pasaba por `Dialog` y todo feedback por `sonner` (toast), no se necesitó ningún cambio.
+
+## Correcciones y mejoras (sesión 5 — recuperación de contraseña, invitación de veterinarios, auditoría)
+
+- [x] **Recuperar contraseña** — nuevo enlace "¿Olvidaste tu contraseña?" en `LoginPage.tsx` hacia `/olvide-password` (`OlvidePasswordPage.tsx`): pide solo el `username`, llama a `POST /api/auth/forgot-password` y siempre muestra la misma confirmación genérica ("si la cuenta existe... te enviamos un enlace"), nunca revela si el usuario existe o tiene email. `/restablecer-password` (`RestablecerPasswordPage.tsx`) lee el `token` de la URL y pide la contraseña nueva (+ confirmación), llama a `POST /api/auth/reset-password`; muestra el error del backend si el token ya venció o se usó.
+- [x] **Invitar Veterinario** (`/app/usuarios`, solo Administrador) — nuevo botón "Invitar veterinario" abre `InvitarVeterinarioDialog.tsx` (email + nombre opcional). El listado de invitaciones pendientes vive en la misma pantalla de Usuarios. Pantalla pública `/invitacion` (`InvitacionPage.tsx`): valida el token contra `GET /api/usuarios/invitaciones/validar/:token`, precarga el email, y pide el resto de datos (personales + matrícula/especialidad + contraseña) antes de enviar a `POST /api/usuarios/invitaciones/aceptar/:token`. A diferencia de `/registro` (preregistro), no muestra pantalla de "pendiente de aprobación" — la cuenta queda activa de inmediato y redirige a iniciar sesión.
+- [x] **Pantalla de Auditoría** (`/app/auditoria`, solo Administrador — nuevo módulo del sidebar vía `GET /api/dashboard/modulos`) — tabla paginada de `GET /api/auditoria`: fecha, tipo de acción (badge con color por tipo), quién la realizó, detalle en texto libre. Sin filtros ni acciones, es un log de solo lectura.
+- [x] **Campo Email en Gestión de Usuarios** — `NuevoUsuarioDialog.tsx` ganó un campo opcional "Email" (necesario para que esa cuenta pueda usar "olvidé mi contraseña" más adelante). **Nota:** `prisma/seed.ts` no siembra `email` para ninguna de las cuentas demo, así que "olvidé mi contraseña" no tiene ningún usuario contra el que probar hasta que un Administrador cree uno nuevo con email desde esta pantalla (no hay edición de email sobre un usuario ya existente todavía).
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

@@ -2,18 +2,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { usePreregistrarVeterinario } from "@/features/usuarios/useUsuarios";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAceptarInvitacion, useValidarInvitacion } from "@/features/usuarios/useUsuarios";
 import { ApiError } from "@/lib/api-client";
-import { ArrowLeft, CheckCircle2, Eye, EyeOff, Loader2, Stethoscope } from "lucide-react";
+import { AlertTriangle, ArrowLeft, CheckCircle2, Eye, EyeOff, Loader2, Mail } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const ESTADO_INICIAL = {
   nombre: "",
   apellidoPaterno: "",
   apellidoMaterno: "",
   ci: "",
-  email: "",
   telefono: "",
   username: "",
   password: "",
@@ -22,12 +22,16 @@ const ESTADO_INICIAL = {
   especialidad: "",
 };
 
-export function RegistroVeterinarioPage() {
+export function InvitacionPage() {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? undefined;
+  const { data: invitacion, isLoading, isError } = useValidarInvitacion(token);
+
   const [form, setForm] = useState(ESTADO_INICIAL);
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [enviado, setEnviado] = useState(false);
-  const preregistrar = usePreregistrarVeterinario();
+  const [aceptado, setAceptado] = useState(false);
+  const aceptar = useAceptarInvitacion();
 
   function actualizar<K extends keyof typeof ESTADO_INICIAL>(campo: K, valor: (typeof ESTADO_INICIAL)[K]) {
     setForm((prev) => ({ ...prev, [campo]: valor }));
@@ -47,25 +51,27 @@ export function RegistroVeterinarioPage() {
     }
 
     try {
-      await preregistrar.mutateAsync({
-        nombre: form.nombre,
-        apellidoPaterno: form.apellidoPaterno,
-        apellidoMaterno: form.apellidoMaterno || undefined,
-        ci: form.ci,
-        email: form.email,
-        telefono: form.telefono || undefined,
-        username: form.username,
-        password: form.password,
-        matricula: form.matricula,
-        especialidad: form.especialidad,
+      await aceptar.mutateAsync({
+        token: token!,
+        input: {
+          nombre: form.nombre || invitacion?.nombre || "",
+          apellidoPaterno: form.apellidoPaterno,
+          apellidoMaterno: form.apellidoMaterno || undefined,
+          ci: form.ci,
+          telefono: form.telefono || undefined,
+          username: form.username,
+          password: form.password,
+          matricula: form.matricula,
+          especialidad: form.especialidad,
+        },
       });
-      setEnviado(true);
+      setAceptado(true);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo enviar la solicitud");
+      setError(err instanceof ApiError ? err.message : "No se pudo completar el registro");
     }
   }
 
-  if (enviado) {
+  if (aceptado) {
     return (
       <div className="flex min-h-svh items-center justify-center bg-gradient-to-b from-muted/60 to-muted/20 p-4">
         <Card className="w-full max-w-sm shadow-lg">
@@ -73,11 +79,41 @@ export function RegistroVeterinarioPage() {
             <div className="flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
               <CheckCircle2 className="size-6" />
             </div>
-            <h1 className="text-lg font-semibold">Solicitud enviada</h1>
-            <p className="text-sm text-muted-foreground">
-              Un Administrador debe aprobar tu cuenta antes de que puedas iniciar sesión. Te avisarán cuando esté activa.
-            </p>
+            <h1 className="text-lg font-semibold">¡Cuenta creada!</h1>
+            <p className="text-sm text-muted-foreground">Ya puedes iniciar sesión con tu usuario y contraseña.</p>
             <Button asChild className="mt-2">
+              <Link to="/login">Ir a inicio de sesión</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-svh items-center justify-center bg-gradient-to-b from-muted/60 to-muted/20 p-4">
+        <Card className="w-full max-w-lg shadow-lg">
+          <CardContent className="flex flex-col gap-3 py-10">
+            <Skeleton className="mx-auto h-12 w-12 rounded-full" />
+            <Skeleton className="mx-auto h-4 w-48" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!token || isError || !invitacion) {
+    return (
+      <div className="flex min-h-svh items-center justify-center bg-gradient-to-b from-muted/60 to-muted/20 p-4">
+        <Card className="w-full max-w-sm shadow-lg">
+          <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
+            <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+              <AlertTriangle className="size-6" />
+            </div>
+            <h1 className="text-lg font-semibold">Invitación no válida</h1>
+            <p className="text-sm text-muted-foreground">Este enlace no es válido, ya se usó, o expiró. Pide que te envíen una invitación nueva.</p>
+            <Button asChild variant="outline" className="mt-2">
               <Link to="/login">Volver a inicio de sesión</Link>
             </Button>
           </CardContent>
@@ -91,17 +127,22 @@ export function RegistroVeterinarioPage() {
       <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="items-center text-center">
           <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
-            <Stethoscope className="size-6 text-primary" />
+            <Mail className="size-6 text-primary" />
           </div>
-          <CardTitle className="text-xl">Solicitar acceso como Veterinario</CardTitle>
-          <CardDescription>Un Administrador revisará y aprobará tu cuenta antes de que puedas iniciar sesión</CardDescription>
+          <CardTitle className="text-xl">Completa tu registro</CardTitle>
+          <CardDescription>Te invitaron a PawCare como Veterinario — {invitacion.email}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="nombre">Nombre *</Label>
-                <Input id="nombre" required value={form.nombre} onChange={(e) => actualizar("nombre", e.target.value)} />
+                <Input
+                  id="nombre"
+                  required
+                  value={form.nombre || invitacion.nombre || ""}
+                  onChange={(e) => actualizar("nombre", e.target.value)}
+                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="apellidoPaterno">Apellido paterno *</Label>
@@ -123,17 +164,6 @@ export function RegistroVeterinarioPage() {
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="ci">CI *</Label>
                 <Input id="ci" required value={form.ci} onChange={(e) => actualizar("ci", e.target.value)} />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => actualizar("email", e.target.value)}
-                  placeholder="Para recuperar tu contraseña si la olvidas"
-                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="telefono">Teléfono</Label>
@@ -211,9 +241,9 @@ export function RegistroVeterinarioPage() {
               </p>
             )}
 
-            <Button type="submit" disabled={preregistrar.isPending} className="mt-2">
-              {preregistrar.isPending && <Loader2 className="size-4 animate-spin" />}
-              Enviar solicitud
+            <Button type="submit" disabled={aceptar.isPending} className="mt-2">
+              {aceptar.isPending && <Loader2 className="size-4 animate-spin" />}
+              Completar registro
             </Button>
           </form>
 

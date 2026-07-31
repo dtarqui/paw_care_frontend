@@ -2,6 +2,7 @@ import {
   BarChart3,
   CalendarDays,
   Clock,
+  History,
   MessageCircle,
   Package,
   PawPrint,
@@ -27,4 +28,5 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   BarChart3,
   Package,
   Clock,
+  History,
 };

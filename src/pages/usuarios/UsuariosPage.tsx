@@ -12,12 +12,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/features/auth/AuthContext";
-import { useCambiarEstadoUsuario, useUsuarios } from "@/features/usuarios/useUsuarios";
-import type { Usuario } from "@/features/usuarios/types";
+import { useCambiarEstadoUsuario, useCancelarInvitacion, useInvitacionesPendientes, useUsuarios } from "@/features/usuarios/useUsuarios";
+import type { InvitacionPendiente, Usuario } from "@/features/usuarios/types";
 import { ROL_LABEL } from "@/lib/roles";
-import { Loader2, Users } from "lucide-react";
+import { Loader2, Mail, Users, X } from "lucide-react";
 import { useState } from "react";
 import { CambiarRolDialog } from "./CambiarRolDialog";
+import { InvitarVeterinarioDialog } from "./InvitarVeterinarioDialog";
 import { NuevoUsuarioDialog } from "./NuevoUsuarioDialog";
 import { RestablecerPasswordDialog } from "./RestablecerPasswordDialog";
 
@@ -27,21 +28,36 @@ function esPendienteDeAprobacion(usuario: Usuario) {
   return usuario.autorregistrado && usuario.estado === "INACTIVO";
 }
 
+function formatearFecha(iso: string) {
+  const [fecha] = iso.split("T");
+  const [yyyy, mm, dd] = fecha.split("-");
+  return `${dd}/${mm}/${yyyy}`;
+}
+
 export function UsuariosPage() {
   const { usuario: usuarioActual } = useAuth();
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useUsuarios(page, PAGE_SIZE);
   const usuarios = data?.usuarios;
+  const { data: invitaciones } = useInvitacionesPendientes();
   const [objetivo, setObjetivo] = useState<Usuario | null>(null);
   const [objetivoRol, setObjetivoRol] = useState<Usuario | null>(null);
   const [objetivoPassword, setObjetivoPassword] = useState<Usuario | null>(null);
+  const [objetivoInvitacion, setObjetivoInvitacion] = useState<InvitacionPendiente | null>(null);
   const cambiarEstado = useCambiarEstadoUsuario();
+  const cancelarInvitacion = useCancelarInvitacion();
 
   async function confirmar() {
     if (!objetivo) return;
     const nuevoEstado = objetivo.estado === "ACTIVO" ? "INACTIVO" : "ACTIVO";
     await cambiarEstado.mutateAsync({ id: objetivo.id, estado: nuevoEstado });
     setObjetivo(null);
+  }
+
+  async function confirmarCancelarInvitacion() {
+    if (!objetivoInvitacion) return;
+    await cancelarInvitacion.mutateAsync(objetivoInvitacion.id);
+    setObjetivoInvitacion(null);
   }
 
   return (
@@ -51,8 +67,39 @@ export function UsuariosPage() {
           <h1 className="text-2xl font-semibold tracking-tight">Usuarios</h1>
           <p className="text-muted-foreground">Registro y gestión de cuentas del sistema</p>
         </div>
-        <NuevoUsuarioDialog />
+        <div className="flex gap-2">
+          <InvitarVeterinarioDialog />
+          <NuevoUsuarioDialog />
+        </div>
       </div>
+
+      {invitaciones && invitaciones.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Invitaciones pendientes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col divide-y">
+              {invitaciones.map((invitacion) => (
+                <div key={invitacion.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="size-4 shrink-0 text-muted-foreground" />
+                    <span className="font-medium">{invitacion.nombre || invitacion.email}</span>
+                    <span className="text-muted-foreground">
+                      {invitacion.nombre && `(${invitacion.email}) · `}invitó {invitacion.invitadoPor.nombre}{" "}
+                      {invitacion.invitadoPor.apellidoPaterno} · vence {formatearFecha(invitacion.expiraEn)}
+                    </span>
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={() => setObjetivoInvitacion(invitacion)}>
+                    <X className="size-3.5" />
+                    Cancelar
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -166,6 +213,26 @@ export function UsuariosPage() {
 
       <CambiarRolDialog usuario={objetivoRol} onClose={() => setObjetivoRol(null)} />
       <RestablecerPasswordDialog usuario={objetivoPassword} onClose={() => setObjetivoPassword(null)} />
+
+      <Dialog open={!!objetivoInvitacion} onOpenChange={(v) => !v && setObjetivoInvitacion(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>¿Cancelar invitación?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            El enlace que le enviamos a {objetivoInvitacion?.email} dejará de funcionar.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setObjetivoInvitacion(null)}>
+              Volver
+            </Button>
+            <Button variant="destructive" onClick={confirmarCancelarInvitacion} disabled={cancelarInvitacion.isPending}>
+              {cancelarInvitacion.isPending && <Loader2 className="size-4 animate-spin" />}
+              Cancelar invitación
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

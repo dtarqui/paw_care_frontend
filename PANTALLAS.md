@@ -25,9 +25,11 @@
 
 | Rol | Ve en el sidebar |
 |---|---|
-| **Administrador** | Dashboard, Propietarios, Mascotas, Usuarios, Veterinarios, Citas, Pagos, Control Preventivo, Inventario, Reportes (Ingresos, Clínicos), Configuración |
+| **Administrador** | Dashboard, Propietarios, Mascotas, Usuarios, Veterinarios, Citas, Pagos, Control Preventivo, Inventario, Reportes (Ingresos, Clínicos), Auditoría, Configuración |
 | **Veterinario** | Dashboard, Mascotas, Atención Médica, Citas, Control Preventivo |
 | **Recepcionista** | Dashboard, Propietarios, Mascotas, Citas, Pagos |
+
+**Fuera del shell autenticado** (públicas, sin sidebar): además de `/login`, están `/registro` (preregistro de Veterinario), `/olvide-password` y `/restablecer-password` (recuperación de contraseña), y `/invitacion` (aceptar una invitación de Veterinario enviada por un Administrador) — ver P17-P19.
 
 El sidebar no es una lista fija: se arma en el frontend filtrando este mapa según el rol embebido en el JWT (Tarea 01 de `TASKS.md`).
 
@@ -176,6 +178,10 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 | P14 (opc.) | Configuración | `/app/configuracion` | Administrador | widgets | HU11-B, HU15 · Tareas 12 y 16 |
 | P15 | Ficha de Mascota | `/app/mascotas/:id` | Admin, Veterinario, Recepcionista | B (detalle) + historial unificado | Gap cerrado (sesión posterior) |
 | P16 | Horarios de Veterinario | `/app/horarios` | Administrador, Veterinario | A (grilla semanal) | Gap cerrado — mencionado en HU1, sin pantalla propia hasta ahora |
+| P17 | Olvidé mi contraseña | `/olvide-password` | público (sin sesión) | formulario simple | Sesión 5 |
+| P18 | Restablecer contraseña | `/restablecer-password?token=` | público (sin sesión) | formulario simple | Sesión 5 |
+| P19 | Aceptar invitación de Veterinario | `/invitacion?token=` | público (sin sesión) | formulario (variante del alta de P02) | Sesión 5 |
+| P20 | Auditoría | `/app/auditoria` | Administrador | tabla paginada de solo lectura | Sesión 5 |
 
 ---
 
@@ -183,8 +189,8 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 
 ### P00 — Login
 - **No usa el shell** (pantalla previa a autenticarse).
-- Funcionalidad: formulario `username` + `password` → `POST /api/auth/login`. Error de credenciales se muestra junto al formulario, sin indicar cuál campo falló.
-- Sin registro público — los usuarios los crea un Administrador desde P02.
+- Funcionalidad: formulario `username` + `password` (con mostrar/ocultar contraseña) → `POST /api/auth/login`. Error de credenciales se muestra junto al formulario, sin indicar cuál campo falló.
+- Enlaces: "¿Eres veterinario y no tienes cuenta? Solicita tu acceso" → `/registro` (preregistro público, P02 lo aprueba después) y "¿Olvidaste tu contraseña?" → `/olvide-password` (P17). Para el resto de roles, los usuarios los crea un Administrador desde P02 (o los invita — ver P19).
 
 ### P01 — Dashboard (Patrón C)
 - Mensaje de bienvenida con nombre y rol.
@@ -194,8 +200,9 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 ### P02 — Gestión de Usuarios (Patrón A, extendido)
 - Lista: nombre, ci, username, rol, estado, acciones.
 - Formulario "+ Nuevo": nombre, apellidos, ci, username, rol, contraseña, confirmar contraseña.
-- **Comportamiento condicional:** si `rol = VETERINARIO`, el formulario despliega dos campos adicionales — matrícula y especialidad — que se envían junto con el alta para crear también el perfil de `Veterinario` (1 a 1 con `Usuario`, ver `database/MODELO_DATOS.md`). Esto evita una pantalla separada de "alta de veterinario".
+- **Comportamiento condicional:** si `rol = VETERINARIO`, el formulario despliega dos campos adicionales — matrícula y especialidad — que se envían junto con el alta para crear también el perfil de `Veterinario` (1 a 1 con `Usuario`, ver `database/MODELO_DATOS.md`). Esto evita una pantalla separada de "alta de veterinario". El formulario también tiene un campo opcional **Email** (sesión 5) — necesario para que esa cuenta pueda usar más adelante "olvidé mi contraseña" (P17); no hay forma de agregarle un email a una cuenta ya existente todavía.
 - **Cambiar rol** (gap cerrado, sesión posterior): botón por fila (oculto en la propia cuenta del admin logueado) que abre un diálogo con selector de rol; si el nuevo rol es Veterinario y el usuario no lo era, pide matrícula/especialidad ahí mismo.
+- **Invitar veterinario** (sesión 5): botón "Invitar veterinario" abre un diálogo (email + nombre opcional) que manda una invitación por correo — segunda vía de alta de Veterinario, alternativa al preregistro público (P00 → `/registro`). La lista de invitaciones pendientes (con quién invitó y cuándo) se muestra en esta misma pantalla, con acción para cancelarlas. A diferencia de un preregistro, la cuenta que resulta de aceptar una invitación (P19) queda activa de inmediato, no "pendiente de aprobación".
 - La gestión de `Horario` de cada veterinario terminó como pantalla propia — ver P16, no una sub-sección de esta.
 
 ### P03 — Gestión de Propietarios (Patrón A)
@@ -254,6 +261,37 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 
 ### P14 (opcional) — Configuración
 - Agrupa dos utilidades administrativas que no ameritan pantalla propia: panel de tasa de entregabilidad de notificaciones (HU11-B) y botón "Exportar todos mis datos" (HU15) con indicador de progreso.
+- También vive acá (todos los roles): cambiar tema claro/oscuro/sistema + acento de color, cambiar la propia contraseña (`CambiarPasswordDialog.tsx`, pide la contraseña actual).
+
+### P15 — Ficha de Mascota (Patrón B, detalle)
+- Datos completos de la mascota (especie, raza, color, sexo, fecha de nacimiento, peso, propietario) + botón Editar (abre un formulario, cada cambio queda registrado en `CambioMascota` y aparece en la línea de tiempo).
+- Gráfico de evolución de peso (Recharts) — se muestra solo con 2 o más mediciones registradas (una `AtencionMedica` con peso capturado).
+- Línea de tiempo unificada: atenciones médicas, controles preventivos, citas y ediciones manuales, cada una con su propio ícono/badge, ordenadas por fecha.
+- Botón "Eliminar mascota" / "Reactivar" (borrado lógico, reversible) con modal de confirmación — es la única forma de eliminar una mascota, no existe desde el listado (P04).
+
+### P16 — Horarios de Veterinario (Patrón A, grilla semanal)
+- Grilla semanal (Lunes a Sábado) con hasta 2 turnos por día (mañana/tarde), cada uno con hora de inicio y fin.
+- Administrador elige a qué veterinario le edita el horario (select); si el rol logueado es Veterinario, el horario mostrado es siempre el propio, sin selector (mismo patrón "Tú" que Nueva Cita/Nueva Atención).
+- No hay pantalla de "ver disponibilidad" separada — este horario es justamente lo que alimenta `GET /api/citas/disponibilidad` (P07).
+
+### P17 — Olvidé mi contraseña (formulario simple, público)
+- Un solo campo: `username`. Al enviar, siempre muestra el mismo mensaje de confirmación genérico ("si la cuenta existe y tiene un email registrado, te enviamos un enlace") — nunca revela si la cuenta existe o si tiene email, para no poder usarse como buscador de cuentas válidas.
+- Enlace de vuelta a `/login`. Accesible desde un link "¿Olvidaste tu contraseña?" en P00.
+
+### P18 — Restablecer contraseña (formulario simple, público)
+- Lee el `token` de la query string. Pide la contraseña nueva + confirmación (mínimo 6 caracteres).
+- Si el token no existe, ya expiró (1 hora) o ya se usó, muestra el error del backend invitando a solicitar un enlace nuevo (vuelve a P17).
+- Al confirmar, no inicia sesión automáticamente — redirige a `/login` para que el usuario entre con la contraseña nueva.
+
+### P19 — Aceptar invitación de Veterinario (variante del alta de P02, público)
+- Valida el `token` de la URL contra el backend antes de mostrar el formulario; si no es válido, ya se usó o expiró, muestra un estado de error con link a `/login` (no hay forma de "reenviar" desde acá — eso lo hace un Administrador desde P02).
+- Formulario: datos personales (nombre, apellidos, ci, teléfono, username) + matrícula/especialidad + contraseña/confirmar contraseña. El email viene precargado desde la invitación (no editable).
+- Al completar, muestra una confirmación de "cuenta creada" y un botón a `/login` — a diferencia de `/registro` (preregistro), no hay pantalla de "pendiente de aprobación": la cuenta ya queda activa.
+
+### P20 — Auditoría (tabla paginada de solo lectura)
+- Una fila por acción administrativa sensible: fecha/hora, tipo de acción (badge con color propio: activar/desactivar cuenta, restablecer contraseña, cambiar rol, invitar veterinario), quién la realizó, detalle en texto libre.
+- Sin filtros ni buscador, solo paginación (`Pagination` reutilizable) — es un log para auditar, no un módulo de gestión.
+- No incluye acciones que un usuario hace sobre su propia cuenta (ej. cambiar la propia contraseña); solo acciones de un Administrador sobre la cuenta de otra persona.
 
 ---
 

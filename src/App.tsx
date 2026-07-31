@@ -2,20 +2,24 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AuthProvider } from "@/features/auth/AuthContext";
 import { AtencionMedicaPage } from "@/pages/atencion-medica/AtencionMedicaPage";
+import { AuditoriaPage } from "@/pages/auditoria/AuditoriaPage";
 import { CitasPage } from "@/pages/citas/CitasPage";
 import { ConfiguracionPage } from "@/pages/ConfiguracionPage";
 import { ControlPreventivoPage } from "@/pages/control-preventivo/ControlPreventivoPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { HorariosPage } from "@/pages/horarios/HorariosPage";
 import { InventarioPage } from "@/pages/inventario/InventarioPage";
+import { InvitacionPage } from "@/pages/InvitacionPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { MascotaDetallePage } from "@/pages/mascotas/MascotaDetallePage";
 import { MascotasPage } from "@/pages/mascotas/MascotasPage";
+import { OlvidePasswordPage } from "@/pages/OlvidePasswordPage";
 import { PagosPage } from "@/pages/pagos/PagosPage";
 import { PropietariosPage } from "@/pages/propietarios/PropietariosPage";
 import { RecordatoriosPage } from "@/pages/recordatorios/RecordatoriosPage";
 import { RegistroVeterinarioPage } from "@/pages/RegistroVeterinarioPage";
 import { ReportesPage } from "@/pages/reportes/ReportesPage";
+import { RestablecerPasswordPage } from "@/pages/RestablecerPasswordPage";
 import { UsuariosPage } from "@/pages/usuarios/UsuariosPage";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -25,6 +29,9 @@ export function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registro" element={<RegistroVeterinarioPage />} />
+        <Route path="/olvide-password" element={<OlvidePasswordPage />} />
+        <Route path="/restablecer-password" element={<RestablecerPasswordPage />} />
+        <Route path="/invitacion" element={<InvitacionPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/app" element={<AppShell />}>
@@ -41,6 +48,7 @@ export function App() {
             <Route path="inventario" element={<InventarioPage />} />
             <Route path="usuarios" element={<UsuariosPage />} />
             <Route path="horarios" element={<HorariosPage />} />
+            <Route path="auditoria" element={<AuditoriaPage />} />
             <Route path="configuracion" element={<ConfiguracionPage />} />
           </Route>
         </Route>

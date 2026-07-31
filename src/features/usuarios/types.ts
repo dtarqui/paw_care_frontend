@@ -7,6 +7,7 @@ export interface Usuario {
   apellidoPaterno: string;
   apellidoMaterno?: string;
   ci: string;
+  email?: string;
   telefono?: string;
   rol: Rol;
   estado: "ACTIVO" | "INACTIVO";
@@ -18,6 +19,7 @@ export interface NuevoUsuarioInput {
   apellidoPaterno: string;
   apellidoMaterno?: string;
   ci: string;
+  email?: string;
   username: string;
   telefono?: string;
   rol: Rol;
@@ -33,6 +35,38 @@ export interface CambiarRolInput {
 }
 
 export interface PreregistroVeterinarioInput {
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno?: string;
+  ci: string;
+  email: string;
+  username: string;
+  telefono?: string;
+  password: string;
+  matricula: string;
+  especialidad: string;
+}
+
+export interface InvitarVeterinarioInput {
+  email: string;
+  nombre?: string;
+}
+
+export interface InvitacionPendiente {
+  id: number;
+  email: string;
+  nombre?: string;
+  invitadoPor: { nombre: string; apellidoPaterno: string };
+  expiraEn: string;
+  createdAt: string;
+}
+
+export interface DatosInvitacion {
+  email: string;
+  nombre?: string;
+}
+
+export interface AceptarInvitacionInput {
   nombre: string;
   apellidoPaterno: string;
   apellidoMaterno?: string;

@@ -21,6 +21,7 @@ const ESTADO_INICIAL = {
   apellidoPaterno: "",
   apellidoMaterno: "",
   ci: "",
+  email: "",
   telefono: "",
   username: "",
   rol: "" as Rol | "",
@@ -75,6 +76,7 @@ export function NuevoUsuarioDialog() {
         apellidoPaterno: form.apellidoPaterno,
         apellidoMaterno: form.apellidoMaterno || undefined,
         ci: form.ci,
+        email: form.email || undefined,
         telefono: form.telefono || undefined,
         username: form.username,
         rol: form.rol,
@@ -128,6 +130,10 @@ export function NuevoUsuarioDialog() {
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="ci">CI *</Label>
               <Input id="ci" required value={form.ci} onChange={(e) => actualizar("ci", e.target.value)} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={form.email} onChange={(e) => actualizar("email", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="telefono">Teléfono</Label>

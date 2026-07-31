@@ -1,5 +1,14 @@
 import { apiClient } from "@/lib/api-client";
-import type { CambiarRolInput, NuevoUsuarioInput, PreregistroVeterinarioInput, Usuario } from "./types";
+import type {
+  AceptarInvitacionInput,
+  CambiarRolInput,
+  DatosInvitacion,
+  InvitacionPendiente,
+  InvitarVeterinarioInput,
+  NuevoUsuarioInput,
+  PreregistroVeterinarioInput,
+  Usuario,
+} from "./types";
 
 export interface ListadoUsuarios {
   usuarios: Usuario[];
@@ -21,4 +30,10 @@ export const usuariosApi = {
     apiClient.patch<{ ok: boolean }>("/api/usuarios/me/password", { passwordActual, passwordNuevo }),
   restablecerPassword: (id: number, passwordNuevo: string) =>
     apiClient.patch<{ ok: boolean }>(`/api/usuarios/${id}/password`, { passwordNuevo }),
+  invitar: (input: InvitarVeterinarioInput) => apiClient.post<{ ok: boolean }>("/api/usuarios/invitaciones", input),
+  listarInvitaciones: () => apiClient.get<{ invitaciones: InvitacionPendiente[] }>("/api/usuarios/invitaciones"),
+  cancelarInvitacion: (id: number) => apiClient.delete<void>(`/api/usuarios/invitaciones/${id}`),
+  validarInvitacion: (token: string) => apiClient.get<DatosInvitacion>(`/api/usuarios/invitaciones/validar/${token}`),
+  aceptarInvitacion: (token: string, input: AceptarInvitacionInput) =>
+    apiClient.post<{ usuario: Usuario }>(`/api/usuarios/invitaciones/aceptar/${token}`, input),
 };
