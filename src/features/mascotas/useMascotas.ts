@@ -3,10 +3,10 @@ import { toast } from "sonner";
 import { mascotasApi } from "./api";
 import type { ActualizarMascotaInput, NuevaMascotaInput } from "./types";
 
-export function useMascotas(page = 1, pageSize = 20) {
+export function useMascotas(page = 1, pageSize = 20, incluirInactivas = false) {
   return useQuery({
-    queryKey: ["mascotas", "listado", page, pageSize],
-    queryFn: () => mascotasApi.listar(page, pageSize),
+    queryKey: ["mascotas", "listado", page, pageSize, incluirInactivas],
+    queryFn: () => mascotasApi.listar(page, pageSize, incluirInactivas),
   });
 }
 
@@ -32,6 +32,18 @@ export function useActualizarMascota(id: number) {
       queryClient.invalidateQueries({ queryKey: ["mascotas"] });
       queryClient.invalidateQueries({ queryKey: ["mascotas", id, "historial"] });
       toast.success("Mascota actualizada correctamente");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useCambiarEstadoMascota(id: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (estado: "ACTIVO" | "INACTIVO") => mascotasApi.cambiarEstado(id, estado),
+    onSuccess: (_data, estado) => {
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
+      toast.success(estado === "ACTIVO" ? "Mascota reactivada" : "Mascota eliminada");
     },
     onError: (error: Error) => toast.error(error.message),
   });

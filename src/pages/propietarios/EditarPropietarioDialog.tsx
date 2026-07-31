@@ -16,12 +16,23 @@ import { useState, type FormEvent } from "react";
 
 export function EditarPropietarioDialog({ propietario }: { propietario: PropietarioConMascotas }) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ nombre: propietario.nombre, apellidoPaterno: propietario.apellidoPaterno, telefono: propietario.telefono });
+  const [form, setForm] = useState({
+    nombre: propietario.nombre,
+    apellidoPaterno: propietario.apellidoPaterno,
+    telefono: propietario.telefono,
+    direccion: propietario.direccion ?? "",
+  });
   const [error, setError] = useState<string | null>(null);
   const actualizarPropietario = useActualizarPropietario();
 
   function handleOpenChange(v: boolean) {
-    if (v) setForm({ nombre: propietario.nombre, apellidoPaterno: propietario.apellidoPaterno, telefono: propietario.telefono });
+    if (v)
+      setForm({
+        nombre: propietario.nombre,
+        apellidoPaterno: propietario.apellidoPaterno,
+        telefono: propietario.telefono,
+        direccion: propietario.direccion ?? "",
+      });
     setError(null);
     setOpen(v);
   }
@@ -38,7 +49,12 @@ export function EditarPropietarioDialog({ propietario }: { propietario: Propieta
     try {
       await actualizarPropietario.mutateAsync({
         id: propietario.id,
-        input: { nombre: form.nombre.trim(), apellidoPaterno: form.apellidoPaterno.trim(), telefono: form.telefono.trim() || undefined },
+        input: {
+          nombre: form.nombre.trim(),
+          apellidoPaterno: form.apellidoPaterno.trim(),
+          telefono: form.telefono.trim() || undefined,
+          direccion: form.direccion.trim() || undefined,
+        },
       });
       setOpen(false);
     } catch (err) {
@@ -84,12 +100,20 @@ export function EditarPropietarioDialog({ propietario }: { propietario: Propieta
                 onChange={(e) => setForm((prev) => ({ ...prev, apellidoPaterno: e.target.value }))}
               />
             </div>
-            <div className="col-span-2 flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5">
               <Label htmlFor="editPropTelefono">Teléfono</Label>
               <Input
                 id="editPropTelefono"
                 value={form.telefono}
                 onChange={(e) => setForm((prev) => ({ ...prev, telefono: e.target.value }))}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="editPropDireccion">Dirección</Label>
+              <Input
+                id="editPropDireccion"
+                value={form.direccion}
+                onChange={(e) => setForm((prev) => ({ ...prev, direccion: e.target.value }))}
               />
             </div>
           </div>

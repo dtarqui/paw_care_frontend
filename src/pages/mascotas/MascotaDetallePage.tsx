@@ -1,11 +1,14 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { EventoHistorialMascota } from "@/features/mascotas/types";
-import { useHistorialMascota, useMascota } from "@/features/mascotas/useMascotas";
+import { useCambiarEstadoMascota, useHistorialMascota, useMascota } from "@/features/mascotas/useMascotas";
 import { calcularEdad } from "@/lib/mascota";
-import { ArrowLeft, PawPrint, Phone, User } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Loader2, PawPrint, Phone, User } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { EditarMascotaDialog } from "./EditarMascotaDialog";
 import { GraficoPesoMascota, type PuntoPeso } from "./GraficoPesoMascota";
@@ -23,6 +26,14 @@ export function MascotaDetallePage() {
 
   const { data: mascota, isLoading, isError } = useMascota(mascotaId);
   const { data: eventos, isLoading: cargandoHistorial } = useHistorialMascota(mascotaId);
+  const cambiarEstado = useCambiarEstadoMascota(mascotaId);
+  const [confirmando, setConfirmando] = useState(false);
+
+  async function confirmarCambioEstado() {
+    if (!mascota) return;
+    await cambiarEstado.mutateAsync(mascota.estado === "ACTIVO" ? "INACTIVO" : "ACTIVO");
+    setConfirmando(false);
+  }
 
   function esAtencionConPeso(e: EventoHistorialMascota): e is Extract<EventoHistorialMascota, { tipo: "ATENCION" }> {
     return e.tipo === "ATENCION" && e.atencion.peso !== undefined;
@@ -52,6 +63,13 @@ export function MascotaDetallePage() {
 
       {!isLoading && !isError && mascota && (
         <>
+          {mascota.estado === "INACTIVO" && (
+            <div className="flex items-center gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400">
+              <AlertTriangle className="size-5 shrink-0" />
+              <p className="text-sm">Esta mascota está inactiva — no aparece en el listado principal ni en los buscadores.</p>
+            </div>
+          )}
+
           <Card>
             <CardHeader className="flex-row items-start justify-between space-y-0">
               <div className="flex items-center gap-3">
@@ -67,7 +85,15 @@ export function MascotaDetallePage() {
                   </p>
                 </div>
               </div>
-              <EditarMascotaDialog mascota={mascota} />
+              <div className="flex gap-2">
+                <EditarMascotaDialog mascota={mascota} />
+                <Button
+                  variant={mascota.estado === "ACTIVO" ? "destructive" : "outline"}
+                  onClick={() => setConfirmando(true)}
+                >
+                  {mascota.estado === "ACTIVO" ? "Eliminar mascota" : "Reactivar"}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -134,6 +160,34 @@ export function MascotaDetallePage() {
             </CardContent>
           </Card>
         </>
+      )}
+
+      {mascota && (
+        <Dialog open={confirmando} onOpenChange={setConfirmando}>
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle>{mascota.estado === "ACTIVO" ? "¿Eliminar mascota?" : "¿Reactivar mascota?"}</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground">
+              {mascota.estado === "ACTIVO"
+                ? `${mascota.nombre} dejará de aparecer en el listado y en los buscadores. Su historial clínico no se borra y se puede reactivar en cualquier momento desde esta misma página.`
+                : `${mascota.nombre} volverá a aparecer en el listado principal y en los buscadores.`}
+            </p>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setConfirmando(false)}>
+                Cancelar
+              </Button>
+              <Button
+                variant={mascota.estado === "ACTIVO" ? "destructive" : "default"}
+                onClick={confirmarCambioEstado}
+                disabled={cambiarEstado.isPending}
+              >
+                {cambiarEstado.isPending && <Loader2 className="size-4 animate-spin" />}
+                {mascota.estado === "ACTIVO" ? "Eliminar" : "Reactivar"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

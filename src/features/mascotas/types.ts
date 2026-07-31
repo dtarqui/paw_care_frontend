@@ -8,6 +8,7 @@ export interface Propietario {
   apellidoPaterno: string;
   ci: string;
   telefono: string;
+  direccion?: string;
 }
 
 export interface Mascota {
@@ -18,6 +19,7 @@ export interface Mascota {
   sexo: "Macho" | "Hembra";
   fechaNacimiento: string;
   peso: number;
+  estado: "ACTIVO" | "INACTIVO";
   propietario: Propietario;
 }
 
