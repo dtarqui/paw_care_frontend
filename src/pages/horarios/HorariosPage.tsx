@@ -51,8 +51,14 @@ function estadoDesdeHorarios(horarios: Horario[]): SemanaState {
   const semana = estadoVacio();
   for (const dia of DIAS) {
     const filas = horarios.filter((h) => h.diaSemana === dia.valor).sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
-    if (filas[0]) semana[dia.valor].turno1 = { activo: true, inicio: filas[0].horaInicio, fin: filas[0].horaFin };
-    if (filas[1]) semana[dia.valor].turno2 = { activo: true, inicio: filas[1].horaInicio, fin: filas[1].horaFin };
+    // El backend no guarda a qué switch (turno1/turno2) pertenece cada bloque —
+    // solo una lista plana de horarios. Se reconstruye por hora del día (antes/después
+    // del mediodía) en vez de por orden de llegada, para que un día con solo turno de
+    // tarde no se muestre encendido en el switch de "mañana" al recargar.
+    const manana = filas.find((f) => f.horaInicio < "12:00");
+    const tarde = filas.find((f) => f !== manana && f.horaInicio >= "12:00") ?? filas.find((f) => f !== manana);
+    if (manana) semana[dia.valor].turno1 = { activo: true, inicio: manana.horaInicio, fin: manana.horaFin };
+    if (tarde) semana[dia.valor].turno2 = { activo: true, inicio: tarde.horaInicio, fin: tarde.horaFin };
   }
   return semana;
 }

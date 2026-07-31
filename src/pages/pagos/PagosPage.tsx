@@ -1,15 +1,30 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { usePagosPendientes } from "@/features/pagos/usePagos";
+import { useHistorialPagos, usePagosPendientes } from "@/features/pagos/usePagos";
 import type { PagoPendiente } from "@/features/pagos/types";
-import { Wallet } from "lucide-react";
+import { History, Wallet } from "lucide-react";
 import { useState } from "react";
 import { RegistrarPagoDialog } from "./RegistrarPagoDialog";
 
+function formatearFecha(iso: string) {
+  const [fecha] = iso.split("T");
+  const [yyyy, mm, dd] = fecha.split("-");
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+const METODO_LABEL: Record<string, string> = {
+  EFECTIVO: "Efectivo",
+  TARJETA: "Tarjeta",
+  TRANSFERENCIA: "Transferencia",
+  QR: "QR",
+};
+
 export function PagosPage() {
   const { data: pendientes, isLoading, isError } = usePagosPendientes();
+  const { data: historial, isLoading: cargandoHistorial } = useHistorialPagos(5);
   const [seleccionado, setSeleccionado] = useState<PagoPendiente | null>(null);
 
   return (
@@ -69,6 +84,61 @@ export function PagosPage() {
                           Registrar pago
                         </Button>
                       </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Últimos pagos</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {cargandoHistorial && (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          )}
+
+          {!cargandoHistorial && historial?.length === 0 && (
+            <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
+              <History className="size-7" />
+              <p>Todavía no hay pagos registrados.</p>
+            </div>
+          )}
+
+          {!cargandoHistorial && historial && historial.length > 0 && (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Mascota</TableHead>
+                    <TableHead>Propietario</TableHead>
+                    <TableHead>Monto</TableHead>
+                    <TableHead>Método</TableHead>
+                    <TableHead>Fecha</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {historial.map((pago) => (
+                    <TableRow key={pago.id}>
+                      <TableCell className="font-medium">{pago.mascota.nombre}</TableCell>
+                      <TableCell>
+                        {pago.propietario.nombre} {pago.propietario.apellidoPaterno}
+                      </TableCell>
+                      <TableCell>Bs. {pago.monto.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className="border-none font-normal">
+                          {METODO_LABEL[pago.metodoPago] ?? pago.metodoPago}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{formatearFecha(pago.fecha)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

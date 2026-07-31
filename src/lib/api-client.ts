@@ -52,6 +52,7 @@ export const apiClient = {
     request<T>(path, { method: "PATCH", body: data ? JSON.stringify(data) : undefined }),
   put: <T>(path: string, data?: unknown) =>
     request<T>(path, { method: "PUT", body: data ? JSON.stringify(data) : undefined }),
+  delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 
   /** POST con multipart/form-data (subida de archivos) — sin fijar Content-Type,
    * el navegador arma el boundary correcto solo cuando el body es un FormData real. */

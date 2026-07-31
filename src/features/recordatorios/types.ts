@@ -7,3 +7,11 @@ export interface RecordatorioPendiente {
   mensaje: string;
   referencia: string;
 }
+
+export interface RecordatorioEnviado {
+  id: number;
+  propietario: { nombre: string; apellidoPaterno: string };
+  mensaje: string;
+  canal: string;
+  enviadoEn: string;
+}

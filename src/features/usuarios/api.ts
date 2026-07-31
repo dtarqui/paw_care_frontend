@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import type { NuevoUsuarioInput, Usuario } from "./types";
+import type { CambiarRolInput, NuevoUsuarioInput, Usuario } from "./types";
 
 export interface ListadoUsuarios {
   usuarios: Usuario[];
@@ -13,4 +13,6 @@ export const usuariosApi = {
   crear: (input: NuevoUsuarioInput) => apiClient.post<{ usuario: Usuario }>("/api/usuarios", input),
   cambiarEstado: (id: number, estado: "ACTIVO" | "INACTIVO") =>
     apiClient.patch<{ usuario: Usuario }>(`/api/usuarios/${id}/estado`, { estado }),
+  cambiarRol: (id: number, input: CambiarRolInput) =>
+    apiClient.patch<{ usuario: Usuario }>(`/api/usuarios/${id}/rol`, input),
 };

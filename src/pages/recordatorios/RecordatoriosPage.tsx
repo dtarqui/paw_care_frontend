@@ -1,8 +1,13 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMarcarRecordatorioEnviado, useRecordatoriosPendientes } from "@/features/recordatorios/useRecordatorios";
-import { CalendarClock, MessageCircle, ShieldPlus } from "lucide-react";
+import {
+  useHistorialRecordatorios,
+  useMarcarRecordatorioEnviado,
+  useRecordatoriosPendientes,
+} from "@/features/recordatorios/useRecordatorios";
+import { CalendarClock, CheckCheck, MessageCircle, ShieldPlus } from "lucide-react";
 
 function numeroWhatsApp(telefono: string): string {
   const limpio = telefono.replace(/\D/g, "");
@@ -13,8 +18,16 @@ function enlaceWhatsApp(telefono: string, mensaje: string): string {
   return `https://wa.me/${numeroWhatsApp(telefono)}?text=${encodeURIComponent(mensaje)}`;
 }
 
+function formatearFechaHora(iso: string) {
+  if (!iso) return "—";
+  const [fecha, hora] = iso.split("T");
+  const [yyyy, mm, dd] = fecha.split("-");
+  return `${dd}/${mm}/${yyyy} ${hora ? hora.slice(0, 5) : ""}`.trim();
+}
+
 export function RecordatoriosPage() {
   const { data: recordatorios, isLoading, isError } = useRecordatoriosPendientes();
+  const { data: enviados, isLoading: cargandoEnviados } = useHistorialRecordatorios(5);
   const marcarEnviado = useMarcarRecordatorioEnviado();
 
   return (
@@ -82,6 +95,49 @@ export function RecordatoriosPage() {
                   </div>
                 );
               })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Últimos enviados</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {cargandoEnviados && (
+            <div className="flex flex-col gap-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-full" />
+              ))}
+            </div>
+          )}
+
+          {!cargandoEnviados && enviados?.length === 0 && (
+            <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
+              <CheckCheck className="size-7" />
+              <p>Todavía no se marcó ningún recordatorio como enviado.</p>
+            </div>
+          )}
+
+          {!cargandoEnviados && enviados && enviados.length > 0 && (
+            <div className="flex flex-col divide-y">
+              {enviados.map((enviado) => (
+                <div key={enviado.id} className="flex flex-wrap items-start justify-between gap-3 py-3">
+                  <div className="min-w-[220px] flex-1">
+                    <p className="text-sm font-medium">
+                      {enviado.propietario.nombre} {enviado.propietario.apellidoPaterno}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{enviado.mensaje}</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant="secondary" className="border-none font-normal">
+                      WhatsApp
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">{formatearFechaHora(enviado.enviadoEn)}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </CardContent>

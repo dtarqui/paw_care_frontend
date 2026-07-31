@@ -11,20 +11,24 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useAuth } from "@/features/auth/AuthContext";
 import { useCambiarEstadoUsuario, useUsuarios } from "@/features/usuarios/useUsuarios";
 import type { Usuario } from "@/features/usuarios/types";
 import { ROL_LABEL } from "@/lib/roles";
 import { Loader2, Users } from "lucide-react";
 import { useState } from "react";
+import { CambiarRolDialog } from "./CambiarRolDialog";
 import { NuevoUsuarioDialog } from "./NuevoUsuarioDialog";
 
 const PAGE_SIZE = 20;
 
 export function UsuariosPage() {
+  const { usuario: usuarioActual } = useAuth();
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useUsuarios(page, PAGE_SIZE);
   const usuarios = data?.usuarios;
   const [objetivo, setObjetivo] = useState<Usuario | null>(null);
+  const [objetivoRol, setObjetivoRol] = useState<Usuario | null>(null);
   const cambiarEstado = useCambiarEstadoUsuario();
 
   async function confirmar() {
@@ -92,7 +96,12 @@ export function UsuariosPage() {
                       <TableCell>
                         <StatusBadge status={usuario.estado} />
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right space-x-2">
+                        {usuario.id !== usuarioActual?.id && (
+                          <Button variant="outline" size="sm" onClick={() => setObjetivoRol(usuario)}>
+                            Cambiar rol
+                          </Button>
+                        )}
                         <Button variant="outline" size="sm" onClick={() => setObjetivo(usuario)}>
                           {usuario.estado === "ACTIVO" ? "Desactivar" : "Activar"}
                         </Button>
@@ -133,6 +142,8 @@ export function UsuariosPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <CambiarRolDialog usuario={objetivoRol} onClose={() => setObjetivoRol(null)} />
     </div>
   );
 }

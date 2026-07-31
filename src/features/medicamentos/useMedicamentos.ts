@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { medicamentosApi } from "./api";
+import type { ActualizarMedicamentoInput, NuevoMedicamentoInput } from "./types";
 
 export function useMedicamentos() {
   return useQuery({
@@ -24,6 +25,42 @@ export function useRegistrarEntrada() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medicamentos"] });
       toast.success("Entrada registrada correctamente");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useCrearMedicamento() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: NuevoMedicamentoInput) => medicamentosApi.crear(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["medicamentos"] });
+      toast.success("Medicamento creado correctamente");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useActualizarMedicamento() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, input }: { id: number; input: ActualizarMedicamentoInput }) => medicamentosApi.actualizar(id, input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["medicamentos"] });
+      toast.success("Medicamento actualizado correctamente");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useEliminarMedicamento() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => medicamentosApi.eliminar(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["medicamentos"] });
+      toast.success("Medicamento eliminado");
     },
     onError: (error: Error) => toast.error(error.message),
   });

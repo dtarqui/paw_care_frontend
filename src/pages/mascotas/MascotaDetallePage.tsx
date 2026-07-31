@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { EventoHistorialMascota } from "@/features/mascotas/types";
 import { useHistorialMascota, useMascota } from "@/features/mascotas/useMascotas";
-import { todayISO } from "@/lib/date";
+import { calcularEdad } from "@/lib/mascota";
 import { ArrowLeft, PawPrint, Phone, User } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { EditarMascotaDialog } from "./EditarMascotaDialog";
@@ -15,20 +15,6 @@ function formatearFecha(iso: string) {
   if (!iso) return "—";
   const [yyyy, mm, dd] = iso.split("-");
   return `${dd}/${mm}/${yyyy}`;
-}
-
-function calcularEdad(fechaNacimiento: string): string | null {
-  if (!fechaNacimiento) return null;
-  const [nYyyy, nMm, nDd] = fechaNacimiento.split("-").map(Number);
-  const [hYyyy, hMm, hDd] = todayISO().split("-").map(Number);
-
-  let meses = (hYyyy - nYyyy) * 12 + (hMm - nMm);
-  if (hDd < nDd) meses -= 1;
-  if (meses < 0) return null;
-
-  if (meses < 12) return `${meses} ${meses === 1 ? "mes" : "meses"}`;
-  const anios = Math.floor(meses / 12);
-  return `${anios} ${anios === 1 ? "año" : "años"}`;
 }
 
 export function MascotaDetallePage() {

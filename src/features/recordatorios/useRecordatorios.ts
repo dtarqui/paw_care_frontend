@@ -9,12 +9,19 @@ export function useRecordatoriosPendientes() {
   });
 }
 
+export function useHistorialRecordatorios(limit = 5) {
+  return useQuery({
+    queryKey: ["recordatorios", "historial", limit],
+    queryFn: async () => (await recordatoriosApi.historial(limit)).enviados,
+  });
+}
+
 export function useMarcarRecordatorioEnviado() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => recordatoriosApi.marcarEnviado(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["recordatorios", "pendientes"] });
+      queryClient.invalidateQueries({ queryKey: ["recordatorios"] });
       toast.success("Recordatorio marcado como enviado");
     },
     onError: (error: Error) => toast.error(error.message),

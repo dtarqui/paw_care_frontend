@@ -10,13 +10,20 @@ export function usePagosPendientes() {
   });
 }
 
+export function useHistorialPagos(limit = 5) {
+  return useQuery({
+    queryKey: ["pagos", "historial", limit],
+    queryFn: async () => (await pagosApi.historial(limit)).pagos,
+  });
+}
+
 export function useRegistrarPago() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ atencionId, metodoPago, monto }: { atencionId: number; metodoPago: MetodoPago; monto: number }) =>
       pagosApi.registrar(atencionId, metodoPago, monto),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pagos", "pendientes"] });
+      queryClient.invalidateQueries({ queryKey: ["pagos"] });
       toast.success("Pago registrado correctamente");
     },
     onError: (error: Error) => toast.error(error.message),

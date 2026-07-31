@@ -1,24 +1,43 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Medicamento } from "@/features/medicamentos/types";
-import { useMedicamentos, useMedicamentosBajoStock } from "@/features/medicamentos/useMedicamentos";
-import { AlertTriangle, Package } from "lucide-react";
+import { useEliminarMedicamento, useMedicamentos, useMedicamentosBajoStock } from "@/features/medicamentos/useMedicamentos";
+import { AlertTriangle, Loader2, Package } from "lucide-react";
 import { useState } from "react";
+import { EditarMedicamentoDialog } from "./EditarMedicamentoDialog";
+import { NuevoMedicamentoDialog } from "./NuevoMedicamentoDialog";
 import { RegistrarEntradaDialog } from "./RegistrarEntradaDialog";
 
 export function InventarioPage() {
   const { data: medicamentos, isLoading, isError } = useMedicamentos();
   const { data: bajoStock } = useMedicamentosBajoStock();
   const [seleccionado, setSeleccionado] = useState<Medicamento | null>(null);
+  const [editando, setEditando] = useState<Medicamento | null>(null);
+  const [eliminando, setEliminando] = useState<Medicamento | null>(null);
+  const eliminarMedicamento = useEliminarMedicamento();
+
+  async function confirmarEliminar() {
+    if (!eliminando) return;
+    try {
+      await eliminarMedicamento.mutateAsync(eliminando.id);
+      setEliminando(null);
+    } catch {
+      // el toast de error ya lo maneja el hook — se deja el modal abierto para reintentar/cancelar
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Inventario</h1>
-        <p className="text-muted-foreground">Stock de medicamentos</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Inventario</h1>
+          <p className="text-muted-foreground">Catálogo y stock de medicamentos</p>
+        </div>
+        <NuevoMedicamentoDialog />
       </div>
 
       {bajoStock && bajoStock.length > 0 && (
@@ -84,9 +103,15 @@ export function InventarioPage() {
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right space-x-2">
                           <Button size="sm" variant="outline" onClick={() => setSeleccionado(medicamento)}>
                             Registrar entrada
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setEditando(medicamento)}>
+                            Editar
+                          </Button>
+                          <Button size="sm" variant="destructive" onClick={() => setEliminando(medicamento)}>
+                            Eliminar
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -100,6 +125,28 @@ export function InventarioPage() {
       </Card>
 
       <RegistrarEntradaDialog medicamento={seleccionado} onClose={() => setSeleccionado(null)} />
+      <EditarMedicamentoDialog medicamento={editando} onClose={() => setEditando(null)} />
+
+      <Dialog open={!!eliminando} onOpenChange={(v) => !v && setEliminando(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>¿Eliminar medicamento?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Se eliminará "{eliminando?.nombre}" del catálogo. Si ya tiene movimientos de inventario registrados (entradas o
+            consumos en atenciones), no se podrá eliminar.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEliminando(null)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={confirmarEliminar} disabled={eliminarMedicamento.isPending}>
+              {eliminarMedicamento.isPending && <Loader2 className="size-4 animate-spin" />}
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

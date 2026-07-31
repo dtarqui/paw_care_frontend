@@ -24,3 +24,9 @@ export interface NuevoUsuarioInput {
   matricula?: string;
   especialidad?: string;
 }
+
+export interface CambiarRolInput {
+  rol: Rol;
+  matricula?: string;
+  especialidad?: string;
+}
