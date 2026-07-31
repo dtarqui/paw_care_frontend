@@ -96,12 +96,13 @@ export function NuevoUsuarioDialog() {
           Nuevo Usuario
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-xl overflow-hidden">
         <DialogHeader>
           <DialogTitle>Nuevo usuario</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">
+          <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="nombre">Nombre *</Label>
@@ -204,6 +205,7 @@ export function NuevoUsuarioDialog() {
                 onChange={(e) => actualizar("confirmarPassword", e.target.value)}
               />
             </div>
+          </div>
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}

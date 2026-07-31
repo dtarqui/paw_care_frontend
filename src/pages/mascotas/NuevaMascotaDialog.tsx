@@ -91,12 +91,13 @@ export function NuevaMascotaDialog() {
           Nueva Mascota
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg overflow-hidden">
         <DialogHeader>
           <DialogTitle>Registrar mascota</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">
+          <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
           <div className="flex flex-col gap-3 rounded-md border p-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="propietarioCi">CI del propietario *</Label>
@@ -214,6 +215,7 @@ export function NuevaMascotaDialog() {
                 onChange={(e) => actualizar("peso", e.target.value)}
               />
             </div>
+          </div>
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}

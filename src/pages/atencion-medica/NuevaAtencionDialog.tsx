@@ -107,117 +107,121 @@ export function NuevaAtencionDialog({ mascota }: { mascota: Mascota }) {
           Nueva atención
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl overflow-hidden">
         <DialogHeader>
           <DialogTitle>
             Nueva atención — {mascota.nombre} ({mascota.especie})
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto pr-1">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <Label>Veterinario *</Label>
-              {esVeterinario ? (
-                <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
-                  <ShieldCheck className="size-4 shrink-0 text-primary" />
-                  <span className="truncate">
-                    {miVeterinario ? `${miVeterinario.nombre} ${miVeterinario.apellidoPaterno}` : "Cargando…"}
-                  </span>
-                  <Badge variant="secondary" className="ml-auto shrink-0 text-[10px]">
-                    Tú
-                  </Badge>
-                </div>
-              ) : (
-                <Select value={form.veterinarioId} onValueChange={(v) => actualizar("veterinarioId", v)} disabled={cargandoVeterinarios}>
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">
+          <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <Label>Veterinario *</Label>
+                {esVeterinario ? (
+                  <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
+                    <ShieldCheck className="size-4 shrink-0 text-primary" />
+                    <span className="truncate">
+                      {miVeterinario ? `${miVeterinario.nombre} ${miVeterinario.apellidoPaterno}` : "Cargando…"}
+                    </span>
+                    <Badge variant="secondary" className="ml-auto shrink-0 text-[10px]">
+                      Tú
+                    </Badge>
+                  </div>
+                ) : (
+                  <Select value={form.veterinarioId} onValueChange={(v) => actualizar("veterinarioId", v)} disabled={cargandoVeterinarios}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Seleccione veterinario" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {veterinarios?.map((v) => (
+                        <SelectItem key={v.id} value={String(v.id)}>
+                          {v.nombre} {v.apellidoPaterno} — {v.especialidad}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label>Tipo de servicio *</Label>
+                <Select value={form.tipoServicio} onValueChange={(v) => actualizar("tipoServicio", v)}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Seleccione veterinario" />
+                    <SelectValue placeholder="Seleccione tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    {veterinarios?.map((v) => (
-                      <SelectItem key={v.id} value={String(v.id)}>
-                        {v.nombre} {v.apellidoPaterno} — {v.especialidad}
+                    {TIPOS_SERVICIO.map((tipo) => (
+                      <SelectItem key={tipo} value={tipo}>
+                        {tipo}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-              )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="diagnostico">Diagnóstico *</Label>
+                <textarea
+                  id="diagnostico"
+                  required
+                  value={form.diagnostico}
+                  onChange={(e) => actualizar("diagnostico", e.target.value)}
+                  className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="tratamiento">Tratamiento *</Label>
+                <textarea
+                  id="tratamiento"
+                  required
+                  value={form.tratamiento}
+                  onChange={(e) => actualizar("tratamiento", e.target.value)}
+                  className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Label>Tipo de servicio *</Label>
-              <Select value={form.tipoServicio} onValueChange={(v) => actualizar("tipoServicio", v)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  {TIPOS_SERVICIO.map((tipo) => (
-                    <SelectItem key={tipo} value={tipo}>
-                      {tipo}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="diagnostico">Diagnóstico *</Label>
-            <textarea
-              id="diagnostico"
-              required
-              value={form.diagnostico}
-              onChange={(e) => actualizar("diagnostico", e.target.value)}
-              className="min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="tratamiento">Tratamiento *</Label>
-            <textarea
-              id="tratamiento"
-              required
-              value={form.tratamiento}
-              onChange={(e) => actualizar("tratamiento", e.target.value)}
-              className="min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="examenesExternos">Exámenes externos (opcional)</Label>
-            <textarea
-              id="examenesExternos"
-              value={form.examenesExternos}
-              onChange={(e) => actualizar("examenesExternos", e.target.value)}
-              className="min-h-12 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            />
-          </div>
-
-          <MedicamentosConsumidosField items={medicamentos} onChange={setMedicamentos} />
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="peso">Peso actual (kg, opcional)</Label>
-              <Input
-                id="peso"
-                type="number"
-                min="0"
-                step="0.1"
-                value={form.peso}
-                onChange={(e) => actualizar("peso", e.target.value)}
+              <Label htmlFor="examenesExternos">Exámenes externos (opcional)</Label>
+              <textarea
+                id="examenesExternos"
+                value={form.examenesExternos}
+                onChange={(e) => actualizar("examenesExternos", e.target.value)}
+                className="min-h-12 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
               />
             </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="montoConsulta">Monto de consulta (Bs.) *</Label>
-              <Input
-                id="montoConsulta"
-                type="number"
-                min="0"
-                step="0.01"
-                required
-                value={form.montoConsulta}
-                onChange={(e) => actualizar("montoConsulta", e.target.value)}
-              />
+
+            <MedicamentosConsumidosField items={medicamentos} onChange={setMedicamentos} />
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="peso">Peso actual (kg, opcional)</Label>
+                <Input
+                  id="peso"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={form.peso}
+                  onChange={(e) => actualizar("peso", e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="montoConsulta">Monto de consulta (Bs.) *</Label>
+                <Input
+                  id="montoConsulta"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  required
+                  value={form.montoConsulta}
+                  onChange={(e) => actualizar("montoConsulta", e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
