@@ -10,6 +10,7 @@ export interface Usuario {
   telefono?: string;
   rol: Rol;
   estado: "ACTIVO" | "INACTIVO";
+  autorregistrado: boolean;
 }
 
 export interface NuevoUsuarioInput {
@@ -29,4 +30,16 @@ export interface CambiarRolInput {
   rol: Rol;
   matricula?: string;
   especialidad?: string;
+}
+
+export interface PreregistroVeterinarioInput {
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno?: string;
+  ci: string;
+  username: string;
+  telefono?: string;
+  password: string;
+  matricula: string;
+  especialidad: string;
 }

@@ -29,7 +29,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const response = await fetch(`${API_URL}${path}`, { ...options, headers });
 
-  if (response.status === 401) {
+  // Un 401 solo significa "sesión expirada" cuando la request llevaba un token que el
+  // backend rechazó — si no había token (ej. el propio POST /api/auth/login con
+  // credenciales incorrectas), es un error de negocio normal y debe dejarse fluir
+  // hacia abajo para que el caller lo muestre inline, sin recargar la página.
+  if (response.status === 401 && token) {
     tokenStorage.clear();
     window.location.href = "/login";
     throw new ApiError("Sesión expirada", 401);

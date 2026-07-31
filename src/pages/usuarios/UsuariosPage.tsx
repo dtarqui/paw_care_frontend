@@ -19,8 +19,13 @@ import { Loader2, Users } from "lucide-react";
 import { useState } from "react";
 import { CambiarRolDialog } from "./CambiarRolDialog";
 import { NuevoUsuarioDialog } from "./NuevoUsuarioDialog";
+import { RestablecerPasswordDialog } from "./RestablecerPasswordDialog";
 
 const PAGE_SIZE = 20;
+
+function esPendienteDeAprobacion(usuario: Usuario) {
+  return usuario.autorregistrado && usuario.estado === "INACTIVO";
+}
 
 export function UsuariosPage() {
   const { usuario: usuarioActual } = useAuth();
@@ -29,6 +34,7 @@ export function UsuariosPage() {
   const usuarios = data?.usuarios;
   const [objetivo, setObjetivo] = useState<Usuario | null>(null);
   const [objetivoRol, setObjetivoRol] = useState<Usuario | null>(null);
+  const [objetivoPassword, setObjetivoPassword] = useState<Usuario | null>(null);
   const cambiarEstado = useCambiarEstadoUsuario();
 
   async function confirmar() {
@@ -94,7 +100,7 @@ export function UsuariosPage() {
                       <TableCell>{usuario.username}</TableCell>
                       <TableCell>{ROL_LABEL[usuario.rol]}</TableCell>
                       <TableCell>
-                        <StatusBadge status={usuario.estado} />
+                        <StatusBadge status={esPendienteDeAprobacion(usuario) ? "PENDIENTE_APROBACION" : usuario.estado} />
                       </TableCell>
                       <TableCell className="text-right space-x-2">
                         {usuario.id !== usuarioActual?.id && (
@@ -102,8 +108,15 @@ export function UsuariosPage() {
                             Cambiar rol
                           </Button>
                         )}
-                        <Button variant="outline" size="sm" onClick={() => setObjetivo(usuario)}>
-                          {usuario.estado === "ACTIVO" ? "Desactivar" : "Activar"}
+                        <Button variant="outline" size="sm" onClick={() => setObjetivoPassword(usuario)}>
+                          Restablecer contraseña
+                        </Button>
+                        <Button
+                          variant={esPendienteDeAprobacion(usuario) ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setObjetivo(usuario)}
+                        >
+                          {esPendienteDeAprobacion(usuario) ? "Aprobar" : usuario.estado === "ACTIVO" ? "Desactivar" : "Activar"}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -120,12 +133,20 @@ export function UsuariosPage() {
       <Dialog open={!!objetivo} onOpenChange={(v) => !v && setObjetivo(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>{objetivo?.estado === "ACTIVO" ? "¿Desactivar cuenta?" : "¿Activar cuenta?"}</DialogTitle>
+            <DialogTitle>
+              {objetivo && esPendienteDeAprobacion(objetivo)
+                ? "¿Aprobar solicitud?"
+                : objetivo?.estado === "ACTIVO"
+                  ? "¿Desactivar cuenta?"
+                  : "¿Activar cuenta?"}
+            </DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            {objetivo?.estado === "ACTIVO"
-              ? `${objetivo?.nombre} ${objetivo?.apellidoPaterno} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.`
-              : `${objetivo?.nombre} ${objetivo?.apellidoPaterno} podrá volver a iniciar sesión.`}
+            {objetivo && esPendienteDeAprobacion(objetivo)
+              ? `${objetivo.nombre} ${objetivo.apellidoPaterno} podrá iniciar sesión como Veterinario y aparecerá en los selectores de agendar/atender.`
+              : objetivo?.estado === "ACTIVO"
+                ? `${objetivo?.nombre} ${objetivo?.apellidoPaterno} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.`
+                : `${objetivo?.nombre} ${objetivo?.apellidoPaterno} podrá volver a iniciar sesión.`}
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setObjetivo(null)}>
@@ -137,13 +158,14 @@ export function UsuariosPage() {
               disabled={cambiarEstado.isPending}
             >
               {cambiarEstado.isPending && <Loader2 className="size-4 animate-spin" />}
-              {objetivo?.estado === "ACTIVO" ? "Desactivar" : "Activar"}
+              {objetivo && esPendienteDeAprobacion(objetivo) ? "Aprobar" : objetivo?.estado === "ACTIVO" ? "Desactivar" : "Activar"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <CambiarRolDialog usuario={objetivoRol} onClose={() => setObjetivoRol(null)} />
+      <RestablecerPasswordDialog usuario={objetivoPassword} onClose={() => setObjetivoPassword(null)} />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { Download, Laptop, Loader2, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { toast } from "sonner";
+import { CambiarPasswordDialog } from "./CambiarPasswordDialog";
 
 const OPCIONES_TEMA = [
   { value: "light", label: "Claro", icon: Sun },
@@ -59,6 +60,9 @@ export function ConfiguracionPage() {
               </span>
               <span className="text-sm text-muted-foreground">@{usuario?.username}</span>
               <span className="text-sm text-muted-foreground">{usuario ? ROL_LABEL[usuario.rol] : ""}</span>
+            </div>
+            <div className="ml-auto">
+              <CambiarPasswordDialog />
             </div>
           </div>
         </CardContent>

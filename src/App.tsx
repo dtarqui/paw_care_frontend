@@ -14,6 +14,7 @@ import { MascotasPage } from "@/pages/mascotas/MascotasPage";
 import { PagosPage } from "@/pages/pagos/PagosPage";
 import { PropietariosPage } from "@/pages/propietarios/PropietariosPage";
 import { RecordatoriosPage } from "@/pages/recordatorios/RecordatoriosPage";
+import { RegistroVeterinarioPage } from "@/pages/RegistroVeterinarioPage";
 import { ReportesPage } from "@/pages/reportes/ReportesPage";
 import { UsuariosPage } from "@/pages/usuarios/UsuariosPage";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -23,6 +24,7 @@ export function App() {
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/registro" element={<RegistroVeterinarioPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/app" element={<AppShell />}>

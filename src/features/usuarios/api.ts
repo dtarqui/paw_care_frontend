@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import type { CambiarRolInput, NuevoUsuarioInput, Usuario } from "./types";
+import type { CambiarRolInput, NuevoUsuarioInput, PreregistroVeterinarioInput, Usuario } from "./types";
 
 export interface ListadoUsuarios {
   usuarios: Usuario[];
@@ -15,4 +15,10 @@ export const usuariosApi = {
     apiClient.patch<{ usuario: Usuario }>(`/api/usuarios/${id}/estado`, { estado }),
   cambiarRol: (id: number, input: CambiarRolInput) =>
     apiClient.patch<{ usuario: Usuario }>(`/api/usuarios/${id}/rol`, input),
+  preregistrarVeterinario: (input: PreregistroVeterinarioInput) =>
+    apiClient.post<{ usuario: Usuario }>("/api/usuarios/preregistro", input),
+  cambiarMiPassword: (passwordActual: string, passwordNuevo: string) =>
+    apiClient.patch<{ ok: boolean }>("/api/usuarios/me/password", { passwordActual, passwordNuevo }),
+  restablecerPassword: (id: number, passwordNuevo: string) =>
+    apiClient.patch<{ ok: boolean }>(`/api/usuarios/${id}/password`, { passwordNuevo }),
 };
