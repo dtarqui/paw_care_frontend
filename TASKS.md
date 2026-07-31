@@ -47,6 +47,20 @@
 
 **Todo lo del análisis de gaps está cerrado**, salvo HU11 Track B (sin cambios, sigue fuera de alcance).
 
+---
+
+## Correcciones y mejoras (sesión 3 — feedback de uso real)
+
+- [x] **Bug de Horarios corregido** — `HorariosPage.tsx` (`estadoDesdeHorarios`) reasignaba los switches turno1/turno2 por orden de `horaInicio` al recargar desde el backend (que solo guarda una lista plana, sin etiqueta de turno), así que un día con solo el turno de tarde activo terminaba mostrado en el switch de "mañana". Ahora se reconstruye por franja horaria real (antes/después del mediodía), no por orden de llegada.
+- [x] **Cambio de rol en Usuarios** — nuevo botón "Cambiar rol" por fila (oculto en la propia cuenta del admin logueado), `CambiarRolDialog.tsx`: si el rol elegido es Veterinario y el usuario no lo era, pide matrícula/especialidad.
+- [x] **CRUD completo de Medicamentos** en `/app/inventario` — "Nuevo medicamento", "Editar" y "Eliminar" (con modal de confirmación) junto al ya existente "Registrar entrada".
+- [x] **Historial de últimas transacciones** — Pagos (`/app/pagos`) y Recordatorios (`/app/recordatorios`) ganaron una segunda sección "Últimos pagos"/"Últimos enviados" (top 5, más reciente primero), antes solo mostraban lo pendiente.
+- [x] **Atención Médica más completa** — estado vacío inicial (antes de buscar mascota) con ícono y guía; estado vacío con mascota seleccionada más orientador; header de la ficha ahora muestra sexo/edad/peso (helper `calcularEdad` extraído a `lib/mascota.ts`, compartido con la ficha de mascota); cada fila del historial muestra `peso` y `examenesExternos` (se capturaban en el formulario pero no se mostraban de vuelta).
+- [x] **Eliminar mascota** — botón "Eliminar mascota"/"Reactivar" en la ficha (`MascotaDetallePage.tsx`), con modal de confirmación (borrado lógico, reversible). `MascotasPage.tsx` ganó un toggle "Mostrar inactivas" (oculto por defecto) y un buscador por nombre.
+- [x] **Propietarios más completo** — columna Dirección (editable), y las mascotas de cada propietario se muestran como chips clicables (en vez de solo un número) que navegan a la ficha de la mascota; buscador por nombre/CI.
+
+**Datos demo regenerados** — ver `backend/TASKS.md` para el detalle de conteos; usuarios/mascotas/veterinarios/etc. tienen nombres nuevos, el doble de contenido.
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

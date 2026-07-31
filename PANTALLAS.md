@@ -195,25 +195,29 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 - Lista: nombre, ci, username, rol, estado, acciones.
 - Formulario "+ Nuevo": nombre, apellidos, ci, username, rol, contraseña, confirmar contraseña.
 - **Comportamiento condicional:** si `rol = VETERINARIO`, el formulario despliega dos campos adicionales — matrícula y especialidad — que se envían junto con el alta para crear también el perfil de `Veterinario` (1 a 1 con `Usuario`, ver `database/MODELO_DATOS.md`). Esto evita una pantalla separada de "alta de veterinario".
-- **Pendiente de definir en el backlog:** la gestión de `Horario` (turnos semanales) de cada veterinario no tiene todavía una tarea propia en `backend/TASKS.md`/`frontend/TASKS.md`. Se recomienda agregarla como una sub-sección dentro de esta misma pantalla (tabla de horarios al editar un usuario con rol Veterinario) cuando se planifique esa tarea — se deja anotado aquí para no perderlo.
+- **Cambiar rol** (gap cerrado, sesión posterior): botón por fila (oculto en la propia cuenta del admin logueado) que abre un diálogo con selector de rol; si el nuevo rol es Veterinario y el usuario no lo era, pide matrícula/especialidad ahí mismo.
+- La gestión de `Horario` de cada veterinario terminó como pantalla propia — ver P16, no una sub-sección de esta.
 
 ### P03 — Gestión de Propietarios (Patrón A)
-- Lista: nombre, ci, teléfono, dirección, cantidad de mascotas, acciones.
-- Formulario compartido con el flujo de alta de mascota (ver P04) cuando se registra desde cero; esta pantalla es para editar propietarios ya existentes o darlos de alta sin mascota todavía.
+- Lista: nombre, ci, teléfono, dirección, mascotas (chips clicables — cada uno navega a la ficha de esa mascota, P15), acciones. Buscador por nombre/CI.
+- Formulario compartido con el flujo de alta de mascota (ver P04) cuando se registra desde cero; esta pantalla es para editar propietarios ya existentes (incluida la dirección) o darlos de alta sin mascota todavía.
 
 ### P04 — Gestión de Mascotas (Patrón A)
-- Lista: nombre, especie, raza, propietario, acciones.
+- Lista: nombre, especie, raza, sexo, peso, propietario; filas clicables → ficha de la mascota (P15). Buscador por nombre y toggle "Mostrar inactivas" (oculto por defecto; con él activo se agrega columna de estado y badge "Inactiva").
 - Formulario de alta: **combina datos de mascota y propietario** en un solo paso (según HU2). Al ingresar el CI del propietario, se dispara `GET /api/propietarios/buscar?ci=` — si existe, se precargan sus datos de solo lectura; si no, se completan como alta nueva.
 - Errores 409 (mascota duplicada para el mismo propietario) se muestran junto al campo, sin perder lo ya escrito.
+- **Eliminar** (gap cerrado, sesión posterior) vive en la ficha (P15), no en esta lista — ver ahí.
 
 ### P05 — Atención Médica (Patrón B)
-- Buscador por CI del propietario → lista de sus mascotas → selección de una → historial médico completo.
-- "+ Nueva" abre el formulario de atención: diagnóstico, tratamiento, exámenes externos (opcional), monto, y el selector opcional de medicamentos consumidos (HU9, cantidad por medicamento).
-- El historial muestra el estado de pago de cada atención (Pendiente/Pagado) como badge — enlaza a P06 cuando está pendiente.
+- Antes de buscar: estado inicial con ícono y texto guía (gap cerrado, sesión posterior) en vez de un buscador vacío sin contexto.
+- Buscador por CI del propietario → lista de sus mascotas → selección de una → historial médico completo. El header de la mascota seleccionada muestra especie/raza/dueño y además sexo, edad y peso (gap cerrado).
+- "+ Nueva" abre el formulario de atención: diagnóstico, tratamiento, exámenes externos (opcional), peso actual (opcional), monto, y el selector opcional de medicamentos consumidos (HU9, cantidad por medicamento).
+- El historial muestra el estado de pago de cada atención (Pendiente/Pagado) como badge — enlaza a P06 cuando está pendiente — y ahora también el peso y los exámenes externos registrados en esa visita, cuando existen (gap cerrado: se capturaban pero no se mostraban de vuelta).
+- Estado vacío (mascota sin atenciones) con mensaje orientador y CTA hacia "+ Nueva" (gap cerrado).
 
 ### P06 — Gestión de Pagos (Patrón A, variante)
-- No tiene "Editar" ni "Eliminar": solo lista de atenciones **pendientes de pago** por cliente, con acción "Registrar pago" por fila (abre el formulario: método de pago, monto).
-- Al confirmar, la fila desaparece de la lista de pendientes.
+- No tiene "Editar" ni "Eliminar" sobre pagos ya registrados: la sección principal es la lista de atenciones **pendientes de pago** por cliente, con acción "Registrar pago" por fila (abre el formulario: método de pago, monto). Al confirmar, la fila desaparece de la lista de pendientes.
+- **Últimos pagos** (gap cerrado, sesión posterior): segunda sección debajo, con los 5 pagos más recientes ya registrados (mascota, propietario, monto, método, fecha) — antes esta pantalla solo mostraba pendientes, sin ninguna vista de lo ya cobrado.
 - El método de pago incluye QR desde el diseño de base (aunque el HU12 que lo popularizó es opcional/Fase 7).
 
 ### P07 — Gestión de Citas (Patrón E)
@@ -236,12 +240,13 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 - Resultado: gráfico de ingresos por tipo de servicio + tabla, con botones "Exportar PDF" / "Exportar Excel".
 
 ### P11 — Gestión de Inventario (Patrón A + alerta)
-- Lista de medicamentos: nombre, stock actual, stock mínimo, acciones ("Registrar entrada").
+- Lista de medicamentos: nombre, stock actual, stock mínimo, estado, acciones ("Registrar entrada", "Editar", "Eliminar"). El CRUD del catálogo (crear/editar/eliminar un medicamento) es un gap cerrado en sesión posterior — antes solo existía alta de stock sobre medicamentos ya sembrados manualmente. "Eliminar" muestra modal de confirmación y el backend lo rechaza (409) si el medicamento ya tiene movimientos de inventario registrados.
 - Banner de alerta en la parte superior si hay medicamentos en bajo stock, visible apenas se entra al módulo (no hay que buscarlo).
 
 ### P12 (opcional) — Recordatorios WhatsApp
 - Lista de recordatorios pendientes de hoy (citas < 24h, controles preventivos a 7 días), cada fila con un botón que abre WhatsApp con el mensaje precargado, y un botón "Marcar como enviado".
 - No es un formulario CRUD — es una lista de acciones a ejecutar, se vacía a medida que se marcan como enviadas.
+- **Últimos enviados** (gap cerrado, sesión posterior): segunda sección debajo con los 5 recordatorios marcados como enviados más recientes (propietario, mensaje, fecha) — antes no había ninguna vista de lo ya enviado.
 
 ### P13 (opcional) — Importar clientes desde Excel
 - Zona de carga de archivo (.xlsx) + botón "Importar".
