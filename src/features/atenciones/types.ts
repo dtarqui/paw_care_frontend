@@ -9,6 +9,7 @@ export interface AtencionMedica {
   diagnostico: string;
   tratamiento: string;
   examenesExternos?: string;
+  peso?: number;
   montoConsulta: number;
   estadoPago: EstadoPagoAtencion;
 }
@@ -20,6 +21,7 @@ export interface NuevaAtencionInput {
   diagnostico: string;
   tratamiento: string;
   examenesExternos?: string;
+  peso?: number;
   montoConsulta: number;
   medicamentos?: { medicamentoId: number; cantidad: number }[];
 }

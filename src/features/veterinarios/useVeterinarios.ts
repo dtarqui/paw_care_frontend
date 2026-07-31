@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { veterinariosApi } from "./api";
 
-export function useVeterinarios() {
+export function useVeterinarios(soloActivos = false) {
   return useQuery({
-    queryKey: ["veterinarios"],
-    queryFn: async () => (await veterinariosApi.listar()).veterinarios,
+    queryKey: ["veterinarios", { soloActivos }],
+    queryFn: async () => (await veterinariosApi.listar(soloActivos)).veterinarios,
   });
 }

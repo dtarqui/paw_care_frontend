@@ -39,8 +39,11 @@ export function NuevaCitaTab({ citaEnEdicion, onCompletado }: NuevaCitaTabProps)
   const { usuario } = useAuth();
   const esVeterinario = usuario?.rol === "VETERINARIO";
 
-  const { data: mascotas, isLoading: cargandoMascotas } = useMascotas();
-  const { data: veterinarios, isLoading: cargandoVeterinarios } = useVeterinarios();
+  // El selector necesita el listado completo, no una página — 200 cubre la
+  // escala real de una sola clínica sin necesitar un buscador acá.
+  const { data: mascotasPaginadas, isLoading: cargandoMascotas } = useMascotas(1, 200);
+  const mascotas = mascotasPaginadas?.mascotas;
+  const { data: veterinarios, isLoading: cargandoVeterinarios } = useVeterinarios(true);
   const { miVeterinario } = useMiVeterinario();
   const crearCita = useCrearCita();
   const reprogramarCita = useReprogramarCita();

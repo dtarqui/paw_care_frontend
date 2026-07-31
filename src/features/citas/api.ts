@@ -2,7 +2,13 @@ import { apiClient } from "@/lib/api-client";
 import type { BloqueDisponibilidad, Cita, EstadoCita } from "./types";
 
 export const citasApi = {
-  listar: () => apiClient.get<{ citas: Cita[] }>("/api/citas"),
+  // El backend pagina (protege contra crecimiento sin límite), pero la agenda
+  // (CitasListaTab) agrupa por día y necesita el conjunto completo — pedir una
+  // página grande evita truncar silenciosamente un día a la mitad. Si el volumen
+  // de citas de la clínica creciera mucho, esta pantalla necesitaría un filtro
+  // de rango de fechas antes que paginación real.
+  // 100 es el tope máximo que acepta el backend (leerPaginacion) por request.
+  listar: (pageSize = 100) => apiClient.get<{ citas: Cita[]; total: number }>(`/api/citas?pageSize=${pageSize}`),
 
   disponibilidad: (veterinarioId: number, fecha: string) =>
     apiClient.get<{ bloques: BloqueDisponibilidad[] }>(

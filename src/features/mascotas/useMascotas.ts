@@ -1,12 +1,39 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { mascotasApi } from "./api";
-import type { NuevaMascotaInput } from "./types";
+import type { ActualizarMascotaInput, NuevaMascotaInput } from "./types";
 
-export function useMascotas() {
+export function useMascotas(page = 1, pageSize = 20) {
   return useQuery({
-    queryKey: ["mascotas"],
-    queryFn: async () => (await mascotasApi.listar()).mascotas,
+    queryKey: ["mascotas", "listado", page, pageSize],
+    queryFn: () => mascotasApi.listar(page, pageSize),
+  });
+}
+
+export function useMascota(id: number) {
+  return useQuery({
+    queryKey: ["mascotas", id],
+    queryFn: async () => (await mascotasApi.detalle(id)).mascota,
+  });
+}
+
+export function useHistorialMascota(id: number) {
+  return useQuery({
+    queryKey: ["mascotas", id, "historial"],
+    queryFn: async () => (await mascotasApi.historial(id)).eventos,
+  });
+}
+
+export function useActualizarMascota(id: number) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: ActualizarMascotaInput) => mascotasApi.actualizar(id, input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
+      queryClient.invalidateQueries({ queryKey: ["mascotas", id, "historial"] });
+      toast.success("Mascota actualizada correctamente");
+    },
+    onError: (error: Error) => toast.error(error.message),
   });
 }
 

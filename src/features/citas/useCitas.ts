@@ -24,6 +24,7 @@ export function useCambiarEstadoCita() {
     mutationFn: ({ id, estado }: { id: number; estado: EstadoCita }) => citasApi.cambiarEstado(id, estado),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["citas"] });
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
       toast.success("Estado de la cita actualizado");
     },
     onError: (error: Error) => toast.error(error.message),
@@ -36,6 +37,7 @@ export function useCrearCita() {
     mutationFn: (input: NuevaCitaInput) => citasApi.crear(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["citas"] });
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
       toast.success("Cita agendada correctamente");
     },
     onError: (error: Error) => toast.error(error.message),
@@ -49,6 +51,7 @@ export function useReprogramarCita() {
       citasApi.reprogramar(id, { fecha, hora }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["citas"] });
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
       toast.success("Cita reprogramada correctamente");
     },
     onError: (error: Error) => toast.error(error.message),

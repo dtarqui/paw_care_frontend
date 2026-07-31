@@ -174,6 +174,8 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 | P12 (opc.) | Recordatorios WhatsApp | `/app/recordatorios` | Recepcionista, Admin | lista de acciones | HU11-A · Tarea 11 |
 | P13 (opc.) | Importar clientes | `/app/importar` | Administrador | carga de archivo + resumen | HU13 · Tarea 14 |
 | P14 (opc.) | Configuración | `/app/configuracion` | Administrador | widgets | HU11-B, HU15 · Tareas 12 y 16 |
+| P15 | Ficha de Mascota | `/app/mascotas/:id` | Admin, Veterinario, Recepcionista | B (detalle) + historial unificado | Gap cerrado (sesión posterior) |
+| P16 | Horarios de Veterinario | `/app/horarios` | Administrador, Veterinario | A (grilla semanal) | Gap cerrado — mencionado en HU1, sin pantalla propia hasta ahora |
 
 ---
 

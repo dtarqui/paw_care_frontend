@@ -21,7 +21,7 @@ export function DashboardPage() {
   const verCitas = moduloIds.has("citas");
   const verPagos = moduloIds.has("pagos");
 
-  const { data: mascotas, isLoading: cargandoMascotas } = useMascotas();
+  const { data: mascotas, isLoading: cargandoMascotas } = useMascotas(1, 1);
   const { data: citas, isLoading: cargandoCitas } = useCitas();
   const { data: pendientes, isLoading: cargandoPagos } = usePagosPendientes();
 
@@ -38,7 +38,7 @@ export function DashboardPage() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {verMascotas && (
-          <StatTile label="Mascotas registradas" value={mascotas?.length ?? 0} icon={PawPrint} isLoading={cargandoMascotas} />
+          <StatTile label="Mascotas registradas" value={mascotas?.total ?? 0} icon={PawPrint} isLoading={cargandoMascotas} />
         )}
         {verCitas && <StatTile label="Citas de hoy" value={citasHoy ?? 0} icon={CalendarClock} isLoading={cargandoCitas} />}
         {verPagos && (

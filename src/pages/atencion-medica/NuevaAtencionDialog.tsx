@@ -27,13 +27,14 @@ const ESTADO_INICIAL = {
   diagnostico: "",
   tratamiento: "",
   examenesExternos: "",
+  peso: "",
   montoConsulta: "",
 };
 
 export function NuevaAtencionDialog({ mascota }: { mascota: Mascota }) {
   const { usuario } = useAuth();
   const esVeterinario = usuario?.rol === "VETERINARIO";
-  const { data: veterinarios, isLoading: cargandoVeterinarios } = useVeterinarios();
+  const { data: veterinarios, isLoading: cargandoVeterinarios } = useVeterinarios(true);
   const { miVeterinario } = useMiVeterinario();
   const crearAtencion = useCrearAtencion();
 
@@ -88,6 +89,7 @@ export function NuevaAtencionDialog({ mascota }: { mascota: Mascota }) {
         diagnostico: form.diagnostico,
         tratamiento: form.tratamiento,
         examenesExternos: form.examenesExternos || undefined,
+        peso: form.peso ? Number(form.peso) : undefined,
         montoConsulta: Number(form.montoConsulta) || 0,
         medicamentos: medicamentosValidos.length > 0 ? medicamentosValidos : undefined,
       });
@@ -193,17 +195,30 @@ export function NuevaAtencionDialog({ mascota }: { mascota: Mascota }) {
 
           <MedicamentosConsumidosField items={medicamentos} onChange={setMedicamentos} />
 
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="montoConsulta">Monto de consulta (Bs.) *</Label>
-            <Input
-              id="montoConsulta"
-              type="number"
-              min="0"
-              step="0.01"
-              required
-              value={form.montoConsulta}
-              onChange={(e) => actualizar("montoConsulta", e.target.value)}
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="peso">Peso actual (kg, opcional)</Label>
+              <Input
+                id="peso"
+                type="number"
+                min="0"
+                step="0.1"
+                value={form.peso}
+                onChange={(e) => actualizar("peso", e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="montoConsulta">Monto de consulta (Bs.) *</Label>
+              <Input
+                id="montoConsulta"
+                type="number"
+                min="0"
+                step="0.01"
+                required
+                value={form.montoConsulta}
+                onChange={(e) => actualizar("montoConsulta", e.target.value)}
+              />
+            </div>
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}

@@ -3,10 +3,10 @@ import { toast } from "sonner";
 import { usuariosApi } from "./api";
 import type { NuevoUsuarioInput } from "./types";
 
-export function useUsuarios() {
+export function useUsuarios(page = 1, pageSize = 20) {
   return useQuery({
-    queryKey: ["usuarios"],
-    queryFn: async () => (await usuariosApi.listar()).usuarios,
+    queryKey: ["usuarios", "listado", page, pageSize],
+    queryFn: () => usuariosApi.listar(page, pageSize),
   });
 }
 
@@ -18,6 +18,19 @@ export function useCrearUsuario() {
       queryClient.invalidateQueries({ queryKey: ["usuarios"] });
       queryClient.invalidateQueries({ queryKey: ["veterinarios"] });
       toast.success("Usuario registrado correctamente");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useCambiarEstadoUsuario() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, estado }: { id: number; estado: "ACTIVO" | "INACTIVO" }) => usuariosApi.cambiarEstado(id, estado),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
+      queryClient.invalidateQueries({ queryKey: ["veterinarios"] });
+      toast.success(variables.estado === "ACTIVO" ? "Usuario activado" : "Usuario desactivado");
     },
     onError: (error: Error) => toast.error(error.message),
   });

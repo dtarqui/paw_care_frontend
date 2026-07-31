@@ -1,14 +1,38 @@
+import { Pagination } from "@/components/Pagination";
+import { StatusBadge } from "@/components/StatusBadge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { StatusBadge } from "@/components/StatusBadge";
-import { useUsuarios } from "@/features/usuarios/useUsuarios";
+import { useCambiarEstadoUsuario, useUsuarios } from "@/features/usuarios/useUsuarios";
+import type { Usuario } from "@/features/usuarios/types";
 import { ROL_LABEL } from "@/lib/roles";
-import { Users } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
+import { useState } from "react";
 import { NuevoUsuarioDialog } from "./NuevoUsuarioDialog";
 
+const PAGE_SIZE = 20;
+
 export function UsuariosPage() {
-  const { data: usuarios, isLoading, isError } = useUsuarios();
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isError } = useUsuarios(page, PAGE_SIZE);
+  const usuarios = data?.usuarios;
+  const [objetivo, setObjetivo] = useState<Usuario | null>(null);
+  const cambiarEstado = useCambiarEstadoUsuario();
+
+  async function confirmar() {
+    if (!objetivo) return;
+    const nuevoEstado = objetivo.estado === "ACTIVO" ? "INACTIVO" : "ACTIVO";
+    await cambiarEstado.mutateAsync({ id: objetivo.id, estado: nuevoEstado });
+    setObjetivo(null);
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -43,6 +67,7 @@ export function UsuariosPage() {
           )}
 
           {!isLoading && !isError && usuarios && usuarios.length > 0 && (
+            <>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -52,6 +77,7 @@ export function UsuariosPage() {
                     <TableHead>Usuario</TableHead>
                     <TableHead>Rol</TableHead>
                     <TableHead>Estado</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -66,14 +92,47 @@ export function UsuariosPage() {
                       <TableCell>
                         <StatusBadge status={usuario.estado} />
                       </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="outline" size="sm" onClick={() => setObjetivo(usuario)}>
+                          {usuario.estado === "ACTIVO" ? "Desactivar" : "Activar"}
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
+            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPageChange={setPage} />}
+            </>
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={!!objetivo} onOpenChange={(v) => !v && setObjetivo(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{objetivo?.estado === "ACTIVO" ? "¿Desactivar cuenta?" : "¿Activar cuenta?"}</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {objetivo?.estado === "ACTIVO"
+              ? `${objetivo?.nombre} ${objetivo?.apellidoPaterno} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.`
+              : `${objetivo?.nombre} ${objetivo?.apellidoPaterno} podrá volver a iniciar sesión.`}
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setObjetivo(null)}>
+              Cancelar
+            </Button>
+            <Button
+              variant={objetivo?.estado === "ACTIVO" ? "destructive" : "default"}
+              onClick={confirmar}
+              disabled={cambiarEstado.isPending}
+            >
+              {cambiarEstado.isPending && <Loader2 className="size-4 animate-spin" />}
+              {objetivo?.estado === "ACTIVO" ? "Desactivar" : "Activar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

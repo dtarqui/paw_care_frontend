@@ -1,11 +1,13 @@
 import {
   BarChart3,
   CalendarDays,
+  Clock,
   MessageCircle,
   Package,
   PawPrint,
   ShieldPlus,
   Stethoscope,
+  User,
   Users,
   Wallet,
   type LucideIcon,
@@ -20,7 +22,9 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   Stethoscope,
   ShieldPlus,
   Users,
+  User,
   MessageCircle,
   BarChart3,
   Package,
+  Clock,
 };

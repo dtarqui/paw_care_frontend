@@ -33,11 +33,19 @@
 
 **Construido y no estaba en esta lista original:** pantalla de **Configuración** (`/app/configuracion` — tema claro/oscuro/sistema + datos de cuenta + exportación completa) y **Dashboard con KPIs reales** (mascotas registradas, citas de hoy, pagos pendientes), agregados durante la iteración de diseño.
 
-**Gestión de Horarios** (turnos semanales de cada veterinario, mencionada en HU1) sigue sin tarea propia — el alta de Veterinario (matrícula/especialidad) ya vive dentro de Gestión de Usuarios, pero definir sus horarios de atención para HU5 queda pendiente.
-
 *(HU10 — Alertas Automáticas — es el job de backend detrás de la Tarea 11; no tiene pantalla propia.)*
 
 ---
+
+## Gaps cerrados (sesión posterior — análisis de brechas contra este documento)
+
+- [x] **Ficha individual de mascota** (`/app/mascotas/:id`) — datos completos + botón Editar, gráfico de evolución de peso (Recharts, se muestra solo con ≥2 mediciones), y línea de tiempo unificada (atenciones, controles preventivos, citas, ediciones manuales) con ícono/badge por tipo. El formulario de Nueva Atención ganó un campo opcional "Peso actual" que alimenta el gráfico. El listado de Mascotas ahora navega a la ficha al hacer clic en una fila.
+- [x] **Gestión de Horarios** (`/app/horarios`) — ítem que quedaba explícitamente pendiente en la nota de arriba. Grilla semanal (hasta 2 turnos por día) — Administrador elige veterinario, Veterinario ve el suyo bloqueado (mismo patrón "Tú" que Nueva Cita/Nueva Atención). Sin cambios en la pantalla de Citas: el contrato de `GET /citas/disponibilidad` no cambió de forma, solo pasó a reflejar los horarios reales.
+- [x] **Pantalla de Propietarios** (`/app/propietarios`) — listado con cantidad de mascotas por dueño + edición (nombre, apellido, teléfono; el CI no es editable).
+- [x] **Desactivar usuario/veterinario** — badge de estado + botón Activar/Desactivar (con confirmación) en Gestión de Usuarios. Los selectores de veterinario en Nueva Cita/Nueva Atención/Horarios ahora piden solo veterinarios activos.
+- [x] **Paginación** — Mascotas y Usuarios muestran controles Anterior/Siguiente (componente `Pagination` reutilizable) cuando hay más de una página. Citas sigue mostrando el listado completo (agenda agrupada por día — paginar ahí partiría un día a la mitad); el KPI "Mascotas registradas" del Dashboard ahora usa el total real del backend en vez de contar solo la página cargada.
+
+**Todo lo del análisis de gaps está cerrado**, salvo HU11 Track B (sin cambios, sigue fuera de alcance).
 
 ## Tarea 00 — Setup del frontend
 

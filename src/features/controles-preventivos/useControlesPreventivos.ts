@@ -25,6 +25,7 @@ export function useCrearControlPreventivo() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["controles-preventivos", "historial", variables.mascotaId] });
       queryClient.invalidateQueries({ queryKey: ["controles-preventivos", "proximos-a-vencer"] });
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
       toast.success("Control preventivo registrado");
     },
     onError: (error: Error) => toast.error(error.message),

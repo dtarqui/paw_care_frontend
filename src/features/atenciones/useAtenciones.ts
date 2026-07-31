@@ -18,6 +18,8 @@ export function useCrearAtencion() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["atenciones", "historial", variables.mascotaId] });
       queryClient.invalidateQueries({ queryKey: ["pagos", "pendientes"] });
+      // También afecta la ficha de mascota (peso actual + línea de tiempo unificada).
+      queryClient.invalidateQueries({ queryKey: ["mascotas"] });
       toast.success("Atención registrada. Queda disponible para cobro en Pagos.");
     },
     onError: (error: Error) => toast.error(error.message),
