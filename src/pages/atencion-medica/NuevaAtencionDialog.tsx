@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useCrearAtencion } from "@/features/atenciones/useAtenciones";
 import type { Mascota } from "@/features/mascotas/types";
@@ -165,34 +166,34 @@ export function NuevaAtencionDialog({ mascota }: { mascota: Mascota }) {
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="diagnostico">Diagnóstico *</Label>
-                <textarea
+                <Textarea
                   id="diagnostico"
                   required
                   value={form.diagnostico}
                   onChange={(e) => actualizar("diagnostico", e.target.value)}
-                  className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  className="min-h-24"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="tratamiento">Tratamiento *</Label>
-                <textarea
+                <Textarea
                   id="tratamiento"
                   required
                   value={form.tratamiento}
                   onChange={(e) => actualizar("tratamiento", e.target.value)}
-                  className="min-h-24 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  className="min-h-24"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="examenesExternos">Exámenes externos (opcional)</Label>
-              <textarea
+              <Textarea
                 id="examenesExternos"
                 value={form.examenesExternos}
                 onChange={(e) => actualizar("examenesExternos", e.target.value)}
-                className="min-h-12 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                className="min-h-12"
               />
             </div>
 

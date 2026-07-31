@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/features/auth/AuthContext";
 import type { BloqueDisponibilidad, Cita } from "@/features/citas/types";
 import { useCrearCita, useDisponibilidad, useReprogramarCita } from "@/features/citas/useCitas";
@@ -221,12 +222,12 @@ export function NuevaCitaTab({ citaEnEdicion, onCompletado }: NuevaCitaTabProps)
       {!editando && (
         <div className="flex flex-col gap-2">
           <Label htmlFor="motivo">Motivo</Label>
-          <textarea
+          <Textarea
             id="motivo"
             value={motivo}
             onChange={(e) => setMotivo(e.target.value)}
             placeholder="Describa brevemente el motivo de la consulta"
-            className="min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="min-h-20"
           />
         </div>
       )}
