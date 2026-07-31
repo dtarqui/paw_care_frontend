@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/features/auth/AuthContext";
+import { COLOR_THEMES, useColorTheme } from "@/features/color-theme/ColorThemeContext";
 import { exportacionApi } from "@/features/exportacion/api";
 import { ROL_LABEL } from "@/lib/roles";
 import { cn } from "@/lib/utils";
-import { Download, Laptop, Loader2, Moon, Sun } from "lucide-react";
+import { Check, Download, Laptop, Loader2, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ const OPCIONES_TEMA = [
 export function ConfiguracionPage() {
   const { usuario } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { colorTheme, setColorTheme } = useColorTheme();
   const [exportando, setExportando] = useState(false);
 
   const iniciales = usuario ? `${usuario.nombre[0]}${usuario.apellidoPaterno[0]}` : "?";
@@ -73,27 +75,57 @@ export function ConfiguracionPage() {
           <CardTitle className="text-base">Apariencia</CardTitle>
           <CardDescription>Elige cómo se ve PawCare en este dispositivo</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Label className="mb-3 block">Tema</Label>
-          <div className="grid grid-cols-3 gap-3 sm:max-w-md">
-            {OPCIONES_TEMA.map((opcion) => {
-              const Icon = opcion.icon;
-              const activo = theme === opcion.value;
-              return (
-                <button
-                  key={opcion.value}
-                  type="button"
-                  onClick={() => setTheme(opcion.value)}
-                  className={cn(
-                    "flex flex-col items-center gap-2 rounded-lg border p-4 text-sm font-medium transition-colors",
-                    activo ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
-                  )}
-                >
-                  <Icon className="size-5" />
-                  {opcion.label}
-                </button>
-              );
-            })}
+        <CardContent className="flex flex-col gap-6">
+          <div>
+            <Label className="mb-3 block">Tema</Label>
+            <div className="grid grid-cols-3 gap-3 sm:max-w-md">
+              {OPCIONES_TEMA.map((opcion) => {
+                const Icon = opcion.icon;
+                const activo = theme === opcion.value;
+                return (
+                  <button
+                    key={opcion.value}
+                    type="button"
+                    onClick={() => setTheme(opcion.value)}
+                    className={cn(
+                      "flex flex-col items-center gap-2 rounded-lg border p-4 text-sm font-medium transition-colors",
+                      activo ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
+                    )}
+                  >
+                    <Icon className="size-5" />
+                    {opcion.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <Label className="mb-3 block">Color</Label>
+            <div className="grid grid-cols-3 gap-3 sm:max-w-md">
+              {COLOR_THEMES.map((opcion) => {
+                const activo = colorTheme === opcion.value;
+                return (
+                  <button
+                    key={opcion.value}
+                    type="button"
+                    onClick={() => setColorTheme(opcion.value)}
+                    className={cn(
+                      "flex flex-col items-center gap-2 rounded-lg border p-4 text-sm font-medium transition-colors",
+                      activo ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
+                    )}
+                  >
+                    <span
+                      className="relative flex size-7 items-center justify-center rounded-full"
+                      style={{ backgroundColor: opcion.swatch }}
+                    >
+                      {activo && <Check className="size-4 text-white drop-shadow" />}
+                    </span>
+                    {opcion.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>

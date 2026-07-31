@@ -5,6 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PawCare</title>
+    <script>
+      // Aplica el tema de color antes del primer paint, para evitar un parpadeo
+      // al color por defecto (violeta) cuando el usuario ya eligió otro.
+      (function () {
+        try {
+          var t = localStorage.getItem("pawcare.color-theme");
+          if (t === "oceano" || t === "rosa") document.documentElement.setAttribute("data-color-theme", t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
