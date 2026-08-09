@@ -7,6 +7,7 @@ import { useHistorialPagos, usePagosPendientes } from "@/features/pagos/usePagos
 import type { PagoPendiente } from "@/features/pagos/types";
 import { History, Wallet } from "lucide-react";
 import { useState } from "react";
+import { CobroQrDialog } from "./CobroQrDialog";
 import { RegistrarPagoDialog } from "./RegistrarPagoDialog";
 
 function formatearFecha(iso: string) {
@@ -26,6 +27,7 @@ export function PagosPage() {
   const { data: pendientes, isLoading, isError } = usePagosPendientes();
   const { data: historial, isLoading: cargandoHistorial } = useHistorialPagos(5);
   const [seleccionado, setSeleccionado] = useState<PagoPendiente | null>(null);
+  const [seleccionadoQr, setSeleccionadoQr] = useState<PagoPendiente | null>(null);
 
   return (
     <div className="flex flex-col gap-4">
@@ -80,9 +82,14 @@ export function PagosPage() {
                       <TableCell>{pendiente.motivoConsulta}</TableCell>
                       <TableCell>Bs. {pendiente.monto.toFixed(2)}</TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" onClick={() => setSeleccionado(pendiente)}>
-                          Registrar pago
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                          <Button size="sm" variant="outline" onClick={() => setSeleccionadoQr(pendiente)}>
+                            Cobrar con QR
+                          </Button>
+                          <Button size="sm" onClick={() => setSeleccionado(pendiente)}>
+                            Registrar pago
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -149,6 +156,7 @@ export function PagosPage() {
       </Card>
 
       <RegistrarPagoDialog pendiente={seleccionado} onClose={() => setSeleccionado(null)} />
+      <CobroQrDialog pendiente={seleccionadoQr} onClose={() => setSeleccionadoQr(null)} />
     </div>
   );
 }

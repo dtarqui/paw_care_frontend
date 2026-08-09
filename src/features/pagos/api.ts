@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import type { MetodoPago, PagoHistorial, PagoPendiente } from "./types";
+import type { CobroQr, MetodoPago, PagoHistorial, PagoPendiente } from "./types";
 
 export const pagosApi = {
   listarPendientes: () => apiClient.get<{ pendientes: PagoPendiente[] }>("/api/pagos/pendientes"),
@@ -8,4 +8,8 @@ export const pagosApi = {
 
   registrar: (atencionId: number, metodoPago: MetodoPago, monto: number) =>
     apiClient.post("/api/pagos", { atencionId, metodoPago, monto }),
+
+  generarCobroQr: (atencionId: number) => apiClient.post<{ cobro: CobroQr }>("/api/pagos/qr", { atencionId }),
+
+  consultarCobroQr: (id: number) => apiClient.get<{ cobro: CobroQr }>(`/api/pagos/qr/${id}`),
 };

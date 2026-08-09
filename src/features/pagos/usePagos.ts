@@ -29,3 +29,22 @@ export function useRegistrarPago() {
     onError: (error: Error) => toast.error(error.message),
   });
 }
+
+export function useGenerarCobroQr() {
+  return useMutation({
+    mutationFn: (atencionId: number) => pagosApi.generarCobroQr(atencionId),
+  });
+}
+
+/** Consulta el estado de un cobro QR, reintentando cada 3s mientras siga PENDIENTE
+ * (no hay websockets en el proyecto — ver docs/MEJORAS_PRODUCTO.md sección 5) y
+ * se detiene sola al confirmarse/expirar/fallar. El caller (CobroQrDialog) es quien
+ * invalida ["pagos", "pendientes"/"historial"] al ver que llegó a CONFIRMADO. */
+export function useCobroQr(id: number | null) {
+  return useQuery({
+    queryKey: ["pagos", "qr", id],
+    queryFn: async () => (await pagosApi.consultarCobroQr(id!)).cobro,
+    enabled: id !== null,
+    refetchInterval: (query) => (query.state.data?.estado === "PENDIENTE" ? 3000 : false),
+  });
+}

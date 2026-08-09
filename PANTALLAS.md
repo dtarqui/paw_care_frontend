@@ -15,19 +15,19 @@
         ┌───────────────┬──────┼──────┬───────────────┐
         ▼                ▼            ▼                ▼
   ADMINISTRADOR      VETERINARIO  RECEPCIONISTA    (Dueño de mascota:
-  (7 módulos +        (Mascotas,   (Propietarios,    fuera del MVP,
-   reportes +          Citas,       Mascotas,         ver sección 8)
-   inventario)         Atención     Citas, Pagos)
-                        Médica,
-                        Control
-                        Preventivo)
+  (todos los          (ver tabla   (ver tabla        fuera del MVP,
+   módulos —           de abajo)    de abajo)         ver sección 8)
+   ver tabla
+   de abajo)
 ```
+
+*(El conteo exacto de módulos por rol cambia con cierta frecuencia — la tabla de abajo, derivada de `dashboard.service.ts`, es la que manda; no lo dupliques de memoria en este diagrama.)*
 
 | Rol | Ve en el sidebar |
 |---|---|
-| **Administrador** | Dashboard, Propietarios, Mascotas, Usuarios, Veterinarios, Citas, Pagos, Control Preventivo, Inventario, Reportes (Ingresos, Clínicos), Auditoría, Configuración |
-| **Veterinario** | Dashboard, Mascotas, Atención Médica, Citas, Control Preventivo |
-| **Recepcionista** | Dashboard, Propietarios, Mascotas, Citas, Pagos |
+| **Administrador** | Dashboard, Propietarios, Mascotas, Atención Médica, Citas, Control Preventivo, Pagos, Recordatorios, Reportes (Ingresos, Clínicos), Inventario, Usuarios, Horarios, Auditoría, Configuración |
+| **Veterinario** | Dashboard, Mascotas, Atención Médica, Citas, Control Preventivo, Horarios ("Mi Horario") |
+| **Recepcionista** | Dashboard, Propietarios, Mascotas, Citas, Pagos, Recordatorios |
 
 **Fuera del shell autenticado** (públicas, sin sidebar): además de `/login`, están `/registro` (preregistro de Veterinario), `/olvide-password` y `/restablecer-password` (recuperación de contraseña), y `/invitacion` (aceptar una invitación de Veterinario enviada por un Administrador) — ver P17-P19.
 
@@ -223,9 +223,10 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 - Estado vacío (mascota sin atenciones) con mensaje orientador y CTA hacia "+ Nueva" (gap cerrado).
 
 ### P06 — Gestión de Pagos (Patrón A, variante)
-- No tiene "Editar" ni "Eliminar" sobre pagos ya registrados: la sección principal es la lista de atenciones **pendientes de pago** por cliente, con acción "Registrar pago" por fila (abre el formulario: método de pago, monto). Al confirmar, la fila desaparece de la lista de pendientes.
+- No tiene "Editar" ni "Eliminar" sobre pagos ya registrados: la sección principal es la lista de atenciones **pendientes de pago** por cliente, con dos acciones por fila: "Registrar pago" (formulario manual: método de pago, monto) y "Cobrar con QR" (sesión 6, ver abajo). Al confirmar cualquiera de las dos, la fila desaparece de la lista de pendientes.
 - **Últimos pagos** (gap cerrado, sesión posterior): segunda sección debajo, con los 5 pagos más recientes ya registrados (mascota, propietario, monto, método, fecha) — antes esta pantalla solo mostraba pendientes, sin ninguna vista de lo ya cobrado.
 - El método de pago incluye QR desde el diseño de base (aunque el HU12 que lo popularizó es opcional/Fase 7).
+- **"Cobrar con QR" (sesión 6):** `CobroQrDialog.tsx` genera el cobro y hace polling del estado cada 3s hasta que se confirme, expire o falle. **Hoy siempre muestra un mensaje de error honesto** ("el cobro por QR bancario no está disponible todavía") en vez de un QR — el backend no tiene ningún banco conectado de verdad (ver `backend/TASKS.md` sesión 6); el diálogo ya está armado para mostrar el QR real y confirmar solo apenas eso cambie.
 
 ### P07 — Gestión de Citas (Patrón E)
 - Pestaña "Lista de Citas": agenda agrupada por día ("Hoy", "Mañana", fecha completa), con acciones Marcar atendida / Cancelar por fila. Si el rol es Veterinario, aparece un toggle "Solo mis citas" (activado por defecto) que filtra por su propia agenda.

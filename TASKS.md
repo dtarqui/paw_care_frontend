@@ -75,12 +75,23 @@
 - [x] **Componente `Textarea` compartido** (`components/ui/textarea.tsx`) — reemplazó 4 `<textarea>` escritos a mano con estilos ligeramente distintos entre sí (y distintos de `Input`); ahora un solo componente, mismos tokens que `Input`.
 - [x] **Auditoría de `alert()`/`confirm()`/`prompt()` nativos** — cero resultados en todo `frontend/src`; toda confirmación ya pasaba por `Dialog` y todo feedback por `sonner` (toast), no se necesitó ningún cambio.
 
+---
+
 ## Correcciones y mejoras (sesión 5 — recuperación de contraseña, invitación de veterinarios, auditoría)
 
 - [x] **Recuperar contraseña** — nuevo enlace "¿Olvidaste tu contraseña?" en `LoginPage.tsx` hacia `/olvide-password` (`OlvidePasswordPage.tsx`): pide solo el `username`, llama a `POST /api/auth/forgot-password` y siempre muestra la misma confirmación genérica ("si la cuenta existe... te enviamos un enlace"), nunca revela si el usuario existe o tiene email. `/restablecer-password` (`RestablecerPasswordPage.tsx`) lee el `token` de la URL y pide la contraseña nueva (+ confirmación), llama a `POST /api/auth/reset-password`; muestra el error del backend si el token ya venció o se usó.
 - [x] **Invitar Veterinario** (`/app/usuarios`, solo Administrador) — nuevo botón "Invitar veterinario" abre `InvitarVeterinarioDialog.tsx` (email + nombre opcional). El listado de invitaciones pendientes vive en la misma pantalla de Usuarios. Pantalla pública `/invitacion` (`InvitacionPage.tsx`): valida el token contra `GET /api/usuarios/invitaciones/validar/:token`, precarga el email, y pide el resto de datos (personales + matrícula/especialidad + contraseña) antes de enviar a `POST /api/usuarios/invitaciones/aceptar/:token`. A diferencia de `/registro` (preregistro), no muestra pantalla de "pendiente de aprobación" — la cuenta queda activa de inmediato y redirige a iniciar sesión.
 - [x] **Pantalla de Auditoría** (`/app/auditoria`, solo Administrador — nuevo módulo del sidebar vía `GET /api/dashboard/modulos`) — tabla paginada de `GET /api/auditoria`: fecha, tipo de acción (badge con color por tipo), quién la realizó, detalle en texto libre. Sin filtros ni acciones, es un log de solo lectura.
 - [x] **Campo Email en Gestión de Usuarios** — `NuevoUsuarioDialog.tsx` ganó un campo opcional "Email" (necesario para que esa cuenta pueda usar "olvidé mi contraseña" más adelante). **Nota:** `prisma/seed.ts` no siembra `email` para ninguna de las cuentas demo, así que "olvidé mi contraseña" no tiene ningún usuario contra el que probar hasta que un Administrador cree uno nuevo con email desde esta pantalla (no hay edición de email sobre un usuario ya existente todavía).
+
+---
+
+## Correcciones y mejoras (sesión 6 — botón "Cobrar con QR" en Pagos, banco todavía no conectado)
+
+- [x] **Botón "Cobrar con QR"** en `/app/pagos` (`PagosPage.tsx`), junto al ya existente "Registrar pago" en cada fila de pendientes. Abre `CobroQrDialog.tsx`, que genera el intento de cobro (`POST /api/pagos/qr`) apenas se abre y, si se genera con éxito, hace polling cada 3s (`useCobroQr`, sin websockets en el proyecto) contra `GET /api/pagos/qr/:id` hasta que el backend reporte `CONFIRMADO`/`EXPIRADO`/`ERROR`.
+- [x] **Hoy siempre muestra el error honesto del backend** ("El cobro por QR bancario no está disponible todavía en este entorno...") en vez de un QR falso — el backend (`lib/pagoQr.ts`, ver `backend/TASKS.md` sesión 6) no tiene ningún banco conectado todavía. El diálogo ya está listo para mostrar el QR real (imagen si `qrPayload` es una URL, o el contenido crudo si no) apenas el backend empiece a devolver uno de verdad — no hará falta tocar el frontend.
+- [x] **Al confirmarse un cobro**, invalida `["pagos", "pendientes"]` y `["pagos", "historial"]` (mismo criterio de invalidación por prefijo que ya usa el resto de la app) para que la fila desaparezca de pendientes y aparezca en "Últimos pagos" sin recargar.
+- [x] **Probado en navegador real** (Playwright, ver `backend/TASKS.md` sesión 6 para el detalle de la corrida) contra el backend real: login, ir a Pagos, clic en "Cobrar con QR" sobre una atención pendiente real, el diálogo muestra los datos correctos y el mensaje de error esperado, sin errores de consola aparte del 500 esperado.
 
 ---
 
