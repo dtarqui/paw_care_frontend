@@ -6,6 +6,7 @@ import {
   MessageCircle,
   Package,
   PawPrint,
+  Settings,
   ShieldPlus,
   Stethoscope,
   User,
@@ -29,4 +30,5 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   Package,
   Clock,
   History,
+  Settings,
 };

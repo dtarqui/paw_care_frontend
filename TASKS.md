@@ -112,6 +112,25 @@ Contraparte frontend del refactor de nomenclatura descrito en `backend/TASKS.md`
 
 ---
 
+## Correcciones y mejoras (sesión 8 — menú agrupado y dos pantallas fusionadas)
+
+El sidebar tenía 13 ítems planos. Se agruparon en 4 secciones y se fusionaron dos pares de pantallas que en realidad son la misma tarea.
+
+- [x] **Sidebar agrupado en Clientes / Clínica / Administración / Sistema** — los grupos, su orden y qué módulo cae en cada uno los define el backend (`dashboard.service.ts`, campo `group` + `GET /api/dashboard/modules` que ahora devuelve `{ modules, groups }`). Un grupo sin módulos para ese rol no se dibuja: un Veterinario no ve "Administración". Las tarjetas de acceso rápido del Dashboard usan la misma agrupación.
+- [x] **Agenda = Citas + Horarios** (`/app/appointments`) — `SchedulesPage` pasó a ser `SchedulesTab` dentro de la pantalla de Citas. Van juntas porque el horario del veterinario es lo que determina qué bloques quedan libres al agendar; tenerlas separadas obligaba a saltar de pantalla para entender la disponibilidad.
+- [x] **Usuarios = Cuentas + Auditoría** (`/app/users`) — `AuditLogPage` pasó a ser `AuditLogTab`, y el listado anterior a `UsersListTab`. La auditoría es la bitácora de las acciones administrativas sobre esas mismas cuentas, así que se lee al lado del listado.
+- [x] **Qué pestañas ve cada rol lo manda el backend** (campo `tabs` del módulo), no una tabla de roles en el frontend — mismo criterio que ya regía para los módulos del sidebar. Una Recepcionista agenda citas pero no edita horarios ajenos, así que su módulo "agenda" llega sin la pestaña `schedules`.
+- [x] **`Configuración` dejó de estar clavada al pie del sidebar** y pasó a ser un módulo más, dentro del grupo Sistema. Así todos los roles tienen un grupo Sistema coherente y el pie queda solo con el menú de cuenta.
+- [x] **Rutas viejas redirigidas** — `/app/schedules` → `/app/appointments` y `/app/audit-log` → `/app/users`, para no romper enlaces guardados.
+
+**Bug encontrado y corregido de paso:** los KPIs del Dashboard (Mascotas registradas, Citas de hoy, Pagos pendientes) estaban **ocultos siempre**. El refactor de la sesión 7 renombró los ids de módulo a inglés, pero las comparaciones vivían dentro de strings (`moduloIds.has("mascotas")`), que el renombrado automático protegía a propósito — así que quedaron comparando contra ids que ya no existían. Ahora comparan contra `pets`, `agenda` y `payments`.
+
+**También se corrigieron fugas de la sesión 7** en los archivos tocados: `"Veterinario"` había quedado como `"Vet"` en un título visible de Horarios, `"Invitaciones pendientes"` como `"Invitaciones pending"`, y varios identificadores locales seguían en español (`semana`, `turno1/turno2`, `objetivo`, `esPendienteDeAprobacion`, …).
+
+**Deuda conocida:** quedan identificadores locales en español dentro de otras pantallas que esta sesión no tocó (`reporteIngresos` en `ClinicalTab`, `propietarioNuevo` en `NewPetDialog`, `crearMedicamento` en `NewMedicationDialog`, etc.). No afectan el contrato ni la UI — son variables privadas de cada archivo — pero contradicen la convención de `docs/GLOSARIO_EN_ES.md` y conviene cerrarlas.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

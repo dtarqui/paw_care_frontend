@@ -23,11 +23,30 @@
 
 *(El conteo exacto de módulos por rol cambia con cierta frecuencia — la tabla de abajo, derivada de `dashboard.service.ts`, es la que manda; no lo dupliques de memoria en este diagrama.)*
 
-| Rol | Ve en el sidebar |
-|---|---|
-| **Administrador** | Dashboard, Propietarios, Mascotas, Atención Médica, Citas, Control Preventivo, Pagos, Recordatorios, Reportes (Ingresos, Clínicos), Inventario, Usuarios, Horarios, Auditoría, Configuración |
-| **Veterinario** | Dashboard, Mascotas, Atención Médica, Citas, Control Preventivo, Horarios ("Mi Horario") |
-| **Recepcionista** | Dashboard, Propietarios, Mascotas, Citas, Pagos, Recordatorios |
+El sidebar está **agrupado en secciones**; los grupos, su orden y qué módulo cae en
+cada uno los define `dashboard.service.ts` en el backend, igual que la lista de módulos.
+Un grupo sin módulos para ese rol no se dibuja (un Veterinario, por ejemplo, no ve
+"Administración").
+
+| Grupo | Administrador | Veterinario | Recepcionista |
+|---|---|---|---|
+| **Clientes** | Propietarios, Mascotas | Mascotas | Propietarios, Mascotas |
+| **Clínica** | Agenda, Atención Médica, Control Preventivo, Recordatorios | Agenda, Atención Médica, Control Preventivo | Agenda, Recordatorios |
+| **Administración** | Pagos, Inventario, Reportes | — | Pagos |
+| **Sistema** | Usuarios, Configuración | Configuración | Configuración |
+
+*(Dashboard va siempre arriba, fuera de los grupos.)*
+
+**Dos pantallas agrupan más de una funcionalidad en pestañas:**
+
+| Pantalla | Ruta | Pestañas | Por qué van juntas |
+|---|---|---|---|
+| **Agenda** | `/app/appointments` | Lista de Citas · Nueva Cita · **Horarios** | El horario del veterinario es lo que determina qué bloques quedan libres al agendar; separados obligaban a saltar de pantalla para entender la disponibilidad. La pestaña Horarios **no** se muestra a Recepcionista. |
+| **Usuarios** | `/app/users` | Cuentas · **Auditoría** | La auditoría es la bitácora de las acciones administrativas sobre esas mismas cuentas (activar, cambiar rol, restablecer contraseña, invitar). |
+
+Qué pestañas ve cada rol viene en el campo `tabs` del módulo, no de una tabla de
+roles en el frontend. Las rutas anteriores (`/app/schedules` y `/app/audit-log`)
+siguen existiendo como redirecciones para no romper enlaces guardados.
 
 **Fuera del shell autenticado** (públicas, sin sidebar): además de `/login`, están `/register` (preregistro de Veterinario), `/forgot-password` y `/reset-password` (recuperación de contraseña), y `/invitation` (aceptar una invitación de Veterinario enviada por un Administrador) — ver P17-P19.
 

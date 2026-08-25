@@ -13,93 +13,93 @@ import { useVets } from "@/features/vets/useVets";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const DIAS = [
-  { valor: 1, etiqueta: "Lunes" },
-  { valor: 2, etiqueta: "Martes" },
-  { valor: 3, etiqueta: "Miércoles" },
-  { valor: 4, etiqueta: "Jueves" },
-  { valor: 5, etiqueta: "Viernes" },
-  { valor: 6, etiqueta: "Sábado" },
-  { valor: 0, etiqueta: "Domingo" },
+const DAYS = [
+  { value: 1, label: "Lunes" },
+  { value: 2, label: "Martes" },
+  { value: 3, label: "Miércoles" },
+  { value: 4, label: "Jueves" },
+  { value: 5, label: "Viernes" },
+  { value: 6, label: "Sábado" },
+  { value: 0, label: "Domingo" },
 ];
 
-interface Turno {
-  activo: boolean;
-  inicio: string;
-  fin: string;
+interface Shift {
+  enabled: boolean;
+  start: string;
+  end: string;
 }
 
-interface DiaState {
-  turno1: Turno;
-  turno2: Turno;
+interface DayState {
+  morningShift: Shift;
+  afternoonShift: Shift;
 }
 
-type SemanaState = Record<number, DiaState>;
+type WeekState = Record<number, DayState>;
 
-function estadoVacio(): SemanaState {
-  const semana: SemanaState = {};
-  for (const dia of DIAS) {
-    semana[dia.valor] = {
-      turno1: { activo: false, inicio: "08:00", fin: "12:00" },
-      turno2: { activo: false, inicio: "14:00", fin: "16:30" },
+function emptyState(): WeekState {
+  const week: WeekState = {};
+  for (const day of DAYS) {
+    week[day.value] = {
+      morningShift: { enabled: false, start: "08:00", end: "12:00" },
+      afternoonShift: { enabled: false, start: "14:00", end: "16:30" },
     };
   }
-  return semana;
+  return week;
 }
 
-function estadoDesdeHorarios(schedules: Schedule[]): SemanaState {
-  const semana = estadoVacio();
-  for (const dia of DIAS) {
-    const filas = schedules.filter((h) => h.dayOfWeek === dia.valor).sort((a, b) => a.startTime.localeCompare(b.startTime));
-    // El backend no guarda a qué switch (turno1/turno2) pertenece cada bloque —
+function stateFromSchedules(schedules: Schedule[]): WeekState {
+  const week = emptyState();
+  for (const day of DAYS) {
+    const rows = schedules.filter((h) => h.dayOfWeek === day.value).sort((a, b) => a.startTime.localeCompare(b.startTime));
+    // El backend no guarda a qué switch (turno de mañana/tarde) pertenece cada bloque —
     // solo una lista plana de horarios. Se reconstruye por hora del día (antes/después
     // del mediodía) en vez de por orden de llegada, para que un día con solo turno de
     // tarde no se muestre encendido en el switch de "mañana" al recargar.
-    const manana = filas.find((f) => f.startTime < "12:00");
-    const tarde = filas.find((f) => f !== manana && f.startTime >= "12:00") ?? filas.find((f) => f !== manana);
-    if (manana) semana[dia.valor].turno1 = { activo: true, inicio: manana.startTime, fin: manana.endTime };
-    if (tarde) semana[dia.valor].turno2 = { activo: true, inicio: tarde.startTime, fin: tarde.endTime };
+    const morning = rows.find((f) => f.startTime < "12:00");
+    const afternoon = rows.find((f) => f !== morning && f.startTime >= "12:00") ?? rows.find((f) => f !== morning);
+    if (morning) week[day.value].morningShift = { enabled: true, start: morning.startTime, end: morning.endTime };
+    if (afternoon) week[day.value].afternoonShift = { enabled: true, start: afternoon.startTime, end: afternoon.endTime };
   }
-  return semana;
+  return week;
 }
 
-function aInput(semana: SemanaState): ScheduleBlockInput[] {
-  const resultado: ScheduleBlockInput[] = [];
-  for (const dia of DIAS) {
-    const { turno1, turno2 } = semana[dia.valor];
-    if (turno1.activo) resultado.push({ dayOfWeek: dia.valor, startTime: turno1.inicio, endTime: turno1.fin });
-    if (turno2.activo) resultado.push({ dayOfWeek: dia.valor, startTime: turno2.inicio, endTime: turno2.fin });
+function toInput(week: WeekState): ScheduleBlockInput[] {
+  const result: ScheduleBlockInput[] = [];
+  for (const day of DAYS) {
+    const { morningShift, afternoonShift } = week[day.value];
+    if (morningShift.enabled) result.push({ dayOfWeek: day.value, startTime: morningShift.start, endTime: morningShift.end });
+    if (afternoonShift.enabled) result.push({ dayOfWeek: day.value, startTime: afternoonShift.start, endTime: afternoonShift.end });
   }
-  return resultado;
+  return result;
 }
 
-export function SchedulesPage() {
+export function SchedulesTab() {
   const { user } = useAuth();
-  const esVeterinario = user?.role === "VET";
-  const { data: vets, isLoading: cargandoVeterinarios } = useVets();
+  const isVet = user?.role === "VET";
+  const { data: vets, isLoading: loadingVets } = useVets();
   const { myVet } = useMyVet();
-  const [veterinarioIdSeleccionado, setVeterinarioIdSeleccionado] = useState<number | undefined>();
+  const [selectedVetId, setVeterinarioIdSeleccionado] = useState<number | undefined>();
 
-  const veterinarioId = esVeterinario ? myVet?.id : veterinarioIdSeleccionado;
-  const veterinarioActual = esVeterinario ? myVet : vets?.find((v) => v.id === veterinarioId);
+  const vetId = isVet ? myVet?.id : selectedVetId;
+  const veterinarioActual = isVet ? myVet : vets?.find((v) => v.id === vetId);
 
-  const { data: schedules, isLoading: cargandoHorarios } = useSchedules(veterinarioId);
-  const actualizarHorarios = useUpdateSchedules(veterinarioId);
+  const { data: schedules, isLoading: loadingSchedules } = useSchedules(vetId);
+  const updateSchedulesMutation = useUpdateSchedules(vetId);
 
-  const [semana, setSemana] = useState<SemanaState>(estadoVacio());
+  const [week, setWeek] = useState<WeekState>(emptyState());
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (schedules) setSemana(estadoDesdeHorarios(schedules));
+    if (schedules) setWeek(stateFromSchedules(schedules));
   }, [schedules]);
 
-  function actualizarTurno(dia: number, turno: "turno1" | "turno2", cambios: Partial<Turno>) {
-    setSemana((prev) => ({ ...prev, [dia]: { ...prev[dia], [turno]: { ...prev[dia][turno], ...cambios } } }));
+  function updateShift(day: number, shift: "morningShift" | "afternoonShift", changes: Partial<Shift>) {
+    setWeek((prev) => ({ ...prev, [day]: { ...prev[day], [shift]: { ...prev[day][shift], ...changes } } }));
   }
 
-  async function guardar() {
+  async function save() {
     setError(null);
-    const input = aInput(semana);
+    const input = toInput(week);
     for (const bloque of input) {
       if (bloque.startTime >= bloque.endTime) {
         setError("En cada turno activo, la hora de inicio debe ser anterior a la hora de fin");
@@ -107,7 +107,7 @@ export function SchedulesPage() {
       }
     }
     try {
-      await actualizarHorarios.mutateAsync(input);
+      await updateSchedulesMutation.mutateAsync(input);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar el horario");
     }
@@ -115,15 +115,10 @@ export function SchedulesPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Horarios</h1>
-        <p className="text-muted-foreground">Horario semanal de atención por veterinario — define la disponibilidad real de Citas</p>
-      </div>
-
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">Vet</CardTitle>
-          {esVeterinario ? (
+          <CardTitle className="text-base">Veterinario</CardTitle>
+          {isVet ? (
             <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
               <ShieldCheck className="size-4 shrink-0 text-primary" />
               <span className="truncate">{myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : "Cargando…"}</span>
@@ -133,9 +128,9 @@ export function SchedulesPage() {
             </div>
           ) : (
             <Select
-              value={veterinarioIdSeleccionado ? String(veterinarioIdSeleccionado) : ""}
+              value={selectedVetId ? String(selectedVetId) : ""}
               onValueChange={(v) => setVeterinarioIdSeleccionado(Number(v))}
-              disabled={cargandoVeterinarios}
+              disabled={loadingVets}
             >
               <SelectTrigger className="w-64">
                 <SelectValue placeholder="Selecciona un veterinario" />
@@ -152,11 +147,11 @@ export function SchedulesPage() {
         </CardHeader>
       </Card>
 
-      {!veterinarioId && !esVeterinario && (
+      {!vetId && !isVet && (
         <p className="py-6 text-center text-sm text-muted-foreground">Selecciona un veterinario para ver y editar su horario.</p>
       )}
 
-      {veterinarioId && (
+      {vetId && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
@@ -165,7 +160,7 @@ export function SchedulesPage() {
             <p className="text-sm text-muted-foreground">Hasta 2 turnos por día (ej. mañana y tarde). Un día sin turnos activos queda sin atención.</p>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            {cargandoHorarios ? (
+            {loadingSchedules ? (
               <div className="flex flex-col gap-2">
                 {Array.from({ length: 7 }).map((_, i) => (
                   <Skeleton key={i} className="h-14 w-full" />
@@ -173,32 +168,32 @@ export function SchedulesPage() {
               </div>
             ) : (
               <div className="flex flex-col divide-y">
-                {DIAS.map((dia) => (
-                  <div key={dia.valor} className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
-                    <span className="w-24 shrink-0 text-sm font-medium">{dia.etiqueta}</span>
+                {DAYS.map((day) => (
+                  <div key={day.value} className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
+                    <span className="w-24 shrink-0 text-sm font-medium">{day.label}</span>
                     <div className="flex flex-1 flex-wrap gap-4">
-                      {(["turno1", "turno2"] as const).map((turnoKey) => {
-                        const turno = semana[dia.valor][turnoKey];
+                      {(["morningShift", "afternoonShift"] as const).map((shiftKey) => {
+                        const turno = week[day.value][shiftKey];
                         return (
-                          <div key={turnoKey} className="flex items-center gap-2">
+                          <div key={shiftKey} className="flex items-center gap-2">
                             <Switch
-                              checked={turno.activo}
-                              onCheckedChange={(activo) => actualizarTurno(dia.valor, turnoKey, { activo })}
+                              checked={turno.enabled}
+                              onCheckedChange={(enabled) => updateShift(day.value, shiftKey, { enabled })}
                             />
                             <Input
                               type="time"
                               className="w-28"
-                              value={turno.inicio}
-                              disabled={!turno.activo}
-                              onChange={(e) => actualizarTurno(dia.valor, turnoKey, { inicio: e.target.value })}
+                              value={turno.start}
+                              disabled={!turno.enabled}
+                              onChange={(e) => updateShift(day.value, shiftKey, { start: e.target.value })}
                             />
                             <span className="text-muted-foreground">–</span>
                             <Input
                               type="time"
                               className="w-28"
-                              value={turno.fin}
-                              disabled={!turno.activo}
-                              onChange={(e) => actualizarTurno(dia.valor, turnoKey, { fin: e.target.value })}
+                              value={turno.end}
+                              disabled={!turno.enabled}
+                              onChange={(e) => updateShift(day.value, shiftKey, { end: e.target.value })}
                             />
                           </div>
                         );
@@ -212,8 +207,8 @@ export function SchedulesPage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
 
             <div className="flex justify-end">
-              <Button onClick={guardar} disabled={actualizarHorarios.isPending || cargandoHorarios}>
-                {actualizarHorarios.isPending && <Loader2 className="size-4 animate-spin" />}
+              <Button onClick={save} disabled={updateSchedulesMutation.isPending || loadingSchedules}>
+                {updateSchedulesMutation.isPending && <Loader2 className="size-4 animate-spin" />}
                 Guardar schedule
               </Button>
             </div>

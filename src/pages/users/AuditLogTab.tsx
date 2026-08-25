@@ -10,7 +10,7 @@ import { useState } from "react";
 
 const PAGE_SIZE = 20;
 
-const ACCION_LABEL: Record<AuditAction, string> = {
+const ACTION_LABEL: Record<AuditAction, string> = {
   ACTIVATE_ACCOUNT: "Cuenta activada",
   DEACTIVATE_ACCOUNT: "Cuenta desactivada",
   RESET_PASSWORD: "Contraseña restablecida",
@@ -18,7 +18,7 @@ const ACCION_LABEL: Record<AuditAction, string> = {
   INVITE_VET: "Veterinario invitado",
 };
 
-const ACCION_STYLE: Record<AuditAction, string> = {
+const ACTION_STYLE: Record<AuditAction, string> = {
   ACTIVATE_ACCOUNT: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400",
   DEACTIVATE_ACCOUNT: "bg-muted text-muted-foreground",
   RESET_PASSWORD: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
@@ -32,17 +32,17 @@ function formatDateTime(iso: string) {
   return `${dd}/${mm}/${yyyy} ${time ? time.slice(0, 5) : ""}`.trim();
 }
 
-export function AuditLogPage() {
+export function AuditLogTab() {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useAuditLogs(page, PAGE_SIZE);
   const logs = data?.logs;
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Auditoría</h1>
-        <p className="text-muted-foreground">Quién hizo qué sobre otras cuentas — aprobaciones, restablecimientos de contraseña, cambios de rol e invitaciones</p>
-      </div>
+      <p className="text-sm text-muted-foreground">
+        Quién hizo qué sobre otras cuentas — aprobaciones, restablecimientos de contraseña, cambios de rol e
+        invitaciones.
+      </p>
 
       <Card>
         <CardHeader>
@@ -83,8 +83,8 @@ export function AuditLogPage() {
                       <TableRow key={log.id}>
                         <TableCell className="whitespace-nowrap text-sm text-muted-foreground">{formatDateTime(log.date)}</TableCell>
                         <TableCell>
-                          <Badge className={`border-none font-medium ${ACCION_STYLE[log.action]}`} variant="secondary">
-                            {ACCION_LABEL[log.action] ?? log.action}
+                          <Badge className={`border-none font-medium ${ACTION_STYLE[log.action]}`} variant="secondary">
+                            {ACTION_LABEL[log.action] ?? log.action}
                           </Badge>
                         </TableCell>
                         <TableCell>

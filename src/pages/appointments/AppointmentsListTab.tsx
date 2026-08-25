@@ -12,7 +12,7 @@ import { todayISO } from "@/lib/date";
 import { CalendarDays } from "lucide-react";
 import { useMemo, useState } from "react";
 
-function manana(): string {
+function morning(): string {
   const d = new Date();
   d.setDate(d.getDate() + 1);
   const yyyy = d.getFullYear();
@@ -21,10 +21,10 @@ function manana(): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function etiquetaDelDia(fechaISO: string) {
-  if (fechaISO === todayISO()) return "Hoy";
-  if (fechaISO === manana()) return "Mañana";
-  const [yyyy, mm, dd] = fechaISO.split("-").map(Number);
+function etiquetaDelDia(isoDate: string) {
+  if (isoDate === todayISO()) return "Hoy";
+  if (isoDate === morning()) return "Mañana";
+  const [yyyy, mm, dd] = isoDate.split("-").map(Number);
   const texto = new Intl.DateTimeFormat("es-BO", {
     weekday: "long",
     day: "numeric",
@@ -36,9 +36,9 @@ function etiquetaDelDia(fechaISO: string) {
 function agruparPorDia(appointments: Appointment[]) {
   const groups = new Map<string, Appointment[]>();
   for (const appointment of appointments) {
-    const dia = appointment.dateTime.slice(0, 10);
-    if (!groups.has(dia)) groups.set(dia, []);
-    groups.get(dia)!.push(appointment);
+    const day = appointment.dateTime.slice(0, 10);
+    if (!groups.has(day)) groups.set(day, []);
+    groups.get(day)!.push(appointment);
   }
   return [...groups.entries()];
 }
@@ -49,7 +49,7 @@ interface CitasListaTabProps {
 
 export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
   const { user } = useAuth();
-  const esVeterinario = user?.role === "VET";
+  const isVet = user?.role === "VET";
   const { myVet } = useMyVet();
   const [soloMisCitas, setSoloMisCitas] = useState(true);
 
@@ -58,11 +58,11 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
 
   const citasFiltradas = useMemo(() => {
     if (!appointments) return [];
-    if (esVeterinario && soloMisCitas && myVet) {
+    if (isVet && soloMisCitas && myVet) {
       return appointments.filter((c) => c.vet.id === myVet.id);
     }
     return appointments;
-  }, [appointments, esVeterinario, soloMisCitas, myVet]);
+  }, [appointments, isVet, soloMisCitas, myVet]);
 
   const groups = useMemo(() => agruparPorDia(citasFiltradas), [citasFiltradas]);
 
@@ -82,7 +82,7 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      {esVeterinario && (
+      {isVet && (
         <div className="flex items-center gap-2 self-start rounded-md border px-3 py-2">
           <Switch id="solo-mis-citas" checked={soloMisCitas} onCheckedChange={setSoloMisCitas} />
           <Label htmlFor="solo-mis-citas" className="cursor-pointer text-sm font-normal">
@@ -94,20 +94,20 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
       {groups.length === 0 && (
         <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
           <CalendarDays className="size-8" />
-          <p>{soloMisCitas && esVeterinario ? "No tienes citas asignadas todavía." : "No hay citas registradas todavía."}</p>
+          <p>{soloMisCitas && isVet ? "No tienes citas asignadas todavía." : "No hay citas registradas todavía."}</p>
         </div>
       )}
 
-      {groups.map(([dia, citasDelDia]) => (
-        <Card key={dia}>
+      {groups.map(([day, dayAppointments]) => (
+        <Card key={day}>
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-foreground">{etiquetaDelDia(dia)}</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground">{etiquetaDelDia(day)}</CardTitle>
             <span className="text-xs text-muted-foreground">
-              {citasDelDia.length} {citasDelDia.length === 1 ? "cita" : "citas"}
+              {dayAppointments.length} {dayAppointments.length === 1 ? "cita" : "citas"}
             </span>
           </CardHeader>
           <CardContent className="divide-y p-0">
-            {citasDelDia.map((appointment) => (
+            {dayAppointments.map((appointment) => (
               <div key={appointment.id} title={appointment.code} className="flex flex-wrap items-center gap-3 px-6 py-3">
                 <div className="w-14 shrink-0 font-semibold tabular-nums">{appointment.dateTime.slice(11, 16)}</div>
 
@@ -127,7 +127,7 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
                     <>
                       {/* Reprogramar es una acción de agenda: mismo criterio que crear (HU5) —
                           un veterinario solo reprograma su propia cita. */}
-                      {(!esVeterinario || appointment.vet.id === myVet?.id) && (
+                      {(!isVet || appointment.vet.id === myVet?.id) && (
                         <Button size="sm" variant="outline" onClick={() => onReprogramar(appointment)}>
                           Reprogramar
                         </Button>

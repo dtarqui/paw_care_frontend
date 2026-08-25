@@ -2,12 +2,10 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AuthProvider } from "@/features/auth/AuthContext";
 import { MedicalVisitsPage } from "@/pages/medical-visits/MedicalVisitsPage";
-import { AuditLogPage } from "@/pages/audit-log/AuditLogPage";
 import { AppointmentsPage } from "@/pages/appointments/AppointmentsPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { PreventiveControlsPage } from "@/pages/preventive-controls/PreventiveControlsPage";
 import { DashboardPage } from "@/pages/DashboardPage";
-import { SchedulesPage } from "@/pages/schedules/SchedulesPage";
 import { InventoryPage } from "@/pages/inventory/InventoryPage";
 import { InvitationPage } from "@/pages/InvitationPage";
 import { LoginPage } from "@/pages/LoginPage";
@@ -47,9 +45,12 @@ export function App() {
             <Route path="reports" element={<ReportsPage />} />
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="users" element={<UsersPage />} />
-            <Route path="schedules" element={<SchedulesPage />} />
-            <Route path="audit-log" element={<AuditLogPage />} />
             <Route path="settings" element={<SettingsPage />} />
+
+            {/* Horarios y Auditoría se fusionaron como pestañas de Agenda y Usuarios;
+                se mantienen las rutas viejas redirigiendo para no romper enlaces. */}
+            <Route path="schedules" element={<Navigate to="/app/appointments" replace />} />
+            <Route path="audit-log" element={<Navigate to="/app/users" replace />} />
           </Route>
         </Route>
 

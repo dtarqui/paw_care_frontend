@@ -1,54 +1,76 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Appointment } from "@/features/appointments/types";
+import { useModule } from "@/features/dashboard/useModules";
 import { useState } from "react";
 import { AppointmentsListTab } from "./AppointmentsListTab";
 import { NewAppointmentTab } from "./NewAppointmentTab";
+import { SchedulesTab } from "./SchedulesTab";
 
+/**
+ * Agenda: citas y horarios de atención en una sola pantalla. Van juntos porque el
+ * horario del veterinario es lo que determina qué bloques quedan libres al agendar
+ * — tenerlos separados obligaba a saltar de pantalla para entender la disponibilidad.
+ *
+ * Qué pestañas se muestran lo decide el backend (`dashboard.service.ts`, campo
+ * `tabs` del módulo "agenda"): una Recepcionista agenda citas pero no edita el
+ * horario de los veterinarios, así que no recibe la pestaña "Horarios".
+ */
 export function AppointmentsPage() {
-  const [tab, setTab] = useState("lista");
-  const [appointmentBeingEdited, setCitaEnEdicion] = useState<Appointment | null>(null);
+  const [tab, setTab] = useState("list");
+  const [appointmentBeingEdited, setAppointmentBeingEdited] = useState<Appointment | null>(null);
+  const { module } = useModule("agenda");
 
-  function handleReprogramar(appointment: Appointment) {
-    setCitaEnEdicion(appointment);
-    setTab("nueva");
+  const availableTabs = module?.tabs ?? ["list", "new"];
+  const showSchedules = availableTabs.includes("schedules");
+
+  function handleReschedule(appointment: Appointment) {
+    setAppointmentBeingEdited(appointment);
+    setTab("new");
   }
 
-  function handleTabChange(nuevoTab: string) {
-    setTab(nuevoTab);
-    if (nuevoTab === "lista") setCitaEnEdicion(null);
+  function handleTabChange(nextTab: string) {
+    setTab(nextTab);
+    if (nextTab !== "new") setAppointmentBeingEdited(null);
   }
 
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Citas</h1>
-        <p className="text-muted-foreground">Gestión de citas médicas</p>
+        <h1 className="text-2xl font-semibold tracking-tight">Agenda</h1>
+        <p className="text-muted-foreground">{module?.description ?? "Citas y horarios de atención"}</p>
       </div>
 
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="lista">Lista de Citas</TabsTrigger>
-          <TabsTrigger value="nueva">{appointmentBeingEdited ? "Reprogramar Cita" : "Nueva Cita"}</TabsTrigger>
+          <TabsTrigger value="list">Lista de Citas</TabsTrigger>
+          <TabsTrigger value="new">{appointmentBeingEdited ? "Reprogramar Cita" : "Nueva Cita"}</TabsTrigger>
+          {showSchedules && <TabsTrigger value="schedules">Horarios</TabsTrigger>}
         </TabsList>
 
-        <TabsContent value="lista" className="mt-4">
-          <AppointmentsListTab onReprogramar={handleReprogramar} />
+        <TabsContent value="list" className="mt-4">
+          <AppointmentsListTab onReprogramar={handleReschedule} />
         </TabsContent>
 
-        <TabsContent value="nueva" className="mt-4">
+        <TabsContent value="new" className="mt-4">
           <Card>
             <CardContent className="pt-6">
               <NewAppointmentTab
                 appointmentBeingEdited={appointmentBeingEdited}
                 onCompleted={() => {
-                  setCitaEnEdicion(null);
-                  setTab("lista");
+                  setAppointmentBeingEdited(null);
+                  setTab("list");
                 }}
               />
             </CardContent>
           </Card>
         </TabsContent>
+
+        {showSchedules && (
+          <TabsContent value="schedules" className="mt-4">
+            <SchedulesTab />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

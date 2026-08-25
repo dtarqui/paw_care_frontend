@@ -24,59 +24,53 @@ import { ResetPasswordDialog } from "./ResetPasswordDialog";
 
 const PAGE_SIZE = 20;
 
-function esPendienteDeAprobacion(user: User) {
+function isPendingApproval(user: User) {
   return user.selfRegistered && user.status === "INACTIVE";
 }
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   const [fecha] = iso.split("T");
   const [yyyy, mm, dd] = fecha.split("-");
   return `${dd}/${mm}/${yyyy}`;
 }
 
-export function UsersPage() {
-  const { user: usuarioActual } = useAuth();
+export function UsersListTab() {
+  const { user: currentUser } = useAuth();
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useUsers(page, PAGE_SIZE);
   const users = data?.users;
   const { data: invitations } = usePendingInvitations();
-  const [objetivo, setObjetivo] = useState<User | null>(null);
-  const [objetivoRol, setObjetivoRol] = useState<User | null>(null);
-  const [objetivoPassword, setObjetivoPassword] = useState<User | null>(null);
-  const [objetivoInvitacion, setObjetivoInvitacion] = useState<PendingInvitation | null>(null);
-  const cambiarEstado = useChangeUserStatus();
-  const cancelarInvitacion = useCancelInvitation();
+  const [statusTarget, setStatusTarget] = useState<User | null>(null);
+  const [roleTarget, setRoleTarget] = useState<User | null>(null);
+  const [passwordTarget, setPasswordTarget] = useState<User | null>(null);
+  const [invitationTarget, setInvitationTarget] = useState<PendingInvitation | null>(null);
+  const changeStatus = useChangeUserStatus();
+  const cancelInvitation = useCancelInvitation();
 
-  async function confirmar() {
-    if (!objetivo) return;
-    const nuevoEstado = objetivo.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-    await cambiarEstado.mutateAsync({ id: objetivo.id, status: nuevoEstado });
-    setObjetivo(null);
+  async function confirm() {
+    if (!statusTarget) return;
+    const nuevoEstado = statusTarget.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+    await changeStatus.mutateAsync({ id: statusTarget.id, status: nuevoEstado });
+    setStatusTarget(null);
   }
 
-  async function confirmarCancelarInvitacion() {
-    if (!objetivoInvitacion) return;
-    await cancelarInvitacion.mutateAsync(objetivoInvitacion.id);
-    setObjetivoInvitacion(null);
+  async function confirmCancelarInvitacion() {
+    if (!invitationTarget) return;
+    await cancelInvitation.mutateAsync(invitationTarget.id);
+    setInvitationTarget(null);
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Usuarios</h1>
-          <p className="text-muted-foreground">Registro y gestión de cuentas del sistema</p>
-        </div>
-        <div className="flex gap-2">
-          <InviteVetDialog />
-          <NewUserDialog />
-        </div>
+      <div className="flex justify-end gap-2">
+        <InviteVetDialog />
+        <NewUserDialog />
       </div>
 
       {invitations && invitations.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Invitaciones pending</CardTitle>
+            <CardTitle className="text-base">Invitaciones pendientes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col divide-y">
@@ -87,10 +81,10 @@ export function UsersPage() {
                     <span className="font-medium">{invitation.name || invitation.email}</span>
                     <span className="text-muted-foreground">
                       {invitation.name && `(${invitation.email}) · `}invitó {invitation.invitedBy.firstName}{" "}
-                      {invitation.invitedBy.paternalLastName} · vence {formatearFecha(invitation.expiresAt)}
+                      {invitation.invitedBy.paternalLastName} · vence {formatDate(invitation.expiresAt)}
                     </span>
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => setObjetivoInvitacion(invitation)}>
+                  <Button variant="ghost" size="sm" onClick={() => setInvitationTarget(invitation)}>
                     <X className="size-3.5" />
                     Cancelar
                   </Button>
@@ -147,23 +141,23 @@ export function UsersPage() {
                       <TableCell>{user.username}</TableCell>
                       <TableCell>{ROLE_LABEL[user.role]}</TableCell>
                       <TableCell>
-                        <StatusBadge status={esPendienteDeAprobacion(user) ? "PENDING_APPROVAL" : user.status} />
+                        <StatusBadge status={isPendingApproval(user) ? "PENDING_APPROVAL" : user.status} />
                       </TableCell>
                       <TableCell className="text-right space-x-2">
-                        {user.id !== usuarioActual?.id && (
-                          <Button variant="outline" size="sm" onClick={() => setObjetivoRol(user)}>
+                        {user.id !== currentUser?.id && (
+                          <Button variant="outline" size="sm" onClick={() => setRoleTarget(user)}>
                             Cambiar rol
                           </Button>
                         )}
-                        <Button variant="outline" size="sm" onClick={() => setObjetivoPassword(user)}>
+                        <Button variant="outline" size="sm" onClick={() => setPasswordTarget(user)}>
                           Restablecer contraseña
                         </Button>
                         <Button
-                          variant={esPendienteDeAprobacion(user) ? "default" : "outline"}
+                          variant={isPendingApproval(user) ? "default" : "outline"}
                           size="sm"
-                          onClick={() => setObjetivo(user)}
+                          onClick={() => setStatusTarget(user)}
                         >
-                          {esPendienteDeAprobacion(user) ? "Aprobar" : user.status === "ACTIVE" ? "Desactivar" : "Activar"}
+                          {isPendingApproval(user) ? "Aprobar" : user.status === "ACTIVE" ? "Desactivar" : "Activar"}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -177,57 +171,57 @@ export function UsersPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={!!objetivo} onOpenChange={(v) => !v && setObjetivo(null)}>
+      <Dialog open={!!statusTarget} onOpenChange={(v) => !v && setStatusTarget(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>
-              {objetivo && esPendienteDeAprobacion(objetivo)
+              {statusTarget && isPendingApproval(statusTarget)
                 ? "¿Aprobar solicitud?"
-                : objetivo?.status === "ACTIVE"
+                : statusTarget?.status === "ACTIVE"
                   ? "¿Desactivar cuenta?"
                   : "¿Activar cuenta?"}
             </DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            {objetivo && esPendienteDeAprobacion(objetivo)
-              ? `${objetivo.firstName} ${objetivo.paternalLastName} podrá iniciar sesión como Veterinario y aparecerá en los selectores de agendar/atender.`
-              : objetivo?.status === "ACTIVE"
-                ? `${objetivo?.firstName} ${objetivo?.paternalLastName} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.`
-                : `${objetivo?.firstName} ${objetivo?.paternalLastName} podrá volver a iniciar sesión.`}
+            {statusTarget && isPendingApproval(statusTarget)
+              ? `${statusTarget.firstName} ${statusTarget.paternalLastName} podrá iniciar sesión como Veterinario y aparecerá en los selectores de agendar/atender.`
+              : statusTarget?.status === "ACTIVE"
+                ? `${statusTarget?.firstName} ${statusTarget?.paternalLastName} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.`
+                : `${statusTarget?.firstName} ${statusTarget?.paternalLastName} podrá volver a iniciar sesión.`}
           </p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setObjetivo(null)}>
+            <Button variant="outline" onClick={() => setStatusTarget(null)}>
               Cancelar
             </Button>
             <Button
-              variant={objetivo?.status === "ACTIVE" ? "destructive" : "default"}
-              onClick={confirmar}
-              disabled={cambiarEstado.isPending}
+              variant={statusTarget?.status === "ACTIVE" ? "destructive" : "default"}
+              onClick={confirm}
+              disabled={changeStatus.isPending}
             >
-              {cambiarEstado.isPending && <Loader2 className="size-4 animate-spin" />}
-              {objetivo && esPendienteDeAprobacion(objetivo) ? "Aprobar" : objetivo?.status === "ACTIVE" ? "Desactivar" : "Activar"}
+              {changeStatus.isPending && <Loader2 className="size-4 animate-spin" />}
+              {statusTarget && isPendingApproval(statusTarget) ? "Aprobar" : statusTarget?.status === "ACTIVE" ? "Desactivar" : "Activar"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <ChangeRoleDialog user={objetivoRol} onClose={() => setObjetivoRol(null)} />
-      <ResetPasswordDialog user={objetivoPassword} onClose={() => setObjetivoPassword(null)} />
+      <ChangeRoleDialog user={roleTarget} onClose={() => setRoleTarget(null)} />
+      <ResetPasswordDialog user={passwordTarget} onClose={() => setPasswordTarget(null)} />
 
-      <Dialog open={!!objetivoInvitacion} onOpenChange={(v) => !v && setObjetivoInvitacion(null)}>
+      <Dialog open={!!invitationTarget} onOpenChange={(v) => !v && setInvitationTarget(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>¿Cancelar invitación?</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            El enlace que le enviamos a {objetivoInvitacion?.email} dejará de funcionar.
+            El enlace que le enviamos a {invitationTarget?.email} dejará de funcionar.
           </p>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setObjetivoInvitacion(null)}>
+            <Button variant="outline" onClick={() => setInvitationTarget(null)}>
               Volver
             </Button>
-            <Button variant="destructive" onClick={confirmarCancelarInvitacion} disabled={cancelarInvitacion.isPending}>
-              {cancelarInvitacion.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button variant="destructive" onClick={confirmCancelarInvitacion} disabled={cancelInvitation.isPending}>
+              {cancelInvitation.isPending && <Loader2 className="size-4 animate-spin" />}
               Cancelar invitación
             </Button>
           </DialogFooter>

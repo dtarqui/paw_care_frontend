@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/api-client";
-import type { DashboardModule } from "./types";
+import type { DashboardModulesResponse } from "./types";
 
 export const dashboardApi = {
-  modules: () => apiClient.get<{ modules: DashboardModule[] }>("/api/dashboard/modules"),
+  modules: () => apiClient.get<DashboardModulesResponse>("/api/dashboard/modules"),
 };

@@ -1,6 +1,6 @@
 import { useModules } from "@/features/dashboard/useModules";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, PawPrint, Settings } from "lucide-react";
+import { LayoutDashboard, PawPrint } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { ICON_MAP } from "./icon-map";
 import { SidebarUserMenu } from "./SidebarUserMenu";
@@ -10,7 +10,9 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onNavigate }: SidebarProps) {
-  const { data: modules, isLoading } = useModules();
+  // Los grupos, su orden y qué módulos caen en cada uno los define el backend
+  // (dashboard.service.ts) según el rol — acá no hay ninguna tabla de permisos.
+  const { groupedModules, isLoading } = useModules();
 
   return (
     <nav className="flex h-full flex-col">
@@ -30,25 +32,26 @@ export function Sidebar({ onNavigate }: SidebarProps) {
             <div key={i} className="mx-1 my-1 h-9 animate-pulse rounded-md bg-muted" />
           ))}
 
-        {modules?.map((module) => {
-          const Icon = ICON_MAP[module.icon] ?? PawPrint;
-          return (
-            <SidebarLink key={module.id} to={module.route} onClick={onNavigate}>
-              <Icon className="size-4" />
-              {module.title}
-            </SidebarLink>
-          );
-        })}
+        {groupedModules.map(({ group, modules }) => (
+          <div key={group.id} className="mt-4 flex flex-col gap-1 first:mt-2">
+            <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/45">
+              {group.title}
+            </p>
+            {modules.map((module) => {
+              const Icon = ICON_MAP[module.icon] ?? PawPrint;
+              return (
+                <SidebarLink key={module.id} to={module.route} onClick={onNavigate}>
+                  <Icon className="size-4" />
+                  {module.title}
+                </SidebarLink>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
-      <div className="flex flex-col gap-1 border-t border-sidebar-border p-3">
-        <SidebarLink to="/app/settings" onClick={onNavigate}>
-          <Settings className="size-4" />
-          Configuración
-        </SidebarLink>
-        <div className="mt-1">
-          <SidebarUserMenu onNavigate={onNavigate} />
-        </div>
+      <div className="border-t border-sidebar-border p-3">
+        <SidebarUserMenu onNavigate={onNavigate} />
       </div>
     </nav>
   );
