@@ -1,14 +1,14 @@
-export type Rol = "ADMINISTRADOR" | "VETERINARIO" | "RECEPCIONISTA";
+export type Role = "ADMIN" | "VET" | "RECEPTIONIST";
 
-export interface UsuarioSesion {
+export interface SessionUser {
   id: number;
   username: string;
-  nombre: string;
-  apellidoPaterno: string;
-  rol: Rol;
+  firstName: string;
+  paternalLastName: string;
+  role: Role;
 }
 
 export interface LoginResponse {
   token: string;
-  usuario: UsuarioSesion;
+  user: SessionUser;
 }

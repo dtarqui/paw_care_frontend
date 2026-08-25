@@ -1,13 +1,14 @@
-import type { Rol } from "@/features/auth/types";
+import type { Role } from "@/features/auth/types";
 
-export const ROL_LABEL: Record<Rol, string> = {
-  ADMINISTRADOR: "Administrador",
-  VETERINARIO: "Veterinario",
-  RECEPCIONISTA: "Recepcionista",
+/** Etiquetas visibles en español para cada rol del backend. */
+export const ROLE_LABEL: Record<Role, string> = {
+  ADMIN: "Administrador",
+  VET: "Veterinario",
+  RECEPTIONIST: "Recepcionista",
 };
 
-export const ROLES: { value: Rol; label: string }[] = [
-  { value: "ADMINISTRADOR", label: "Administrador" },
-  { value: "VETERINARIO", label: "Veterinario" },
-  { value: "RECEPCIONISTA", label: "Recepcionista" },
+export const ROLES: { value: Role; label: string }[] = [
+  { value: "ADMIN", label: "Administrador" },
+  { value: "VET", label: "Veterinario" },
+  { value: "RECEPTIONIST", label: "Recepcionista" },
 ];

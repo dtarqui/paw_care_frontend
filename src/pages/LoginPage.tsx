@@ -51,7 +51,7 @@ export function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="username">Usuario</Label>
+              <Label htmlFor="username">User</Label>
               <Input
                 id="username"
                 autoComplete="username"
@@ -64,7 +64,7 @@ export function LoginPage() {
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Contraseña</Label>
-                <Link to="/olvide-password" className="text-xs text-muted-foreground hover:text-primary hover:underline">
+                <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-primary hover:underline">
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -103,8 +103,8 @@ export function LoginPage() {
           </form>
 
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            ¿Eres veterinario y no tienes cuenta?{" "}
-            <Link to="/registro" className="font-medium text-primary hover:underline">
+            ¿Eres vet y no tienes cuenta?{" "}
+            <Link to="/register" className="font-medium text-primary hover:underline">
               Solicita tu acceso
             </Link>
           </p>

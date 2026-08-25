@@ -1,4 +1,4 @@
-import { useModulos } from "@/features/dashboard/useModulos";
+import { useModules } from "@/features/dashboard/useModules";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, PawPrint, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -10,7 +10,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onNavigate }: SidebarProps) {
-  const { data: modulos, isLoading } = useModulos();
+  const { data: modules, isLoading } = useModules();
 
   return (
     <nav className="flex h-full flex-col">
@@ -30,19 +30,19 @@ export function Sidebar({ onNavigate }: SidebarProps) {
             <div key={i} className="mx-1 my-1 h-9 animate-pulse rounded-md bg-muted" />
           ))}
 
-        {modulos?.map((modulo) => {
-          const Icon = ICON_MAP[modulo.icono] ?? PawPrint;
+        {modules?.map((module) => {
+          const Icon = ICON_MAP[module.icon] ?? PawPrint;
           return (
-            <SidebarLink key={modulo.id} to={modulo.ruta} onClick={onNavigate}>
+            <SidebarLink key={module.id} to={module.route} onClick={onNavigate}>
               <Icon className="size-4" />
-              {modulo.titulo}
+              {module.title}
             </SidebarLink>
           );
         })}
       </div>
 
       <div className="flex flex-col gap-1 border-t border-sidebar-border p-3">
-        <SidebarLink to="/app/configuracion" onClick={onNavigate}>
+        <SidebarLink to="/app/settings" onClick={onNavigate}>
           <Settings className="size-4" />
           Configuración
         </SidebarLink>

@@ -10,6 +10,8 @@
 
 ## Progreso
 
+> **⚠️ Nombres antiguos en el historial:** todo lo que sigue (Progreso y sesiones 1–6) quedó escrito con los nombres en español que el proyecto usaba en ese momento (`Mascota`, `/api/mascotas`, `estado: ACTIVO`, …). En la **sesión 7** el código pasó íntegramente a inglés y las tablas al prefijo `st_` — se dejó el historial tal cual, como registro de lo que se hizo cuándo. Para traducir cualquier nombre viejo al actual, usá [`docs/GLOSARIO_EN_ES.md`](../docs/GLOSARIO_EN_ES.md).
+
 > El backend ahora persiste en PostgreSQL real (Supabase) vía Prisma — ver `backend/TASKS.md`. El frontend no cambió: siempre consumió la API real por HTTP, nunca datos mockeados en el propio frontend, así que la migración de datos en memoria a base de datos fue transparente para esta capa. `[x]` = construido y funcionando; `[ ]` con nota "parcial" = existe algo pero no cumple la HU completa; sin nota = no empezado.
 
 - [x] Tarea 00 — Setup del frontend
@@ -92,6 +94,21 @@
 - [x] **Hoy siempre muestra el error honesto del backend** ("El cobro por QR bancario no está disponible todavía en este entorno...") en vez de un QR falso — el backend (`lib/pagoQr.ts`, ver `backend/TASKS.md` sesión 6) no tiene ningún banco conectado todavía. El diálogo ya está listo para mostrar el QR real (imagen si `qrPayload` es una URL, o el contenido crudo si no) apenas el backend empiece a devolver uno de verdad — no hará falta tocar el frontend.
 - [x] **Al confirmarse un cobro**, invalida `["pagos", "pendientes"]` y `["pagos", "historial"]` (mismo criterio de invalidación por prefijo que ya usa el resto de la app) para que la fila desaparezca de pendientes y aparezca en "Últimos pagos" sin recargar.
 - [x] **Probado en navegador real** (Playwright, ver `backend/TASKS.md` sesión 6 para el detalle de la corrida) contra el backend real: login, ir a Pagos, clic en "Cobrar con QR" sobre una atención pendiente real, el diálogo muestra los datos correctos y el mensaje de error esperado, sin errores de consola aparte del 500 esperado.
+
+---
+
+## Correcciones y mejoras (sesión 7 — código en inglés, UI en español)
+
+Contraparte frontend del refactor de nomenclatura descrito en `backend/TASKS.md` sesión 7. Sin cambios funcionales ni de diseño: **ninguna pantalla cambió de aspecto ni de comportamiento**, solo los identificadores del código.
+
+- [x] **`features/` y `pages/` renombrados** — las 18 carpetas de features (`mascotas`→`pets`, `atenciones`→`medical-visits`, `citas`→`appointments`, `controles-preventivos`→`preventive-controls`, `propietarios`→`owners`, `veterinarios`→`vets`, `usuarios`→`users`, `medicamentos`→`medications`, `pagos`→`payments`, `recordatorios`→`reminders`, `reportes`→`reports`, `auditoria`→`audit-logs`, `horarios`→`schedules`, `importaciones`→`imports`, `exportacion`→`exports`) y sus 12 carpetas de páginas equivalentes, con todos sus componentes (`MascotasPage`→`PetsPage`, `NuevaAtencionDialog`→`NewVisitDialog`, `CobroQrDialog`→`QrChargeDialog`, …). También `lib/mascota.ts`→`lib/pet.ts`, `lib/tipos-servicio.ts`→`lib/service-types.ts` y `components/BuscadorMascotaPorCi.tsx`→`components/PetSearchByNationalId.tsx`.
+- [x] **Tipos y hooks alineados al nuevo contrato del backend** — `Mascota`→`Pet`, `AtencionMedica`→`MedicalVisit`, `useMascotas`→`usePets`, `usePagosPendientes`→`usePendingPayments`, etc. Las **claves de caché de TanStack Query** también cambiaron (`["mascotas"]`→`["pets"]`, `["pagos","pendientes"]`→`["payments","pending"]`), respetando la invalidación por prefijo cruzada que ya existía entre features.
+- [x] **Rutas del frontend en inglés** — `/app/mascotas`→`/app/pets`, `/app/atencion-medica`→`/app/medical-visits`, `/app/configuracion`→`/app/settings`, etc., y las públicas `/registro`→`/register`, `/olvide-password`→`/forgot-password`, `/restablecer-password`→`/reset-password`, `/invitacion`→`/invitation`. El backend genera estas mismas rutas (`dashboard.service.ts` para el sidebar; `auth.service.ts`/`vetInvitation.service.ts` para los links de email), así que ambos lados quedaron sincronizados.
+- [x] **Traducción de enums en el borde de la UI** — como los valores ahora viajan en inglés, `StatusBadge.tsx` y `lib/roles.ts` mapean cada valor a su etiqueta en español (`PENDING`→"Pendiente", `ADMIN`→"Administrador", `VACCINE`→"Vacuna", …). El valor derivado `PENDING_APPROVAL` (que no existe en el backend) se mantiene, ahora calculado como `selfRegistered && status === "INACTIVE"`.
+- [x] **Todo el texto visible sigue en español** — labels, placeholders, toasts, estados vacíos, mensajes de error y comentarios del código quedaron intactos. Se hizo una auditoría específica sobre los nodos de texto JSX (que, al no estar entre comillas, eran el punto donde un renombrado automático podía filtrar inglés a la pantalla) y se corrigieron 23 archivos donde eso había pasado.
+- [x] **Verificado**: `npx tsc -b --noEmit` limpio, `npm run lint` (oxlint) limpio, `npm run build` genera el bundle + service worker de la PWA sin errores. El contrato contra el backend se validó con el servidor real corriendo (ver `backend/TASKS.md` sesión 7).
+
+**Deuda conocida que este refactor NO tocó:** el frontend sigue sin ningún test automatizado (ver `docs/MEJORAS_PRODUCTO.md` 4.2) — la red de seguridad de esta migración fue TypeScript, no una suite de pruebas.
 
 ---
 

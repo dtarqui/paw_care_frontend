@@ -1,12 +1,12 @@
 import { tokenStorage } from "@/lib/api-client";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { authApi } from "./api";
-import type { UsuarioSesion } from "./types";
+import type { SessionUser } from "./types";
 
-const USER_STORAGE_KEY = "pawcare.usuario";
+const USER_STORAGE_KEY = "pawcare.user";
 
 interface AuthContextValue {
-  usuario: UsuarioSesion | null;
+  user: SessionUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
@@ -15,36 +15,36 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-function readStoredUser(): UsuarioSesion | null {
+function readStoredUser(): SessionUser | null {
   const raw = localStorage.getItem(USER_STORAGE_KEY);
-  return raw ? (JSON.parse(raw) as UsuarioSesion) : null;
+  return raw ? (JSON.parse(raw) as SessionUser) : null;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [usuario, setUsuario] = useState<UsuarioSesion | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = tokenStorage.get();
-    if (token) setUsuario(readStoredUser());
+    if (token) setUser(readStoredUser());
     setIsLoading(false);
   }, []);
 
   async function login(username: string, password: string) {
-    const { token, usuario: usuarioLogueado } = await authApi.login(username, password);
+    const { token, user: loggedUser } = await authApi.login(username, password);
     tokenStorage.set(token);
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(usuarioLogueado));
-    setUsuario(usuarioLogueado);
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(loggedUser));
+    setUser(loggedUser);
   }
 
   function logout() {
     tokenStorage.clear();
     localStorage.removeItem(USER_STORAGE_KEY);
-    setUsuario(null);
+    setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ usuario, isAuthenticated: !!usuario, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

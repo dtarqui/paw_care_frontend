@@ -92,16 +92,16 @@ export const apiClient = {
     }
 
     const blob = await response.blob();
-    const disposicion = response.headers.get("Content-Disposition");
-    const nombre = disposicion?.match(/filename="(.+)"/)?.[1] ?? filenameFallback;
+    const disposition = response.headers.get("Content-Disposition");
+    const filename = disposition?.match(/filename="(.+)"/)?.[1] ?? filenameFallback;
 
     const url = URL.createObjectURL(blob);
-    const enlace = document.createElement("a");
-    enlace.href = url;
-    enlace.download = nombre;
-    document.body.appendChild(enlace);
-    enlace.click();
-    enlace.remove();
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
     URL.revokeObjectURL(url);
   },
 };

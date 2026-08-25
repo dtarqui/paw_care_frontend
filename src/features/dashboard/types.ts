@@ -1,7 +1,7 @@
-export interface ModuloDashboard {
+export interface DashboardModule {
   id: string;
-  titulo: string;
-  descripcion: string;
-  ruta: string;
-  icono: string;
+  title: string; // texto visible, en español
+  description: string; // idem
+  route: string;
+  icon: string;
 }

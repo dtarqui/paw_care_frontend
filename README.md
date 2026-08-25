@@ -58,7 +58,7 @@ Agregar una pantalla nueva = agregar su `feature/` (si consume datos nuevos) + s
 
 ## Deploy en Vercel
 
-Zero-config (framework Vite auto-detectado): `npm run build` genera un sitio estático en `dist/`. [`vercel.json`](vercel.json) agrega el rewrite de fallback SPA (`/(.*)` → `/index.html`) explícito, necesario porque las rutas las maneja React Router del lado del cliente (sin esto, refrescar una URL como `/app/mascotas` daría 404).
+Zero-config (framework Vite auto-detectado): `npm run build` genera un sitio estático en `dist/`. [`vercel.json`](vercel.json) agrega el rewrite de fallback SPA (`/(.*)` → `/index.html`) explícito, necesario porque las rutas las maneja React Router del lado del cliente (sin esto, refrescar una URL como `/app/pets` daría 404).
 
 En el proyecto de Vercel (Project Settings → Environment Variables) hay que configurar `VITE_API_URL` apuntando a la URL desplegada del backend — Vite la incrusta en el build, así que cualquier cambio requiere un nuevo deploy.
 

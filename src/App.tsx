@@ -1,26 +1,26 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AuthProvider } from "@/features/auth/AuthContext";
-import { AtencionMedicaPage } from "@/pages/atencion-medica/AtencionMedicaPage";
-import { AuditoriaPage } from "@/pages/auditoria/AuditoriaPage";
-import { CitasPage } from "@/pages/citas/CitasPage";
-import { ConfiguracionPage } from "@/pages/ConfiguracionPage";
-import { ControlPreventivoPage } from "@/pages/control-preventivo/ControlPreventivoPage";
+import { MedicalVisitsPage } from "@/pages/medical-visits/MedicalVisitsPage";
+import { AuditLogPage } from "@/pages/audit-log/AuditLogPage";
+import { AppointmentsPage } from "@/pages/appointments/AppointmentsPage";
+import { SettingsPage } from "@/pages/SettingsPage";
+import { PreventiveControlsPage } from "@/pages/preventive-controls/PreventiveControlsPage";
 import { DashboardPage } from "@/pages/DashboardPage";
-import { HorariosPage } from "@/pages/horarios/HorariosPage";
-import { InventarioPage } from "@/pages/inventario/InventarioPage";
-import { InvitacionPage } from "@/pages/InvitacionPage";
+import { SchedulesPage } from "@/pages/schedules/SchedulesPage";
+import { InventoryPage } from "@/pages/inventory/InventoryPage";
+import { InvitationPage } from "@/pages/InvitationPage";
 import { LoginPage } from "@/pages/LoginPage";
-import { MascotaDetallePage } from "@/pages/mascotas/MascotaDetallePage";
-import { MascotasPage } from "@/pages/mascotas/MascotasPage";
-import { OlvidePasswordPage } from "@/pages/OlvidePasswordPage";
-import { PagosPage } from "@/pages/pagos/PagosPage";
-import { PropietariosPage } from "@/pages/propietarios/PropietariosPage";
-import { RecordatoriosPage } from "@/pages/recordatorios/RecordatoriosPage";
-import { RegistroVeterinarioPage } from "@/pages/RegistroVeterinarioPage";
-import { ReportesPage } from "@/pages/reportes/ReportesPage";
-import { RestablecerPasswordPage } from "@/pages/RestablecerPasswordPage";
-import { UsuariosPage } from "@/pages/usuarios/UsuariosPage";
+import { PetDetailPage } from "@/pages/pets/PetDetailPage";
+import { PetsPage } from "@/pages/pets/PetsPage";
+import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
+import { PaymentsPage } from "@/pages/payments/PaymentsPage";
+import { OwnersPage } from "@/pages/owners/OwnersPage";
+import { RemindersPage } from "@/pages/reminders/RemindersPage";
+import { VetRegistrationPage } from "@/pages/VetRegistrationPage";
+import { ReportsPage } from "@/pages/reports/ReportsPage";
+import { ResetPasswordPage } from "@/pages/ResetPasswordPage";
+import { UsersPage } from "@/pages/users/UsersPage";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 export function App() {
@@ -28,28 +28,28 @@ export function App() {
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/registro" element={<RegistroVeterinarioPage />} />
-        <Route path="/olvide-password" element={<OlvidePasswordPage />} />
-        <Route path="/restablecer-password" element={<RestablecerPasswordPage />} />
-        <Route path="/invitacion" element={<InvitacionPage />} />
+        <Route path="/register" element={<VetRegistrationPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/invitation" element={<InvitationPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/app" element={<AppShell />}>
             <Route index element={<DashboardPage />} />
-            <Route path="propietarios" element={<PropietariosPage />} />
-            <Route path="mascotas" element={<MascotasPage />} />
-            <Route path="mascotas/:id" element={<MascotaDetallePage />} />
-            <Route path="atencion-medica" element={<AtencionMedicaPage />} />
-            <Route path="citas" element={<CitasPage />} />
-            <Route path="control-preventivo" element={<ControlPreventivoPage />} />
-            <Route path="pagos" element={<PagosPage />} />
-            <Route path="recordatorios" element={<RecordatoriosPage />} />
-            <Route path="reportes" element={<ReportesPage />} />
-            <Route path="inventario" element={<InventarioPage />} />
-            <Route path="usuarios" element={<UsuariosPage />} />
-            <Route path="horarios" element={<HorariosPage />} />
-            <Route path="auditoria" element={<AuditoriaPage />} />
-            <Route path="configuracion" element={<ConfiguracionPage />} />
+            <Route path="owners" element={<OwnersPage />} />
+            <Route path="pets" element={<PetsPage />} />
+            <Route path="pets/:id" element={<PetDetailPage />} />
+            <Route path="medical-visits" element={<MedicalVisitsPage />} />
+            <Route path="appointments" element={<AppointmentsPage />} />
+            <Route path="preventive-controls" element={<PreventiveControlsPage />} />
+            <Route path="payments" element={<PaymentsPage />} />
+            <Route path="reminders" element={<RemindersPage />} />
+            <Route path="reports" element={<ReportsPage />} />
+            <Route path="inventory" element={<InventoryPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="schedules" element={<SchedulesPage />} />
+            <Route path="audit-log" element={<AuditLogPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Route>
 
