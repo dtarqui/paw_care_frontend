@@ -180,7 +180,7 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 
 | ID | Pantalla | Ruta | Rol(es) | Patrón | HU / Tarea |
 |---|---|---|---|---|---|
-| P00 | Login | `/login` | todos | formulario simple | HU1 · Tarea 01 |
+| P00 | Login | `/login` | público (sin sesión) | layout propio, partido en 2 columnas | HU1 · Tarea 01 · Sesión 9 |
 | P01 | Dashboard | `/app` | todos | C | HU1 · Tarea 01 |
 | P02 | Gestión de Usuarios | `/app/users` | Administrador | A (extendido) | HU1 · Tarea 01 |
 | P03 | Gestión de Propietarios | `/app/owners` | Admin, Recepcionista | A | HU2 · Tarea 02 |
@@ -207,8 +207,12 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 ## 5. Detalle por pantalla
 
 ### P00 — Login
-- **No usa el shell** (pantalla previa a autenticarse).
+- **No usa el shell** (pantalla previa a autenticarse). Es la primera impresión del producto, así que tiene su propio layout.
+- **Layout partido en dos columnas** a partir de `lg`: panel de marca a la izquierda (logo, propuesta de valor y tres capacidades reales del sistema) sobre `bg-primary`, y el formulario a la derecha. Por debajo de `lg` el panel desaparece y lo reemplaza una cabecera compacta con el logo, para no robarle espacio al formulario en móvil. El panel usa solo tokens (`primary` / `primary-foreground`), así que acompaña a los tres acentos de color y a claro/oscuro sin cambios.
 - Funcionalidad: formulario `username` + `password` (con mostrar/ocultar contraseña) → `POST /api/auth/login`. Error de credenciales se muestra junto al formulario, sin indicar cuál campo falló.
+- **Aviso de Bloq Mayús**: se detecta con `getModifierState("CapsLock")` en el campo de contraseña y se muestra inline. Es la causa más común de un login fallido y avisarla antes ahorra el intento perdido.
+- **Tooltips** (`components/ui/tooltip.tsx`, agregado en sesión 9): en el ícono de ayuda de "Usuario" (aclara que no es el correo), en el botón de mostrar/ocultar contraseña, en el enlace "Solicita tu acceso" (explica que un Administrador debe aprobar la cuenta) y en cada cuenta de demostración (qué ve ese rol).
+- **Cuentas de demostración**: una por rol (`admin`, `veterinario`, `recepcion`), las mismas que siembra `prisma/seed.ts`. Cada fila es un botón que llena usuario y contraseña de un clic — pensado para cambiar de rol en vivo durante una demo sin tipear. Si cambian en el seed, hay que actualizar `DEMO_ACCOUNTS` en `LoginPage.tsx` y `backend/README.md`.
 - Enlaces: "¿Eres veterinario y no tienes cuenta? Solicita tu acceso" → `/register` (preregistro público, P02 lo aprueba después) y "¿Olvidaste tu contraseña?" → `/forgot-password` (P17). Para el resto de roles, los usuarios los crea un Administrador desde P02 (o los invita — ver P19).
 
 ### P01 — Dashboard (Patrón C)

@@ -131,6 +131,21 @@ El sidebar tenía 13 ítems planos. Se agruparon en 4 secciones y se fusionaron 
 
 ---
 
+## Correcciones y mejoras (sesión 9 — rediseño del login y credenciales demo por rol)
+
+El login es la primera pantalla que ve cualquiera, así que se rehizo con eso en mente.
+
+- [x] **Layout partido en dos columnas** (`LoginPage.tsx`) — panel de marca a la izquierda sobre `bg-primary` (logo, propuesta de valor y tres capacidades reales: historial clínico, agenda y recordatorios, inventario y reportes) y formulario a la derecha. Por debajo de `lg` el panel desaparece y lo reemplaza una cabecera compacta, para no robarle espacio al formulario en móvil. Usa solo tokens de tema, así que funciona igual en claro/oscuro y con los tres acentos de color.
+- [x] **Componente `Tooltip` nuevo** (`components/ui/tooltip.tsx`) — no existía en el proyecto; se agregó sobre el paquete `radix-ui` que ya era dependencia, siguiendo el mismo patrón de los demás componentes de `ui/`.
+- [x] **Tooltips donde aportan**, no decorativos: en "Usuario" (aclara que no es el correo, es el username que asigna el Administrador), en mostrar/ocultar contraseña, en "Solicita tu acceso" (avisa que un Admin debe aprobar la cuenta) y en cada cuenta de demostración (qué ve ese rol).
+- [x] **Aviso de Bloq Mayús** — detectado con `getModifierState("CapsLock")` en el campo de contraseña. Es la causa más común de un login fallido; avisarla antes ahorra el intento perdido.
+- [x] **Una credencial demo por rol, y clicable** — el bloque de demo mostraba solo `admin` y `recepcion`; faltaba Veterinario porque su username cambiaba en cada reseed (nota de sesión 4). Ahora `prisma/seed.ts` siembra un `veterinario` / `vet123` estable (Patricia Mendoza), y las tres filas son botones que llenan el formulario de un clic — pensado para cambiar de rol en vivo durante una demo sin tipear. Los otros 5 veterinarios siguen existiendo como datos, pero no se publicitan.
+- [x] **Estados de error y envío más claros** — el error va en una caja con ícono y borde, y el botón pasa a "Verificando…" con spinner mientras envía.
+
+**Fugas de la sesión 7 corregidas acá:** la etiqueta del campo decía **"User"** en vez de "Usuario", y el enlace de registro decía **"¿Eres vet y no tienes cuenta?"** en vez de "¿Eres veterinario…?". Ambas venían del renombrado automático, que alcanzó texto JSX sin comillas.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).
