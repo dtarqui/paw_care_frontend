@@ -40,9 +40,9 @@ export function PetWeightChart({ puntos }: { puntos: PuntoPeso[] }) {
         <Line
           type="monotone"
           dataKey="weight"
-          stroke="var(--primary)"
+          stroke="var(--chart-1)"
           strokeWidth={2}
-          dot={{ r: 4, fill: "var(--primary)", strokeWidth: 0 }}
+          dot={{ r: 4, fill: "var(--chart-1)", strokeWidth: 0 }}
           activeDot={{ r: 6 }}
         />
       </LineChart>

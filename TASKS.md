@@ -164,6 +164,32 @@ Tres mejoras transversales de UI, decididas tras auditar las 9 pantallas con tab
 
 ---
 
+## Correcciones y mejoras (sesión 11 — búsqueda global, paleta de gráficos accesible y breadcrumbs)
+
+Los tres ítems que la sesión 10 había dejado pendientes.
+
+### Búsqueda global (Ctrl/Cmd + K)
+
+- [x] **Endpoint nuevo `GET /api/search?q=`** (`requireAuth`) — los endpoints existentes solo buscaban por CI exacto, así que combinarlos no alcanzaba: hacía falta coincidencia parcial por nombre.
+- [x] **Diseñado con proveedores, no con un `if` por entidad** — `SearchProvider` (`backend/src/services/search/searchProvider.ts`) define el contrato; `pet.searchProvider.ts` y `owner.searchProvider.ts` lo implementan y `search.service.ts` los compone. Sumar medicamentos o citas a la búsqueda es escribir un proveedor más y registrarlo: el servicio, el controlador y la ruta no cambian. Cada proveedor decide cómo se representa su entidad (título, subtítulo y a qué ruta navega), así que quien consume la búsqueda solo conoce `SearchResult`.
+- [x] **Mascotas por nombre; propietarios por nombre, apellido o CI** — las tres formas en que recepción identifica a un cliente en el mostrador. Solo mascotas activas: una dada de baja no es un destino útil al que saltar.
+- [x] **Paleta de comandos en el frontend** (`components/GlobalSearch.tsx`) sin dependencias nuevas — está construida sobre el `Dialog` que ya existía, no sobre `cmdk`. Debounce de 250 ms, mínimo de 2 caracteres (mismo umbral que aplica el backend), navegación con flechas y Enter, resultados agrupados por tipo.
+- [x] **Un registro `RESULT_KINDS` traduce `type` a ícono y etiqueta** — el diálogo no conoce mascotas ni propietarios; cuando el backend sume un proveedor, acá va una entrada más.
+- [x] **Con disparador visible**, no solo el atajo: un botón "Buscar… Ctrl K" arriba del sidebar y un ícono de lupa en la cabecera móvil. Un atajo que nadie descubre no sirve.
+
+### Paleta de gráficos accesible
+
+- [x] **La paleta anterior fallaba tres de los cinco checks** del validador de la skill `dataviz`, medido contra las superficies reales de la app. En claro: banda de luminosidad, separación CVD (peor par ΔE 5.8 con protanopía) y piso de visión normal (ΔE 14.4). En **oscuro era peor**: `chart-1` y `chart-2` estaban a ΔE 8.7 en visión normal y **2.3 con protanopía** — dos series contiguas prácticamente idénticas.
+- [x] **Reemplazada por la paleta de referencia validada** (azul, naranja, aqua, amarillo, magenta), re-escalonada para la superficie oscura — no es un flip automático del modo claro. Ambos modos pasan los cinco checks. Se dejan en hex a propósito: es el valor exacto que pasó la validación, sin deriva por conversión desde oklch.
+- [x] **El orden de los slots es el mecanismo de seguridad CVD**, no decoración: está documentado en `index.css` que no se reordene ni se agregue un 6º color sin volver a correr el validador.
+- [x] **Los gráficos ahora usan `--chart-1`, no `--primary`** — el acento de marca rota con el tema de color (violeta/océano/rosa) y nunca se validó como marca contra la superficie del gráfico; el slot 1 sí (≥3:1 en ambos modos). Se confirmó contra la skill que **un color para todas las barras es lo correcto** en el gráfico de ingresos por servicio: colorear cada barra distinto codificaría el rango, que es justo lo que el largo de la barra ya muestra.
+
+### Breadcrumbs
+
+- [x] **`components/Breadcrumbs.tsx`** y aplicado en la ficha de mascota, que es la única pantalla profunda: se llega desde Mascotas y desde Propietarios, y antes solo tenía un "Volver a Mascotas" que apuntaba siempre al mismo lugar sin importar de dónde vinieras.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

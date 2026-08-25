@@ -1,15 +1,16 @@
 import { useModules } from "@/features/dashboard/useModules";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, PawPrint } from "lucide-react";
+import { LayoutDashboard, PawPrint, Search } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { ICON_MAP } from "./icon-map";
 import { SidebarUserMenu } from "./SidebarUserMenu";
 
 interface SidebarProps {
   onNavigate?: () => void;
+  onOpenSearch?: () => void;
 }
 
-export function Sidebar({ onNavigate }: SidebarProps) {
+export function Sidebar({ onNavigate, onOpenSearch }: SidebarProps) {
   // Los grupos, su orden y qué módulos caen en cada uno los define el backend
   // (dashboard.service.ts) según el rol — acá no hay ninguna tabla de permisos.
   const { groupedModules, isLoading } = useModules();
@@ -22,6 +23,23 @@ export function Sidebar({ onNavigate }: SidebarProps) {
       </div>
 
       <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
+        {onOpenSearch && (
+          <button
+            type="button"
+            onClick={() => {
+              onNavigate?.();
+              onOpenSearch();
+            }}
+            className="mb-2 flex items-center gap-2 rounded-md border border-sidebar-border/70 px-3 py-2 text-sm text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          >
+            <Search className="size-4" />
+            <span>Buscar…</span>
+            <kbd className="ml-auto rounded border border-sidebar-border bg-sidebar-accent/50 px-1.5 py-0.5 font-sans text-[10px]">
+              Ctrl K
+            </kbd>
+          </button>
+        )}
+
         <SidebarLink to="/app" end onClick={onNavigate}>
           <LayoutDashboard className="size-4" />
           Dashboard

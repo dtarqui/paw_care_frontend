@@ -67,11 +67,20 @@
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.541 0.245 292.5);
-    --chart-1: oklch(0.541 0.245 292.5);
-    --chart-2: oklch(0.65 0.2 320);
-    --chart-3: oklch(0.72 0.17 200);
-    --chart-4: oklch(0.75 0.18 150);
-    --chart-5: oklch(0.8 0.18 80);
+    /* Paleta categórica de gráficos — validada con el validador de la skill dataviz
+       contra las superficies reales de la app (#ffffff en claro, #171717 en oscuro):
+       banda de luminosidad, piso de croma, separación CVD y piso de visión normal.
+       La anterior fallaba tres de esos checks: chart-1 y chart-2 estaban a 27° de
+       tono (ΔE 8.7 en visión normal, 2.3 con protanopía) — dos series contiguas
+       prácticamente indistinguibles. Se dejan en hex a propósito: es el valor exacto
+       que pasó la validación, sin deriva por conversión.
+       El orden de los slots ES el mecanismo de seguridad CVD: no lo reordenes ni
+       agregues un 6º color sin volver a correr el validador. */
+    --chart-1: #2a78d6; /* azul */
+    --chart-2: #eb6834; /* naranja */
+    --chart-3: #1baf7a; /* aqua */
+    --chart-4: #eda100; /* amarillo */
+    --chart-5: #e87ba4; /* magenta */
     --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
@@ -102,11 +111,13 @@
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.72 0.19 292.5);
-    --chart-1: oklch(0.72 0.19 292.5);
-    --chart-2: oklch(0.75 0.18 320);
-    --chart-3: oklch(0.78 0.15 200);
-    --chart-4: oklch(0.8 0.16 150);
-    --chart-5: oklch(0.82 0.16 80);
+    /* Mismos cinco tonos, re-escalonados para la superficie oscura (no es un flip
+       automático del modo claro): se validaron como conjunto contra #171717. */
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-4: #c98500;
+    --chart-5: #d55181;
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: oklch(0.72 0.19 292.5);

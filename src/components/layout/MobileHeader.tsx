@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, PawPrint } from "lucide-react";
+import { Menu, PawPrint, Search } from "lucide-react";
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 
@@ -9,7 +9,7 @@ import { Sidebar } from "./Sidebar";
  * incluido) vive en un Sheet lateral. En escritorio el sidebar ya está siempre
  * visible, así que esta barra no se renderiza.
  */
-export function MobileHeader() {
+export function MobileHeader({ onOpenSearch }: { onOpenSearch?: () => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -21,13 +21,18 @@ export function MobileHeader() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-72 border-sidebar-border bg-sidebar p-0">
-          <Sidebar onNavigate={() => setOpen(false)} />
+          <Sidebar onNavigate={() => setOpen(false)} onOpenSearch={onOpenSearch} />
         </SheetContent>
       </Sheet>
       <div className="flex items-center gap-2">
         <PawPrint className="size-5 text-primary" />
         <span className="font-semibold">PawCare</span>
       </div>
+      {onOpenSearch && (
+        <Button variant="ghost" size="icon" className="ml-auto" onClick={onOpenSearch} aria-label="Buscar">
+          <Search className="size-5" />
+        </Button>
+      )}
     </header>
   );
 }

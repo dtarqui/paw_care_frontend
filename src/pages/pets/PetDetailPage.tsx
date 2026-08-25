@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { PetHistoryEvent } from "@/features/pets/types";
 import { useChangePetStatus, usePetHistory, usePet } from "@/features/pets/usePets";
 import { calculateAge } from "@/lib/pet";
-import { AlertTriangle, ArrowLeft, Loader2, PawPrint, Phone, User } from "lucide-react";
+import { AlertTriangle, Loader2, PawPrint, Phone, User } from "lucide-react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { EditPetDialog } from "./EditPetDialog";
 import { PetWeightChart, type PuntoPeso } from "./PetWeightChart";
 import { PetHistoryTimeline } from "./PetHistoryTimeline";
@@ -48,10 +49,12 @@ export function PetDetailPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Link to="/app/pets" className="flex w-fit items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="size-4" />
-        Volver a Mascotas
-      </Link>
+      <Breadcrumbs
+        items={[
+          { label: "Mascotas", to: "/app/pets" },
+          { label: pet?.name ?? "Ficha de mascota" },
+        ]}
+      />
 
       {isLoading && (
         <div className="flex flex-col gap-2">

@@ -111,7 +111,7 @@ export function ClinicalTab() {
                       fontSize: 13,
                     }}
                   />
-                  <Bar dataKey="amount" fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={22} />
+                  <Bar dataKey="amount" fill="var(--chart-1)" radius={[0, 4, 4, 0]} barSize={22} />
                 </BarChart>
               </ResponsiveContainer>
             )}
