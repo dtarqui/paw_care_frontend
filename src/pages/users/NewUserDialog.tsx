@@ -140,7 +140,7 @@ export function NewUserDialog() {
               <Input id="phone" value={form.phone} onChange={(e) => actualizar("phone", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Role *</Label>
+              <Label>Rol *</Label>
               <Select value={form.role} onValueChange={(v) => actualizar("role", v as Role)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione rol" />
@@ -185,7 +185,7 @@ export function NewUserDialog() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="username">User *</Label>
+              <Label htmlFor="username">Usuario *</Label>
               <Input id="username" required value={form.username} onChange={(e) => actualizar("username", e.target.value)} />
             </div>
             <div />

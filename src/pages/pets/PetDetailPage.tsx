@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { PetHistoryEvent } from "@/features/pets/types";
 import { useChangePetStatus, usePetHistory, usePet } from "@/features/pets/usePets";
@@ -150,11 +151,7 @@ export function PetDetailPage() {
             </CardHeader>
             <CardContent>
               {cargandoHistorial && (
-                <div className="flex flex-col gap-2">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
-                  ))}
-                </div>
+<TableSkeleton rows={3} />
               )}
               {!cargandoHistorial && <PetHistoryTimeline events={events ?? []} />}
             </CardContent>

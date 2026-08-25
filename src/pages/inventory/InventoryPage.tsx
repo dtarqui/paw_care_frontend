@@ -1,8 +1,11 @@
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
+import { StatTile } from "@/components/StatTile";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Medication } from "@/features/medications/types";
 import { useDeleteMedication, useMedications, useLowStockMedications } from "@/features/medications/useMedications";
@@ -40,11 +43,22 @@ export function InventoryPage() {
         <NewMedicationDialog />
       </div>
 
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <StatTile label="Medicamentos en catálogo" value={medications?.length ?? 0} icon={Package} isLoading={isLoading} />
+        <StatTile
+          label="Bajo el mínimo"
+          value={bajoStock?.length ?? 0}
+          icon={AlertTriangle}
+          isLoading={isLoading}
+          tone={bajoStock && bajoStock.length > 0 ? "warning" : "default"}
+        />
+      </div>
+
       {bajoStock && bajoStock.length > 0 && (
         <div className="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400">
           <AlertTriangle className="mt-0.5 size-5 shrink-0" />
           <p className="text-sm">
-            <span className="font-medium">{bajoStock.length} medication(s) con stock bajo:</span>{" "}
+            <span className="font-medium">{bajoStock.length} medicamento(s) con stock bajo:</span>{" "}
             {bajoStock.map((m) => m.name).join(", ")}.
           </p>
         </div>
@@ -55,29 +69,67 @@ export function InventoryPage() {
           <CardTitle className="text-base">Medicamentos</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
+          {isLoading && <TableSkeleton rows={4} />}
 
-          {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el inventario.</p>}
+
+          {isError && <ErrorState message="No se pudo cargar el inventario." />}
 
           {!isLoading && !isError && medications?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-              <Package className="size-8" />
-              <p>Sin medicamentos registrados todavía.</p>
-            </div>
+            <EmptyState
+              icon={Package}
+              title="Sin medicamentos registrados todavía"
+              description="Cargá el catálogo para poder descontar stock al registrar atenciones."
+              action={<NewMedicationDialog />}
+            />
           )}
 
           {!isLoading && !isError && medications && medications.length > 0 && (
-            <div className="overflow-x-auto">
-              <Table>
+            <>
+              <MobileCardList>
+                {medications.map((medication) => {
+                  const low = medication.currentStock <= medication.minimumStock;
+                  return (
+                    <MobileCard
+                      key={medication.id}
+                      title={medication.name}
+                      badge={
+                        low ? (
+                          <Badge className="border-none bg-amber-100 font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">
+                            Bajo stock
+                          </Badge>
+                        ) : (
+                          <Badge className="border-none bg-emerald-100 font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
+                            OK
+                          </Badge>
+                        )
+                      }
+                      rows={[
+                        { label: "Stock actual", value: <span className="tabular-nums">{medication.currentStock}</span> },
+                        { label: "Stock mínimo", value: <span className="tabular-nums">{medication.minimumStock}</span> },
+                      ]}
+                      actions={
+                        <>
+                          <Button size="sm" variant="outline" className="flex-1" onClick={() => setSeleccionado(medication)}>
+                            Registrar entrada
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setEditando(medication)}>
+                            Editar
+                          </Button>
+                          <Button size="sm" variant="destructive" onClick={() => setEliminando(medication)}>
+                            Eliminar
+                          </Button>
+                        </>
+                      }
+                    />
+                  );
+                })}
+              </MobileCardList>
+
+              <DesktopTable>
+                <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Medication</TableHead>
+                    <TableHead>Medicamento</TableHead>
                     <TableHead>Stock actual</TableHead>
                     <TableHead>Stock mínimo</TableHead>
                     <TableHead>Estado</TableHead>
@@ -90,8 +142,8 @@ export function InventoryPage() {
                     return (
                       <TableRow key={medication.id}>
                         <TableCell className="font-medium">{medication.name}</TableCell>
-                        <TableCell>{medication.currentStock}</TableCell>
-                        <TableCell>{medication.minimumStock}</TableCell>
+                        <TableCell className="tabular-nums">{medication.currentStock}</TableCell>
+                        <TableCell className="tabular-nums">{medication.minimumStock}</TableCell>
                         <TableCell>
                           {bajo ? (
                             <Badge className="border-none bg-amber-100 font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">
@@ -118,8 +170,9 @@ export function InventoryPage() {
                     );
                   })}
                 </TableBody>
-              </Table>
-            </div>
+                </Table>
+              </DesktopTable>
+            </>
           )}
         </CardContent>
       </Card>
@@ -130,7 +183,7 @@ export function InventoryPage() {
       <Dialog open={!!eliminando} onOpenChange={(v) => !v && setEliminando(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>¿Eliminar medication?</DialogTitle>
+            <DialogTitle>¿Eliminar medicamento?</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
             Se eliminará "{eliminando?.name}" del catálogo. Si ya tiene movimientos de inventario registrados (entradas o

@@ -43,12 +43,12 @@ export function InviteVetDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Mail className="size-4" />
-          Invitar vet
+          Invitar veterinario
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Invitar vet</DialogTitle>
+          <DialogTitle>Invitar veterinario</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">

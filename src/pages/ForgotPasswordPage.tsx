@@ -47,7 +47,7 @@ export function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="username">User</Label>
+                <Label htmlFor="username">Usuario</Label>
                 <Input id="username" required autoFocus value={username} onChange={(e) => setUsername(e.target.value)} />
               </div>
 

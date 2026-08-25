@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { useUpcomingControls } from "@/features/preventive-controls/usePreventiveControls";
 import { CalendarClock, ShieldCheck } from "lucide-react";
 
@@ -20,11 +20,7 @@ export function UpcomingControlsPanel() {
       </CardHeader>
       <CardContent>
         {isLoading && (
-          <div className="flex flex-col gap-2">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full" />
-            ))}
-          </div>
+<TableSkeleton rows={3} />
         )}
 
         {isError && <p className="py-4 text-center text-sm text-destructive">No se pudo cargar el listado.</p>}

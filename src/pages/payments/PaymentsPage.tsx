@@ -1,39 +1,59 @@
-import { Badge } from "@/components/ui/badge";
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
+import { StatTile } from "@/components/StatTile";
+import { StatusBadge } from "@/components/StatusBadge";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { usePaymentHistory, usePendingPayments } from "@/features/payments/usePayments";
 import type { PendingPayment } from "@/features/payments/types";
-import { History, Wallet } from "lucide-react";
+import { History, Receipt, Wallet } from "lucide-react";
 import { useState } from "react";
 import { QrChargeDialog } from "./QrChargeDialog";
 import { RegisterPaymentDialog } from "./RegisterPaymentDialog";
 
-function formatearFecha(iso: string) {
-  const [fecha] = iso.split("T");
-  const [yyyy, mm, dd] = fecha.split("-");
+function formatDate(iso: string) {
+  const [date] = iso.split("T");
+  const [yyyy, mm, dd] = date.split("-");
   return `${dd}/${mm}/${yyyy}`;
 }
 
-const METODO_LABEL: Record<string, string> = {
-  EFECTIVO: "Efectivo",
-  TARJETA: "Tarjeta",
-  TRANSFERENCIA: "Transferencia",
-  QR: "QR",
-};
+function formatAmount(amount: number) {
+  return `Bs. ${amount.toFixed(2)}`;
+}
 
 export function PaymentsPage() {
   const { data: pending, isLoading, isError } = usePendingPayments();
-  const { data: historial, isLoading: cargandoHistorial } = usePaymentHistory(5);
-  const [seleccionado, setSeleccionado] = useState<PendingPayment | null>(null);
-  const [seleccionadoQr, setSeleccionadoQr] = useState<PendingPayment | null>(null);
+  const { data: history, isLoading: loadingHistory } = usePaymentHistory(5);
+  const [selected, setSelected] = useState<PendingPayment | null>(null);
+  const [selectedQr, setSelectedQr] = useState<PendingPayment | null>(null);
+
+  const pendingTotal = pending?.reduce((sum, p) => sum + p.amount, 0) ?? 0;
 
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Pagos</h1>
-        <p className="text-muted-foreground">Atenciones pending de cobro</p>
+        <p className="text-muted-foreground">Atenciones pendientes de cobro</p>
+      </div>
+
+      {/* La pregunta que trae a alguien a esta pantalla es "cuánto falta cobrar" —
+          responderla arriba evita tener que sumar la columna a ojo. */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <StatTile
+          label="Pendiente de cobro"
+          value={formatAmount(pendingTotal)}
+          icon={Wallet}
+          isLoading={isLoading}
+          tone={pendingTotal > 0 ? "warning" : "default"}
+        />
+        <StatTile
+          label="Atenciones por cobrar"
+          value={pending?.length ?? 0}
+          icon={Receipt}
+          isLoading={isLoading}
+        />
       </div>
 
       <Card>
@@ -41,122 +61,149 @@ export function PaymentsPage() {
           <CardTitle className="text-base">Pendientes de pago</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
+          {isLoading && <TableSkeleton rows={3} />}
 
-          {isError && (
-            <p className="py-8 text-center text-sm text-destructive">No se pudo cargar la lista de pagos.</p>
-          )}
+          {isError && <ErrorState message="No se pudo cargar la lista de pagos." />}
 
           {!isLoading && !isError && pending?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-              <Wallet className="size-8" />
-              <p>No hay pagos pending. Todo al día.</p>
-            </div>
+            <EmptyState
+              icon={Wallet}
+              title="No hay pagos pendientes"
+              description="Todas las atenciones registradas ya fueron cobradas."
+            />
           )}
 
           {!isLoading && !isError && pending && pending.length > 0 && (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Pet</TableHead>
-                    <TableHead>Owner</TableHead>
-                    <TableHead>Motivo</TableHead>
-                    <TableHead>Monto</TableHead>
-                    <TableHead className="text-right">Acción</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {pending.map((pendiente) => (
-                    <TableRow key={pendiente.visitId}>
-                      <TableCell className="font-medium">{pendiente.pet.name}</TableCell>
-                      <TableCell>
-                        {pendiente.owner.firstName} {pendiente.owner.paternalLastName}
-                      </TableCell>
-                      <TableCell>{pendiente.consultationReason}</TableCell>
-                      <TableCell>Bs. {pendiente.amount.toFixed(2)}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button size="sm" variant="outline" onClick={() => setSeleccionadoQr(pendiente)}>
-                            Cobrar con QR
-                          </Button>
-                          <Button size="sm" onClick={() => setSeleccionado(pendiente)}>
-                            Registrar payment
-                          </Button>
-                        </div>
-                      </TableCell>
+            <>
+              <MobileCardList>
+                {pending.map((item) => (
+                  <MobileCard
+                    key={item.visitId}
+                    title={item.pet.name}
+                    subtitle={`${item.owner.firstName} ${item.owner.paternalLastName}`}
+                    badge={<span className="font-medium tabular-nums">{formatAmount(item.amount)}</span>}
+                    rows={[{ label: "Motivo", value: item.consultationReason }]}
+                    actions={
+                      <>
+                        <Button size="sm" variant="outline" className="flex-1" onClick={() => setSelectedQr(item)}>
+                          Cobrar con QR
+                        </Button>
+                        <Button size="sm" className="flex-1" onClick={() => setSelected(item)}>
+                          Registrar pago
+                        </Button>
+                      </>
+                    }
+                  />
+                ))}
+              </MobileCardList>
+
+              <DesktopTable>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Mascota</TableHead>
+                      <TableHead>Propietario</TableHead>
+                      <TableHead>Motivo</TableHead>
+                      <TableHead className="text-right">Monto</TableHead>
+                      <TableHead className="text-right">Acción</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {pending.map((item) => (
+                      <TableRow key={item.visitId}>
+                        <TableCell className="font-medium">{item.pet.name}</TableCell>
+                        <TableCell>
+                          {item.owner.firstName} {item.owner.paternalLastName}
+                        </TableCell>
+                        <TableCell>{item.consultationReason}</TableCell>
+                        <TableCell className="text-right tabular-nums">{formatAmount(item.amount)}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button size="sm" variant="outline" onClick={() => setSelectedQr(item)}>
+                              Cobrar con QR
+                            </Button>
+                            <Button size="sm" onClick={() => setSelected(item)}>
+                              Registrar pago
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </DesktopTable>
+            </>
           )}
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Últimos payments</CardTitle>
+          <CardTitle className="text-base">Últimos pagos</CardTitle>
         </CardHeader>
         <CardContent>
-          {cargandoHistorial && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
+          {loadingHistory && <TableSkeleton rows={3} />}
+
+          {!loadingHistory && history?.length === 0 && (
+            <EmptyState
+              icon={History}
+              title="Todavía no hay pagos registrados"
+              description="Los cobros que registres van a aparecer acá."
+            />
           )}
 
-          {!cargandoHistorial && historial?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
-              <History className="size-7" />
-              <p>Todavía no hay pagos registrados.</p>
-            </div>
-          )}
+          {!loadingHistory && history && history.length > 0 && (
+            <>
+              <MobileCardList>
+                {history.map((payment) => (
+                  <MobileCard
+                    key={payment.id}
+                    title={payment.pet.name}
+                    subtitle={`${payment.owner.firstName} ${payment.owner.paternalLastName}`}
+                    badge={<StatusBadge status={payment.method} />}
+                    rows={[
+                      { label: "Monto", value: <span className="tabular-nums">{formatAmount(payment.amount)}</span> },
+                      { label: "Fecha", value: formatDate(payment.date) },
+                    ]}
+                  />
+                ))}
+              </MobileCardList>
 
-          {!cargandoHistorial && historial && historial.length > 0 && (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Pet</TableHead>
-                    <TableHead>Owner</TableHead>
-                    <TableHead>Monto</TableHead>
-                    <TableHead>Método</TableHead>
-                    <TableHead>Fecha</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {historial.map((payment) => (
-                    <TableRow key={payment.id}>
-                      <TableCell className="font-medium">{payment.pet.name}</TableCell>
-                      <TableCell>
-                        {payment.owner.firstName} {payment.owner.paternalLastName}
-                      </TableCell>
-                      <TableCell>Bs. {payment.amount.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className="border-none font-normal">
-                          {METODO_LABEL[payment.method] ?? payment.method}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{formatearFecha(payment.date)}</TableCell>
+              <DesktopTable>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Mascota</TableHead>
+                      <TableHead>Propietario</TableHead>
+                      <TableHead className="text-right">Monto</TableHead>
+                      <TableHead>Método</TableHead>
+                      <TableHead>Fecha</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {history.map((payment) => (
+                      <TableRow key={payment.id}>
+                        <TableCell className="font-medium">{payment.pet.name}</TableCell>
+                        <TableCell>
+                          {payment.owner.firstName} {payment.owner.paternalLastName}
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums">{formatAmount(payment.amount)}</TableCell>
+                        <TableCell>
+                          <StatusBadge status={payment.method} />
+                        </TableCell>
+                        <TableCell>{formatDate(payment.date)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </DesktopTable>
+            </>
           )}
         </CardContent>
       </Card>
 
-      <RegisterPaymentDialog pendiente={seleccionado} onClose={() => setSeleccionado(null)} />
-      <QrChargeDialog pendiente={seleccionadoQr} onClose={() => setSeleccionadoQr(null)} />
+      <RegisterPaymentDialog pendiente={selected} onClose={() => setSelected(null)} />
+      <QrChargeDialog pendiente={selectedQr} onClose={() => setSelectedQr(null)} />
     </div>
   );
 }

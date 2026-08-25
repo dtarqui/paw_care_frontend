@@ -1,7 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
 import { Pagination } from "@/components/Pagination";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuditLogs } from "@/features/audit-logs/useAuditLogs";
 import type { AuditAction } from "@/features/audit-logs/types";
@@ -49,26 +51,37 @@ export function AuditLogTab() {
           <CardTitle className="text-base">Registro de acciones</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
+          {isLoading && <TableSkeleton rows={5} />}
 
-          {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el registro de auditoría.</p>}
+          {isError && <ErrorState message="No se pudo cargar el registro de auditoría." />}
 
           {!isLoading && !isError && logs?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-              <History className="size-8" />
-              <p>Todavía no hay acciones registradas.</p>
-            </div>
+            <EmptyState
+              icon={History}
+              title="Todavía no hay acciones registradas"
+              description="Acá van a aparecer las aprobaciones, cambios de rol, restablecimientos de contraseña e invitaciones."
+            />
           )}
 
           {!isLoading && !isError && logs && logs.length > 0 && (
             <>
-              <div className="overflow-x-auto">
+              <MobileCardList>
+                {logs.map((log) => (
+                  <MobileCard
+                    key={log.id}
+                    title={ACTION_LABEL[log.action] ?? log.action}
+                    subtitle={log.actor ? `${log.actor.firstName} ${log.actor.paternalLastName}` : "—"}
+                    badge={
+                      <span className="whitespace-nowrap text-xs text-muted-foreground">
+                        {formatDateTime(log.date)}
+                      </span>
+                    }
+                    rows={log.details ? [{ label: "Detalle", value: log.details }] : undefined}
+                  />
+                ))}
+              </MobileCardList>
+
+              <DesktopTable>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -95,7 +108,7 @@ export function AuditLogTab() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
+              </DesktopTable>
               {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPageChange={setPage} />}
             </>
           )}

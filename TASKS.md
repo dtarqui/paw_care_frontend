@@ -146,6 +146,24 @@ El login es la primera pantalla que ve cualquiera, así que se rehizo con eso en
 
 ---
 
+## Correcciones y mejoras (sesión 10 — tablas en móvil, estados compartidos y KPIs por pantalla)
+
+Tres mejoras transversales de UI, decididas tras auditar las 9 pantallas con tabla.
+
+- [x] **Fallback de tarjetas en móvil para las tablas** (`components/MobileCard.tsx`) — la app llegaba a 12 columnas en Pagos y 11 en Reportes clínicos; en un celular eso era scroll horizontal con 3 columnas visibles, en una PWA instalable pensada para el mostrador. Ahora cada listado muestra `<MobileCard>` por debajo de `md` y la `<Table>` de ahí para arriba. Aplicado en **8 de 9 tablas** (la novena son 3 columnas dentro de un diálogo de importación, no lo necesita): Pagos (pendientes e historial), Mascotas, Propietarios, Usuarios, Inventario, Auditoría, Reportes → Ingresos y Reportes → Clínicos.
+- [x] **`EmptyState` y `TableSkeleton` compartidos** (`components/EmptyState.tsx`, `components/TableSkeleton.tsx`) — el bloque de estado vacío estaba copiado en **10 archivos** y el skeleton de carga en **17**, cada uno con su espaciado. Ahora quedan **0** copias de estado vacío y solo 2 usos sueltos de `Skeleton` legítimos (chips de horarios disponibles y tarjetas del dashboard, que no son tablas). `EmptyState` acepta una `action`: donde el vacío se resuelve desde la misma pantalla (Mascotas, Inventario, Usuarios) el botón de alta va dentro del estado vacío, así una instalación nueva indica el siguiente paso en vez de ser un callejón sin salida.
+- [x] **KPIs contextuales en los listados** — `StatTile` existía pero solo lo usaba el Dashboard. Ahora Pagos abre con el total pendiente en Bs. y cuántas atenciones lo componen; Inventario con el catálogo y cuántos están bajo el mínimo; Propietarios con cuántos clientes y cuántas mascotas cubren. Responden la pregunta principal de cada pantalla sin leer la tabla.
+- [x] **Números tabulares** (`tabular-nums`) en montos, stock y pesos — pasó de 1 archivo a 6. Sin esto las columnas de dinero no alinean por dígito, que es lo que hace que una tabla de pagos se vea descuidada.
+
+**Bugs visibles corregidos, todos residuo del renombrado de la sesión 7:**
+
+- **El método de pago se mostraba crudo** ("CASH", "CARD", "TRANSFER") en "Últimos pagos": el mapa `METODO_LABEL` había quedado con las claves del enum viejo. Se eliminó y ahora usa `StatusBadge`, que ya traduce y colorea los métodos.
+- **24 etiquetas visibles en inglés**: encabezados de tabla ("Pet", "Owner", "Medication", "Role", "User"), botones ("Registrar payment", "Registrar pet", "Invitar vet", "Editar owner", "Editar medication") y frases ("Atenciones pending de cobro", "Últimos sent", "Aún no hay visits registradas", "medication(s) con stock bajo", "Sin controls preventivos", "recordatorios pending").
+
+**Por qué se escaparon antes:** la auditoría de la sesión 7 solo marcaba una palabra inglesa si estaba rodeada de palabras funcionales del español, así que no veía etiquetas de una sola palabra como `<TableHead>Pet</TableHead>`. Se agregó un segundo barrido específico para textos cortos (encabezados, labels, `placeholder`, `aria-label`).
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

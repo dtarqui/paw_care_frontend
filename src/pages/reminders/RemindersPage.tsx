@@ -1,7 +1,8 @@
+import { EmptyState } from "@/components/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import {
   useReminderHistory,
   useMarkReminderSent,
@@ -35,7 +36,7 @@ export function RemindersPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Recordatorios</h1>
         <p className="text-muted-foreground">
-          Citas en las próximas 24h y controls preventivos a 7 días — envío manual por WhatsApp, sin costo ni integración externa.
+          Citas en las próximas 24h y controles preventivos a 7 días — envío manual por WhatsApp, sin costo ni integración externa.
         </p>
       </div>
 
@@ -45,20 +46,17 @@ export function RemindersPage() {
         </CardHeader>
         <CardContent>
           {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
-              ))}
-            </div>
+<TableSkeleton rows={3} />
           )}
 
           {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar la lista.</p>}
 
           {!isLoading && !isError && reminders?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-              <MessageCircle className="size-8" />
-              <p>No hay recordatorios pending por ahora.</p>
-            </div>
+            <EmptyState
+              icon={MessageCircle}
+              title="No hay recordatorios pendientes"
+              description="Acá aparecen las citas de las próximas 24 horas y los controles preventivos que vencen en 7 días."
+            />
           )}
 
           {!isLoading && !isError && reminders && reminders.length > 0 && (
@@ -102,15 +100,11 @@ export function RemindersPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Últimos sent</CardTitle>
+          <CardTitle className="text-base">Últimos enviados</CardTitle>
         </CardHeader>
         <CardContent>
           {loadingSent && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-14 w-full" />
-              ))}
-            </div>
+<TableSkeleton rows={3} />
           )}
 
           {!loadingSent && sent?.length === 0 && (

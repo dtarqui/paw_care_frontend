@@ -1,9 +1,11 @@
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
 import { Pagination } from "@/components/Pagination";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/features/auth/AuthContext";
@@ -66,25 +68,49 @@ export function PetsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
+          {isLoading && <TableSkeleton rows={5} />}
 
-          {isError && (
-            <p className="py-8 text-center text-sm text-destructive">
-              No se pudo cargar el listado de mascotas. Intenta de nuevo.
-            </p>
-          )}
+          {isError && <ErrorState message="No se pudo cargar el listado de mascotas. Intenta de nuevo." />}
 
-          {!isLoading && !isError && pets?.length === 0 && <EmptyState />}
+          {!isLoading && !isError && pets?.length === 0 && (
+            <EmptyState
+              icon={PawPrint}
+              title={busqueda ? "Ninguna mascota coincide con la búsqueda" : "Sin mascotas registradas todavía"}
+              description={
+                busqueda
+                  ? "Probá con otro nombre, o revisá si está marcada como inactiva."
+                  : "Registrá la primera mascota junto con los datos de su propietario."
+              }
+              action={busqueda ? undefined : <NewPetDialog />}
+            />
+          )}
 
           {!isLoading && !isError && pets && pets.length > 0 && (
             <>
-              <div className="overflow-x-auto">
+              <MobileCardList>
+                {pets.map((pet) => (
+                  <MobileCard
+                    key={pet.id}
+                    title={pet.name}
+                    subtitle={`${pet.species}${pet.breed ? ` · ${pet.breed}` : ""}`}
+                    badge={
+                      pet.status === "INACTIVE" ? (
+                        <Badge variant="secondary" className="border-none font-normal">
+                          Inactiva
+                        </Badge>
+                      ) : undefined
+                    }
+                    rows={[
+                      { label: "Sexo", value: pet.sex },
+                      { label: "Peso", value: <span className="tabular-nums">{pet.weight} kg</span> },
+                      { label: "Propietario", value: `${pet.owner.firstName} ${pet.owner.paternalLastName}` },
+                    ]}
+                    onClick={() => navigate(`/app/pets/${pet.id}`)}
+                  />
+                ))}
+              </MobileCardList>
+
+              <DesktopTable>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -93,7 +119,7 @@ export function PetsPage() {
                       <TableHead>Raza</TableHead>
                       <TableHead>Sexo</TableHead>
                       <TableHead>Peso</TableHead>
-                      <TableHead>Owner</TableHead>
+                      <TableHead>Propietario</TableHead>
                       {mostrarInactivas && <TableHead>Estado</TableHead>}
                     </TableRow>
                   </TableHeader>
@@ -125,21 +151,12 @@ export function PetsPage() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
+              </DesktopTable>
               {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPageChange={setPage} />}
             </>
           )}
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-      <PawPrint className="size-8" />
-      <p>Sin mascotas registradas todavía.</p>
     </div>
   );
 }

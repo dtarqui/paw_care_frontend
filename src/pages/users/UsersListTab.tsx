@@ -1,4 +1,7 @@
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
 import { Pagination } from "@/components/Pagination";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuth } from "@/features/auth/AuthContext";
 import { useChangeUserStatus, useCancelInvitation, usePendingInvitations, useUsers } from "@/features/users/useUsers";
@@ -100,33 +102,61 @@ export function UsersListTab() {
           <CardTitle className="text-base">Listado</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
+          {isLoading && <TableSkeleton rows={4} />}
 
-          {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el listado de usuarios.</p>}
+          {isError && <ErrorState message="No se pudo cargar el listado de usuarios." />}
 
           {!isLoading && !isError && users?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-              <Users className="size-8" />
-              <p>Sin usuarios registrados todavía.</p>
-            </div>
+            <EmptyState
+              icon={Users}
+              title="Sin usuarios registrados todavía"
+              description="Creá cuentas para el personal, o invitá a un veterinario por email."
+              action={<NewUserDialog />}
+            />
           )}
 
           {!isLoading && !isError && users && users.length > 0 && (
             <>
-            <div className="overflow-x-auto">
-              <Table>
+              <MobileCardList>
+                {users.map((user) => (
+                  <MobileCard
+                    key={user.id}
+                    title={`${user.firstName} ${user.paternalLastName}`}
+                    subtitle={`${user.username} · CI ${user.nationalId}`}
+                    badge={<StatusBadge status={isPendingApproval(user) ? "PENDING_APPROVAL" : user.status} />}
+                    rows={[{ label: "Rol", value: ROLE_LABEL[user.role] }]}
+                    actions={
+                      <>
+                        <Button
+                          variant={isPendingApproval(user) ? "default" : "outline"}
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => setStatusTarget(user)}
+                        >
+                          {isPendingApproval(user) ? "Aprobar" : user.status === "ACTIVE" ? "Desactivar" : "Activar"}
+                        </Button>
+                        {user.id !== currentUser?.id && (
+                          <Button variant="outline" size="sm" onClick={() => setRoleTarget(user)}>
+                            Cambiar rol
+                          </Button>
+                        )}
+                        <Button variant="outline" size="sm" onClick={() => setPasswordTarget(user)}>
+                          Restablecer contraseña
+                        </Button>
+                      </>
+                    }
+                  />
+                ))}
+              </MobileCardList>
+
+              <DesktopTable>
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nombre</TableHead>
                     <TableHead>CI</TableHead>
-                    <TableHead>User</TableHead>
-                    <TableHead>Role</TableHead>
+                    <TableHead>Usuario</TableHead>
+                    <TableHead>Rol</TableHead>
                     <TableHead>Estado</TableHead>
                     <TableHead className="text-right">Acciones</TableHead>
                   </TableRow>
@@ -163,9 +193,9 @@ export function UsersListTab() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-            </div>
-            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPageChange={setPage} />}
+                </Table>
+              </DesktopTable>
+              {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPageChange={setPage} />}
             </>
           )}
         </CardContent>

@@ -1,7 +1,8 @@
+import { EmptyState } from "@/components/EmptyState";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { useVisitHistory } from "@/features/medical-visits/useMedicalVisits";
 import type { Pet } from "@/features/pets/types";
 import { calculateAge } from "@/lib/pet";
@@ -53,21 +54,17 @@ export function VisitHistory({ pet }: { pet: Pet }) {
       </CardHeader>
       <CardContent>
         {isLoading && (
-          <div className="flex flex-col gap-2">
-            {Array.from({ length: 2 }).map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
-            ))}
-          </div>
+<TableSkeleton rows={2} />
         )}
 
         {isError && <p className="py-6 text-center text-sm text-destructive">No se pudo cargar el historial.</p>}
 
         {!isLoading && !isError && visits?.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-10 text-center text-muted-foreground">
-            <FilePlus2 className="size-8" />
-            <p className="font-medium text-foreground">Aún no hay visits registradas para {pet.name}</p>
-            <p className="text-sm">Usa el botón "Nueva atención" arriba para registrar la primera.</p>
-          </div>
+          <EmptyState
+            icon={FilePlus2}
+            title={`Aún no hay atenciones registradas para ${pet.name}`}
+            description="Usá el botón «Nueva atención» de arriba para registrar la primera."
+          />
         )}
 
         {!isLoading && !isError && visits && visits.length > 0 && (

@@ -93,7 +93,7 @@ export function VetRegistrationPage() {
           <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
             <Stethoscope className="size-6 text-primary" />
           </div>
-          <CardTitle className="text-xl">Solicitar acceso como Vet</CardTitle>
+          <CardTitle className="text-xl">Solicitar acceso como Veterinario</CardTitle>
           <CardDescription>Un Administrador revisará y aprobará tu cuenta antes de que puedas iniciar sesión</CardDescription>
         </CardHeader>
         <CardContent>
@@ -140,7 +140,7 @@ export function VetRegistrationPage() {
                 <Input id="phone" value={form.phone} onChange={(e) => actualizar("phone", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="username">User *</Label>
+                <Label htmlFor="username">Usuario *</Label>
                 <Input id="username" required value={form.username} onChange={(e) => actualizar("username", e.target.value)} />
               </div>
             </div>

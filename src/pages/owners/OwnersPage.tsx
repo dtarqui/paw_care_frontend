@@ -1,10 +1,13 @@
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
+import { StatTile } from "@/components/StatTile";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useOwners } from "@/features/owners/useOwners";
-import { Search, Users } from "lucide-react";
+import { PawPrint, Search, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { EditOwnerDialog } from "./EditOwnerDialog";
@@ -22,11 +25,18 @@ export function OwnersPage() {
     );
   }, [owners, busqueda]);
 
+  const totalPets = owners?.reduce((sum, o) => sum + o.pets.length, 0) ?? 0;
+
   return (
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Propietarios</h1>
         <p className="text-muted-foreground">Registro y gestión de dueños de mascotas</p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <StatTile label="Propietarios registrados" value={owners?.length ?? 0} icon={Users} isLoading={isLoading} />
+        <StatTile label="Mascotas a su cargo" value={totalPets} icon={PawPrint} isLoading={isLoading} />
       </div>
 
       <Card>
@@ -43,28 +53,54 @@ export function OwnersPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
+          {isLoading && <TableSkeleton rows={5} />}
 
-          {isError && (
-            <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el listado de propietarios.</p>
-          )}
+          {isError && <ErrorState message="No se pudo cargar el listado de propietarios." />}
 
           {!isLoading && !isError && owners?.length === 0 && (
-            <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-              <Users className="size-8" />
-              <p>Sin propietarios registrados todavía.</p>
-            </div>
+            <EmptyState
+              icon={Users}
+              title="Sin propietarios registrados todavía"
+              description="Los propietarios se crean al registrar su primera mascota, desde la pantalla de Mascotas."
+            />
           )}
 
           {!isLoading && !isError && propietariosFiltrados && propietariosFiltrados.length > 0 && (
-            <div className="overflow-x-auto">
-              <Table>
+            <>
+              <MobileCardList>
+                {propietariosFiltrados.map((owner) => (
+                  <MobileCard
+                    key={owner.id}
+                    title={`${owner.firstName} ${owner.paternalLastName}`}
+                    subtitle={`CI ${owner.nationalId}`}
+                    badge={<EditOwnerDialog owner={owner} />}
+                    rows={[
+                      { label: "Teléfono", value: owner.phone || "—" },
+                      { label: "Dirección", value: owner.address || "—" },
+                      {
+                        label: "Mascotas",
+                        value:
+                          owner.pets.length === 0 ? (
+                            "—"
+                          ) : (
+                            <div className="flex flex-wrap justify-end gap-1">
+                              {owner.pets.map((pet) => (
+                                <Link key={pet.id} to={`/app/pets/${pet.id}`}>
+                                  <Badge variant="secondary" className="border-none font-normal">
+                                    {pet.name}
+                                  </Badge>
+                                </Link>
+                              ))}
+                            </div>
+                          ),
+                      },
+                    ]}
+                  />
+                ))}
+              </MobileCardList>
+
+              <DesktopTable>
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nombre</TableHead>
@@ -108,12 +144,17 @@ export function OwnersPage() {
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-            </div>
+                </Table>
+              </DesktopTable>
+            </>
           )}
 
           {!isLoading && !isError && owners && owners.length > 0 && propietariosFiltrados?.length === 0 && (
-            <p className="py-8 text-center text-sm text-muted-foreground">Ningún propietario coincide con la búsqueda.</p>
+            <EmptyState
+              icon={Search}
+              title="Ningún propietario coincide con la búsqueda"
+              description="Probá con otro nombre o con el número de CI completo."
+            />
           )}
         </CardContent>
       </Card>

@@ -93,7 +93,7 @@ export function NewPetDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-lg overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Registrar pet</DialogTitle>
+          <DialogTitle>Registrar mascota</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">

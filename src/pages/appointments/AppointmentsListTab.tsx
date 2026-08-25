@@ -1,8 +1,9 @@
+import { EmptyState } from "@/components/EmptyState";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/features/auth/AuthContext";
 import type { Appointment } from "@/features/appointments/types";
@@ -68,11 +69,7 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-2">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-14 w-full" />
-        ))}
-      </div>
+<TableSkeleton rows={5} />
     );
   }
 
@@ -92,10 +89,11 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
       )}
 
       {groups.length === 0 && (
-        <div className="flex flex-col items-center gap-2 py-12 text-center text-muted-foreground">
-          <CalendarDays className="size-8" />
-          <p>{soloMisCitas && isVet ? "No tienes citas asignadas todavía." : "No hay citas registradas todavía."}</p>
-        </div>
+        <EmptyState
+          icon={CalendarDays}
+          title={soloMisCitas && isVet ? "No tienes citas asignadas todavía" : "No hay citas registradas todavía"}
+          description="Agendá la primera desde la pestaña «Nueva Cita»."
+        />
       )}
 
       {groups.map(([day, dayAppointments]) => (

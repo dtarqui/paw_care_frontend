@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/features/auth/AuthContext";
 import type { ScheduleBlockInput, Schedule } from "@/features/schedules/types";
@@ -161,11 +161,7 @@ export function SchedulesTab() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             {loadingSchedules ? (
-              <div className="flex flex-col gap-2">
-                {Array.from({ length: 7 }).map((_, i) => (
-                  <Skeleton key={i} className="h-14 w-full" />
-                ))}
-              </div>
+<TableSkeleton rows={7} />
             ) : (
               <div className="flex flex-col divide-y">
                 {DAYS.map((day) => (

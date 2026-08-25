@@ -52,7 +52,7 @@ export function EditMedicationDialog({ medication, onClose }: { medication: Medi
     <Dialog open={!!medication} onOpenChange={(v) => !v && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar medication</DialogTitle>
+          <DialogTitle>Editar medicamento</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">

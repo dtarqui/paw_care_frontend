@@ -1,3 +1,4 @@
+import { EmptyState } from "@/components/EmptyState";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -115,10 +116,11 @@ function EventRow({ event }: { event: PetHistoryEvent }) {
 export function PetHistoryTimeline({ events }: { events: PetHistoryEvent[] }) {
   if (events.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 py-10 text-center text-muted-foreground">
-        <History className="size-7" />
-        <p>Sin actividad registrada todavía para esta mascota.</p>
-      </div>
+      <EmptyState
+        icon={History}
+        title="Sin actividad registrada todavía"
+        description="Las atenciones, controles, citas y ediciones de esta mascota van a aparecer acá en orden cronológico."
+      />
     );
   }
 

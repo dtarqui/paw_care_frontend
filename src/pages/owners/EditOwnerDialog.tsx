@@ -72,7 +72,7 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Editar owner</DialogTitle>
+          <DialogTitle>Editar propietario</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

@@ -113,7 +113,7 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         {!editing && (
           <>
             <div className="flex flex-col gap-2">
-              <Label>Pet</Label>
+              <Label>Mascota</Label>
               <Select value={petId} onValueChange={setPetId} disabled={loadingPets}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione mascota" />
@@ -129,7 +129,7 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Vet</Label>
+              <Label>Veterinario</Label>
               {isVet ? (
                 <div className="flex h-9 w-full items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
                   <ShieldCheck className="size-4 shrink-0 text-primary" />

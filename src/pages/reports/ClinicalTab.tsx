@@ -1,14 +1,17 @@
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
 import { StatusBadge } from "@/components/StatusBadge";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { reportsApi } from "@/features/reports/api";
 import { useVisitsReport, useRevenueByServiceTypeReport } from "@/features/reports/useReports";
-import { FileDown, FileSpreadsheet, Loader2 } from "lucide-react";
+import { FileSearch, FileDown, FileSpreadsheet, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -84,9 +87,13 @@ export function ClinicalTab() {
         <Card>
           <CardContent className="pt-6">
             {reporteIngresos.isLoading && <Skeleton className="h-64 w-full" />}
-            {reporteIngresos.isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el reporte.</p>}
+            {reporteIngresos.isError && <ErrorState message="No se pudo cargar el reporte." />}
             {!reporteIngresos.isLoading && reporteIngresos.data?.length === 0 && (
-              <p className="py-8 text-center text-sm text-muted-foreground">No hay ingresos que cumplan estos filtros.</p>
+              <EmptyState
+                icon={FileSearch}
+                title="No hay ingresos que cumplan estos filtros"
+                description="Probá ampliando el rango de fechas."
+              />
             )}
             {!reporteIngresos.isLoading && reporteIngresos.data && reporteIngresos.data.length > 0 && (
               <ResponsiveContainer width="100%" height={Math.max(220, reporteIngresos.data.length * 48)}>
@@ -123,8 +130,8 @@ export function ClinicalTab() {
                     {reporteIngresos.data.map((grupo) => (
                       <TableRow key={grupo.serviceType}>
                         <TableCell className="font-medium">{grupo.serviceType}</TableCell>
-                        <TableCell>{grupo.count}</TableCell>
-                        <TableCell>{grupo.amount.toFixed(2)}</TableCell>
+                        <TableCell className="tabular-nums">{grupo.count}</TableCell>
+                        <TableCell className="tabular-nums">{grupo.amount.toFixed(2)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -138,27 +145,45 @@ export function ClinicalTab() {
       {tipo === "atenciones" && (
         <Card>
           <CardContent className="pt-6">
-            {reporteAtenciones.isLoading && (
-              <div className="flex flex-col gap-2">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton key={i} className="h-10 w-full" />
-                ))}
-              </div>
-            )}
-            {reporteAtenciones.isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el reporte.</p>}
+            {reporteAtenciones.isLoading && <TableSkeleton rows={4} />}
+            {reporteAtenciones.isError && <ErrorState message="No se pudo cargar el reporte." />}
             {!reporteAtenciones.isLoading && reporteAtenciones.data?.length === 0 && (
-              <p className="py-8 text-center text-sm text-muted-foreground">No hay atenciones que cumplan estos filtros.</p>
+              <EmptyState
+                icon={FileSearch}
+                title="No hay atenciones que cumplan estos filtros"
+                description="Probá ampliando el rango de fechas o quitando el filtro de tipo de servicio."
+              />
             )}
             {!reporteAtenciones.isLoading && reporteAtenciones.data && reporteAtenciones.data.length > 0 && (
-              <div className="overflow-x-auto">
-                <Table>
+              <>
+                <MobileCardList>
+                  {reporteAtenciones.data.map((visit) => (
+                    <MobileCard
+                      key={visit.id}
+                      title={visit.pet}
+                      subtitle={visit.owner}
+                      badge={<StatusBadge status={visit.paymentStatus} />}
+                      rows={[
+                        { label: "Fecha", value: formatearFecha(visit.date) },
+                        { label: "Servicio", value: visit.serviceType },
+                        {
+                          label: "Monto",
+                          value: <span className="font-medium tabular-nums">Bs. {visit.consultationFee.toFixed(2)}</span>,
+                        },
+                      ]}
+                    />
+                  ))}
+                </MobileCardList>
+
+                <DesktopTable>
+                  <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Fecha</TableHead>
-                      <TableHead>Pet</TableHead>
-                      <TableHead>Owner</TableHead>
+                      <TableHead>Mascota</TableHead>
+                      <TableHead>Propietario</TableHead>
                       <TableHead>Tipo de servicio</TableHead>
-                      <TableHead>Monto</TableHead>
+                      <TableHead className="text-right">Monto</TableHead>
                       <TableHead>Estado</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -169,15 +194,16 @@ export function ClinicalTab() {
                         <TableCell>{visit.pet}</TableCell>
                         <TableCell>{visit.owner}</TableCell>
                         <TableCell>{visit.serviceType}</TableCell>
-                        <TableCell className="font-medium">Bs. {visit.consultationFee.toFixed(2)}</TableCell>
+                        <TableCell className="font-medium tabular-nums">Bs. {visit.consultationFee.toFixed(2)}</TableCell>
                         <TableCell>
                           <StatusBadge status={visit.paymentStatus} />
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
-                </Table>
-              </div>
+                  </Table>
+                </DesktopTable>
+              </>
             )}
           </CardContent>
         </Card>

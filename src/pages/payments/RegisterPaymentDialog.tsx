@@ -65,7 +65,7 @@ export function RegisterPaymentDialog({ pendiente, onClose }: RegistrarPagoDialo
     <Dialog open={!!pendiente} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Registrar payment</DialogTitle>
+          <DialogTitle>Registrar pago</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

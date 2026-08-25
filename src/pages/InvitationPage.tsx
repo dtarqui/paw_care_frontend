@@ -170,7 +170,7 @@ export function InvitationPage() {
                 <Input id="phone" value={form.phone} onChange={(e) => actualizar("phone", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="username">User *</Label>
+                <Label htmlFor="username">Usuario *</Label>
                 <Input id="username" required value={form.username} onChange={(e) => actualizar("username", e.target.value)} />
               </div>
             </div>

@@ -1,13 +1,15 @@
+import { EmptyState, ErrorState } from "@/components/EmptyState";
+import { DesktopTable, MobileCard, MobileCardList } from "@/components/MobileCard";
 import { StatusBadge } from "@/components/StatusBadge";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useRevenueReport } from "@/features/reports/useReports";
 import { SERVICE_TYPES } from "@/lib/service-types";
-import { Wallet } from "lucide-react";
+import { FileSearch, Wallet } from "lucide-react";
 import { useState } from "react";
 
 const METODOS = [
@@ -112,25 +114,43 @@ export function RevenueTab() {
 
       <Card>
         <CardContent className="pt-6">
-          {isLoading && (
-            <div className="flex flex-col gap-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          )}
-          {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar el reporte.</p>}
+          {isLoading && <TableSkeleton rows={4} />}
+          {isError && <ErrorState message="No se pudo cargar el reporte." />}
           {!isLoading && !isError && data?.payments.length === 0 && (
-            <p className="py-8 text-center text-sm text-muted-foreground">No hay pagos que cumplan estos filtros.</p>
+            <EmptyState
+              icon={FileSearch}
+              title="No hay pagos que cumplan estos filtros"
+              description="Probá ampliando el rango de fechas, o quitando el filtro de método de pago."
+            />
           )}
           {!isLoading && !isError && data && data.payments.length > 0 && (
-            <div className="overflow-x-auto">
-              <Table>
+            <>
+              <MobileCardList>
+                {data.payments.map((payment) => (
+                  <MobileCard
+                    key={payment.id}
+                    title={payment.pet}
+                    subtitle={payment.owner}
+                    badge={<StatusBadge status={payment.method} />}
+                    rows={[
+                      { label: "Fecha", value: formatearFecha(payment.date) },
+                      { label: "Servicio", value: payment.serviceType },
+                      {
+                        label: "Monto",
+                        value: <span className="font-medium tabular-nums">Bs. {payment.amount.toFixed(2)}</span>,
+                      },
+                    ]}
+                  />
+                ))}
+              </MobileCardList>
+
+              <DesktopTable>
+                <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Fecha</TableHead>
-                    <TableHead>Pet</TableHead>
-                    <TableHead>Owner</TableHead>
+                    <TableHead>Mascota</TableHead>
+                    <TableHead>Propietario</TableHead>
                     <TableHead>Tipo de servicio</TableHead>
                     <TableHead>Método</TableHead>
                     <TableHead>Monto</TableHead>
@@ -146,12 +166,13 @@ export function RevenueTab() {
                       <TableCell>
                         <StatusBadge status={payment.method} />
                       </TableCell>
-                      <TableCell className="font-medium">Bs. {payment.amount.toFixed(2)}</TableCell>
+                      <TableCell className="font-medium tabular-nums">Bs. {payment.amount.toFixed(2)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-              </Table>
-            </div>
+                </Table>
+              </DesktopTable>
+            </>
           )}
         </CardContent>
       </Card>

@@ -119,7 +119,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
           <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <Label>Vet *</Label>
+                <Label>Veterinario *</Label>
                 {esVeterinario ? (
                   <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
                     <ShieldCheck className="size-4 shrink-0 text-primary" />

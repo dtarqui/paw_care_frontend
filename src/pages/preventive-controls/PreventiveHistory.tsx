@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { usePreventiveHistory } from "@/features/preventive-controls/usePreventiveControls";
 import type { Pet } from "@/features/pets/types";
 import { cn } from "@/lib/utils";
@@ -31,11 +31,7 @@ export function PreventiveHistory({ pet }: { pet: Pet }) {
       </CardHeader>
       <CardContent>
         {isLoading && (
-          <div className="flex flex-col gap-2">
-            {Array.from({ length: 2 }).map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
+<TableSkeleton rows={2} />
         )}
 
         {isError && <p className="py-6 text-center text-sm text-destructive">No se pudo cargar el historial.</p>}
@@ -43,7 +39,7 @@ export function PreventiveHistory({ pet }: { pet: Pet }) {
         {!isLoading && !isError && controls?.length === 0 && (
           <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
             <ShieldPlus className="size-7" />
-            <p>Sin controls preventivos registrados todavía.</p>
+            <p>Sin controles preventivos registrados todavía.</p>
           </div>
         )}
 
