@@ -12,32 +12,32 @@ import { SERVICE_TYPES } from "@/lib/service-types";
 import { FileSearch, Wallet } from "lucide-react";
 import { useState } from "react";
 
-const METODOS = [
+const PAYMENT_METHODS = [
   { value: "CASH", label: "Efectivo" },
   { value: "CARD", label: "Tarjeta" },
   { value: "TRANSFER", label: "Transferencia" },
   { value: "QR", label: "QR" },
 ] as const;
 
-const TODOS = "__todos__";
+const ALL = "__all__";
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   const [fecha] = iso.split("T");
   const [yyyy, mm, dd] = fecha.split("-");
   return `${dd}/${mm}/${yyyy}`;
 }
 
 export function RevenueTab() {
-  const [from, setDesde] = useState("");
-  const [to, setHasta] = useState("");
-  const [tipoServicio, setTipoServicio] = useState(TODOS);
-  const [metodoPago, setMetodoPago] = useState(TODOS);
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [serviceType, setServiceType] = useState(ALL);
+  const [paymentMethod, setPaymentMethod] = useState(ALL);
 
   const { data, isLoading, isError } = useRevenueReport({
     from: from || undefined,
     to: to || undefined,
-    serviceType: tipoServicio === TODOS ? undefined : tipoServicio,
-    paymentMethod: metodoPago === TODOS ? undefined : (metodoPago as "CASH" | "CARD" | "TRANSFER" | "QR"),
+    serviceType: serviceType === ALL ? undefined : serviceType,
+    paymentMethod: paymentMethod === ALL ? undefined : (paymentMethod as "CASH" | "CARD" | "TRANSFER" | "QR"),
   });
 
   return (
@@ -46,23 +46,23 @@ export function RevenueTab() {
         <CardContent className="grid grid-cols-2 gap-3 pt-6 sm:grid-cols-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="from">Desde</Label>
-            <Input id="from" type="date" value={from} onChange={(e) => setDesde(e.target.value)} />
+            <Input id="from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="to">Hasta</Label>
-            <Input id="to" type="date" value={to} onChange={(e) => setHasta(e.target.value)} />
+            <Input id="to" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label>Tipo de servicio</Label>
-            <Select value={tipoServicio} onValueChange={setTipoServicio}>
+            <Select value={serviceType} onValueChange={setServiceType}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={TODOS}>Todos</SelectItem>
-                {SERVICE_TYPES.map((tipo) => (
-                  <SelectItem key={tipo} value={tipo}>
-                    {tipo}
+                <SelectItem value={ALL}>Todos</SelectItem>
+                {SERVICE_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -70,13 +70,13 @@ export function RevenueTab() {
           </div>
           <div className="flex flex-col gap-1.5">
             <Label>Método de pago</Label>
-            <Select value={metodoPago} onValueChange={setMetodoPago}>
+            <Select value={paymentMethod} onValueChange={setPaymentMethod}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={TODOS}>Todos</SelectItem>
-                {METODOS.map((m) => (
+                <SelectItem value={ALL}>Todos</SelectItem>
+                {PAYMENT_METHODS.map((m) => (
                   <SelectItem key={m.value} value={m.value}>
                     {m.label}
                   </SelectItem>
@@ -133,7 +133,7 @@ export function RevenueTab() {
                     subtitle={payment.owner}
                     badge={<StatusBadge status={payment.method} />}
                     rows={[
-                      { label: "Fecha", value: formatearFecha(payment.date) },
+                      { label: "Fecha", value: formatDate(payment.date) },
                       { label: "Servicio", value: payment.serviceType },
                       {
                         label: "Monto",
@@ -159,7 +159,7 @@ export function RevenueTab() {
                 <TableBody>
                   {data.payments.map((payment) => (
                     <TableRow key={payment.id}>
-                      <TableCell>{formatearFecha(payment.date)}</TableCell>
+                      <TableCell>{formatDate(payment.date)}</TableCell>
                       <TableCell>{payment.pet}</TableCell>
                       <TableCell>{payment.owner}</TableCell>
                       <TableCell>{payment.serviceType}</TableCell>

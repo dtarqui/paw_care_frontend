@@ -14,15 +14,15 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 
 export function EditMedicationDialog({ medication, onClose }: { medication: Medication | null; onClose: () => void }) {
-  const [nombre, setNombre] = useState("");
-  const [stockMinimo, setStockMinimo] = useState("");
+  const [name, setName] = useState("");
+  const [minimumStock, setMinimumStock] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const actualizarMedicamento = useUpdateMedication();
+  const updateMedicationMutation = useUpdateMedication();
 
   useEffect(() => {
     if (medication) {
-      setNombre(medication.name);
-      setStockMinimo(String(medication.minimumStock));
+      setName(medication.name);
+      setMinimumStock(String(medication.minimumStock));
       setError(null);
     }
   }, [medication]);
@@ -31,17 +31,17 @@ export function EditMedicationDialog({ medication, onClose }: { medication: Medi
     event.preventDefault();
     setError(null);
     if (!medication) return;
-    if (!nombre.trim()) {
+    if (!name.trim()) {
       setError("El nombre es obligatorio");
       return;
     }
-    const valor = Number(stockMinimo);
-    if (Number.isNaN(valor) || valor < 0) {
+    const value = Number(minimumStock);
+    if (Number.isNaN(value) || value < 0) {
       setError("El stock mínimo debe ser 0 o mayor");
       return;
     }
     try {
-      await actualizarMedicamento.mutateAsync({ id: medication.id, input: { name: nombre.trim(), minimumStock: valor } });
+      await updateMedicationMutation.mutateAsync({ id: medication.id, input: { name: name.trim(), minimumStock: value } });
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo actualizar el medicamento");
@@ -57,19 +57,19 @@ export function EditMedicationDialog({ medication, onClose }: { medication: Medi
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="edit-nombre">Nombre *</Label>
-            <Input id="edit-nombre" required value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            <Input id="edit-nombre" required value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="edit-stockMinimo">Stock mínimo *</Label>
-            <Input id="edit-stockMinimo" type="number" min="0" required value={stockMinimo} onChange={(e) => setStockMinimo(e.target.value)} />
+            <Input id="edit-stockMinimo" type="number" min="0" required value={minimumStock} onChange={(e) => setMinimumStock(e.target.value)} />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={actualizarMedicamento.isPending}>
-              {actualizarMedicamento.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={updateMedicationMutation.isPending}>
+              {updateMedicationMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar
             </Button>
           </DialogFooter>

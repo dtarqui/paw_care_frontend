@@ -15,7 +15,7 @@ import type { Pet } from "@/features/pets/types";
 import { Loader2, Pencil } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-function aFormulario(pet: Pet) {
+function toFormState(pet: Pet) {
   return {
     name: pet.name,
     species: pet.species,
@@ -28,16 +28,16 @@ function aFormulario(pet: Pet) {
 
 export function EditPetDialog({ pet }: { pet: Pet }) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState(() => aFormulario(pet));
+  const [form, setForm] = useState(() => toFormState(pet));
   const [error, setError] = useState<string | null>(null);
-  const actualizarMascota = useUpdatePet(pet.id);
+  const updatePetMutation = useUpdatePet(pet.id);
 
-  function actualizar<K extends keyof ReturnType<typeof aFormulario>>(field: K, valor: (typeof form)[K]) {
-    setForm((prev) => ({ ...prev, [field]: valor }));
+  function update<K extends keyof ReturnType<typeof toFormState>>(field: K, value: (typeof form)[K]) {
+    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   function handleOpenChange(v: boolean) {
-    if (v) setForm(aFormulario(pet));
+    if (v) setForm(toFormState(pet));
     setError(null);
     setOpen(v);
   }
@@ -52,7 +52,7 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
     }
 
     try {
-      await actualizarMascota.mutateAsync({
+      await updatePetMutation.mutateAsync({
         name: form.name.trim(),
         species: form.species.trim(),
         breed: form.breed.trim(),
@@ -83,11 +83,11 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="editNombre">Nombre *</Label>
-              <Input id="editNombre" required value={form.name} onChange={(e) => actualizar("name", e.target.value)} />
+              <Input id="editNombre" required value={form.name} onChange={(e) => update("name", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Especie *</Label>
-              <Select value={form.species} onValueChange={(v) => actualizar("species", v)}>
+              <Select value={form.species} onValueChange={(v) => update("species", v)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione" />
                 </SelectTrigger>
@@ -100,11 +100,11 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="editRaza">Raza</Label>
-              <Input id="editRaza" value={form.breed} onChange={(e) => actualizar("breed", e.target.value)} />
+              <Input id="editRaza" value={form.breed} onChange={(e) => update("breed", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Sexo *</Label>
-              <Select value={form.sex} onValueChange={(v) => actualizar("sex", v as "Macho" | "Hembra")}>
+              <Select value={form.sex} onValueChange={(v) => update("sex", v as "Macho" | "Hembra")}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione" />
                 </SelectTrigger>
@@ -120,7 +120,7 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
                 id="editFechaNacimiento"
                 type="date"
                 value={form.birthDate}
-                onChange={(e) => actualizar("birthDate", e.target.value)}
+                onChange={(e) => update("birthDate", e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -131,7 +131,7 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
                 step="0.1"
                 min="0"
                 value={form.weight}
-                onChange={(e) => actualizar("weight", e.target.value)}
+                onChange={(e) => update("weight", e.target.value)}
               />
             </div>
           </div>
@@ -142,8 +142,8 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={actualizarMascota.isPending}>
-              {actualizarMascota.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={updatePetMutation.isPending}>
+              {updatePetMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar cambios
             </Button>
           </DialogFooter>

@@ -202,8 +202,8 @@ export function PaymentsPage() {
         </CardContent>
       </Card>
 
-      <RegisterPaymentDialog pendiente={selected} onClose={() => setSelected(null)} />
-      <QrChargeDialog pendiente={selectedQr} onClose={() => setSelectedQr(null)} />
+      <RegisterPaymentDialog pendingPayment={selected} onClose={() => setSelected(null)} />
+      <QrChargeDialog pendingPayment={selectedQr} onClose={() => setSelectedQr(null)} />
     </div>
   );
 }

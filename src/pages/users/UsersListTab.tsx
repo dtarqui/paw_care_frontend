@@ -51,12 +51,12 @@ export function UsersListTab() {
 
   async function confirm() {
     if (!statusTarget) return;
-    const nuevoEstado = statusTarget.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
-    await changeStatus.mutateAsync({ id: statusTarget.id, status: nuevoEstado });
+    const newStatus = statusTarget.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+    await changeStatus.mutateAsync({ id: statusTarget.id, status: newStatus });
     setStatusTarget(null);
   }
 
-  async function confirmCancelarInvitacion() {
+  async function confirmCancelInvitation() {
     if (!invitationTarget) return;
     await cancelInvitation.mutateAsync(invitationTarget.id);
     setInvitationTarget(null);
@@ -250,7 +250,7 @@ export function UsersListTab() {
             <Button variant="outline" onClick={() => setInvitationTarget(null)}>
               Volver
             </Button>
-            <Button variant="destructive" onClick={confirmCancelarInvitacion} disabled={cancelInvitation.isPending}>
+            <Button variant="destructive" onClick={confirmCancelInvitation} disabled={cancelInvitation.isPending}>
               {cancelInvitation.isPending && <Loader2 className="size-4 animate-spin" />}
               Cancelar invitación
             </Button>

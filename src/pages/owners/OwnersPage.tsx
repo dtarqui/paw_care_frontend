@@ -14,16 +14,16 @@ import { EditOwnerDialog } from "./EditOwnerDialog";
 
 export function OwnersPage() {
   const { data: owners, isLoading, isError } = useOwners();
-  const [busqueda, setBusqueda] = useState("");
+  const [search, setSearch] = useState("");
 
-  const propietariosFiltrados = useMemo(() => {
+  const filteredOwners = useMemo(() => {
     if (!owners) return owners;
-    const termino = busqueda.trim().toLowerCase();
-    if (!termino) return owners;
+    const term = search.trim().toLowerCase();
+    if (!term) return owners;
     return owners.filter(
-      (p) => `${p.firstName} ${p.paternalLastName}`.toLowerCase().includes(termino) || p.nationalId.toLowerCase().includes(termino)
+      (p) => `${p.firstName} ${p.paternalLastName}`.toLowerCase().includes(term) || p.nationalId.toLowerCase().includes(term)
     );
-  }, [owners, busqueda]);
+  }, [owners, search]);
 
   const totalPets = owners?.reduce((sum, o) => sum + o.pets.length, 0) ?? 0;
 
@@ -47,8 +47,8 @@ export function OwnersPage() {
             <Input
               placeholder="Buscar por nombre o CI..."
               className="w-64 pl-8"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </CardHeader>
@@ -65,10 +65,10 @@ export function OwnersPage() {
             />
           )}
 
-          {!isLoading && !isError && propietariosFiltrados && propietariosFiltrados.length > 0 && (
+          {!isLoading && !isError && filteredOwners && filteredOwners.length > 0 && (
             <>
               <MobileCardList>
-                {propietariosFiltrados.map((owner) => (
+                {filteredOwners.map((owner) => (
                   <MobileCard
                     key={owner.id}
                     title={`${owner.firstName} ${owner.paternalLastName}`}
@@ -112,7 +112,7 @@ export function OwnersPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {propietariosFiltrados.map((owner) => (
+                  {filteredOwners.map((owner) => (
                     <TableRow key={owner.id}>
                       <TableCell className="font-medium">
                         {owner.firstName} {owner.paternalLastName}
@@ -149,11 +149,11 @@ export function OwnersPage() {
             </>
           )}
 
-          {!isLoading && !isError && owners && owners.length > 0 && propietariosFiltrados?.length === 0 && (
+          {!isLoading && !isError && owners && owners.length > 0 && filteredOwners?.length === 0 && (
             <EmptyState
               icon={Search}
               title="Ningún propietario coincide con la búsqueda"
-              description="Probá con otro nombre o con el número de CI completo."
+              description="Prueba con otro nombre o con el número de CI completo."
             />
           )}
         </CardContent>

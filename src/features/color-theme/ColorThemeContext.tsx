@@ -18,13 +18,13 @@ interface ColorThemeContextValue {
 
 const ColorThemeContext = createContext<ColorThemeContextValue | undefined>(undefined);
 
-function leer(): ColorTheme {
-  const guardado = localStorage.getItem(STORAGE_KEY);
-  return (COLOR_THEMES.some((t) => t.value === guardado) ? guardado : DEFAULT_COLOR_THEME) as ColorTheme;
+function readStoredColorTheme(): ColorTheme {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return (COLOR_THEMES.some((t) => t.value === stored) ? stored : DEFAULT_COLOR_THEME) as ColorTheme;
 }
 
 export function ColorThemeProvider({ children }: { children: ReactNode }) {
-  const [colorTheme, setColorThemeState] = useState<ColorTheme>(leer);
+  const [colorTheme, setColorThemeState] = useState<ColorTheme>(readStoredColorTheme);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-color-theme", colorTheme);

@@ -15,7 +15,7 @@ import { useOwnerByNationalId } from "@/features/owners/useOwners";
 import { CheckCircle2, Loader2, PlusCircle, Search } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-const ESTADO_INICIAL = {
+const INITIAL_STATE = {
   ownerNationalId: "",
   ownerFirstName: "",
   ownerPaternalLastName: "",
@@ -30,21 +30,21 @@ const ESTADO_INICIAL = {
 
 export function NewPetDialog() {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState(ESTADO_INICIAL);
+  const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
-  const crearMascota = useCreatePet();
+  const createPetMutation = useCreatePet();
 
-  const { data: existingOwner, isFetching: buscandoPropietario } = useOwnerByNationalId(
+  const { data: existingOwner, isFetching: searchingOwner } = useOwnerByNationalId(
     form.ownerNationalId || undefined
   );
-  const propietarioNuevo = form.ownerNationalId.length >= 5 && !buscandoPropietario && !existingOwner;
+  const newOwner = form.ownerNationalId.length >= 5 && !searchingOwner && !existingOwner;
 
-  function actualizar<K extends keyof typeof ESTADO_INICIAL>(field: K, valor: (typeof ESTADO_INICIAL)[K]) {
-    setForm((prev) => ({ ...prev, [field]: valor }));
+  function update<K extends keyof typeof INITIAL_STATE>(field: K, value: (typeof INITIAL_STATE)[K]) {
+    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   function handleClose() {
-    setForm(ESTADO_INICIAL);
+    setForm(INITIAL_STATE);
     setError(null);
     setOpen(false);
   }
@@ -57,13 +57,13 @@ export function NewPetDialog() {
       setError("Selecciona el sexo de la mascota");
       return;
     }
-    if (propietarioNuevo && (!form.ownerFirstName || !form.ownerPaternalLastName)) {
+    if (newOwner && (!form.ownerFirstName || !form.ownerPaternalLastName)) {
       setError("Como es un propietario nuevo, indica su nombre y apellido paterno");
       return;
     }
 
     try {
-      await crearMascota.mutateAsync({
+      await createPetMutation.mutateAsync({
         name: form.name,
         species: form.species,
         breed: form.breed || undefined,
@@ -106,10 +106,10 @@ export function NewPetDialog() {
                   id="ownerNationalId"
                   required
                   value={form.ownerNationalId}
-                  onChange={(e) => actualizar("ownerNationalId", e.target.value)}
+                  onChange={(e) => update("ownerNationalId", e.target.value)}
                   placeholder="Ej. 4521367"
                 />
-                {buscandoPropietario && (
+                {searchingOwner && (
                   <Loader2 className="absolute right-2.5 top-2.5 size-4 animate-spin text-muted-foreground" />
                 )}
               </div>
@@ -123,7 +123,7 @@ export function NewPetDialog() {
               </div>
             )}
 
-            {propietarioNuevo && (
+            {newOwner && (
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Search className="size-3.5" />
@@ -134,18 +134,18 @@ export function NewPetDialog() {
                     <Label htmlFor="ownerFirstName">Nombre *</Label>
                     <Input
                       id="ownerFirstName"
-                      required={propietarioNuevo}
+                      required={newOwner}
                       value={form.ownerFirstName}
-                      onChange={(e) => actualizar("ownerFirstName", e.target.value)}
+                      onChange={(e) => update("ownerFirstName", e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="ownerPaternalLastName">Apellido paterno *</Label>
                     <Input
                       id="ownerPaternalLastName"
-                      required={propietarioNuevo}
+                      required={newOwner}
                       value={form.ownerPaternalLastName}
-                      onChange={(e) => actualizar("ownerPaternalLastName", e.target.value)}
+                      onChange={(e) => update("ownerPaternalLastName", e.target.value)}
                     />
                   </div>
                   <div className="col-span-2 flex flex-col gap-1.5">
@@ -153,7 +153,7 @@ export function NewPetDialog() {
                     <Input
                       id="ownerPhone"
                       value={form.ownerPhone}
-                      onChange={(e) => actualizar("ownerPhone", e.target.value)}
+                      onChange={(e) => update("ownerPhone", e.target.value)}
                     />
                   </div>
                 </div>
@@ -164,11 +164,11 @@ export function NewPetDialog() {
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="mascotaNombre">Nombre de la mascota *</Label>
-              <Input id="mascotaNombre" required value={form.name} onChange={(e) => actualizar("name", e.target.value)} />
+              <Input id="mascotaNombre" required value={form.name} onChange={(e) => update("name", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Especie *</Label>
-              <Select value={form.species} onValueChange={(v) => actualizar("species", v)}>
+              <Select value={form.species} onValueChange={(v) => update("species", v)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione" />
                 </SelectTrigger>
@@ -181,11 +181,11 @@ export function NewPetDialog() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="breed">Raza</Label>
-              <Input id="breed" value={form.breed} onChange={(e) => actualizar("breed", e.target.value)} />
+              <Input id="breed" value={form.breed} onChange={(e) => update("breed", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Sexo *</Label>
-              <Select value={form.sex} onValueChange={(v) => actualizar("sex", v as "Macho" | "Hembra")}>
+              <Select value={form.sex} onValueChange={(v) => update("sex", v as "Macho" | "Hembra")}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione" />
                 </SelectTrigger>
@@ -201,7 +201,7 @@ export function NewPetDialog() {
                 id="birthDate"
                 type="date"
                 value={form.birthDate}
-                onChange={(e) => actualizar("birthDate", e.target.value)}
+                onChange={(e) => update("birthDate", e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -212,7 +212,7 @@ export function NewPetDialog() {
                 step="0.1"
                 min="0"
                 value={form.weight}
-                onChange={(e) => actualizar("weight", e.target.value)}
+                onChange={(e) => update("weight", e.target.value)}
               />
             </div>
           </div>
@@ -224,8 +224,8 @@ export function NewPetDialog() {
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={crearMascota.isPending}>
-              {crearMascota.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={createPetMutation.isPending}>
+              {createPetMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar
             </Button>
           </DialogFooter>

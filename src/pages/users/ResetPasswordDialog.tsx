@@ -14,12 +14,12 @@ import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 export function ResetPasswordDialog({ user, onClose }: { user: User | null; onClose: () => void }) {
-  const [newPassword, setPasswordNuevo] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const restablecer = useResetPassword();
+  const resetPasswordMutation = useResetPassword();
 
-  function limpiarYCerrar() {
-    setPasswordNuevo("");
+  function resetAndClose() {
+    setNewPassword("");
     setError(null);
     onClose();
   }
@@ -33,15 +33,15 @@ export function ResetPasswordDialog({ user, onClose }: { user: User | null; onCl
       return;
     }
     try {
-      await restablecer.mutateAsync({ id: user.id, newPassword });
-      limpiarYCerrar();
+      await resetPasswordMutation.mutateAsync({ id: user.id, newPassword });
+      resetAndClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo restablecer la contraseña");
     }
   }
 
   return (
-    <Dialog open={!!user} onOpenChange={(v) => !v && limpiarYCerrar()}>
+    <Dialog open={!!user} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>Restablecer contraseña</DialogTitle>
@@ -58,17 +58,17 @@ export function ResetPasswordDialog({ user, onClose }: { user: User | null; onCl
               type="text"
               minLength={6}
               value={newPassword}
-              onChange={(e) => setPasswordNuevo(e.target.value)}
+              onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Mínimo 6 caracteres"
             />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={limpiarYCerrar}>
+            <Button type="button" variant="outline" onClick={resetAndClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={restablecer.isPending}>
-              {restablecer.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={resetPasswordMutation.isPending}>
+              {resetPasswordMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Restablecer
             </Button>
           </DialogFooter>

@@ -13,16 +13,16 @@ import { useChangeMyPassword } from "@/features/users/useUsers";
 import { KeyRound, Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-const ESTADO_INICIAL = { currentPassword: "", newPassword: "", confirmPassword: "" };
+const INITIAL_STATE = { currentPassword: "", newPassword: "", confirmPassword: "" };
 
 export function ChangePasswordDialog() {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState(ESTADO_INICIAL);
+  const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
-  const cambiarPassword = useChangeMyPassword();
+  const changePasswordMutation = useChangeMyPassword();
 
   function handleClose() {
-    setForm(ESTADO_INICIAL);
+    setForm(INITIAL_STATE);
     setError(null);
     setOpen(false);
   }
@@ -41,7 +41,7 @@ export function ChangePasswordDialog() {
     }
 
     try {
-      await cambiarPassword.mutateAsync({ currentPassword: form.currentPassword, newPassword: form.newPassword });
+      await changePasswordMutation.mutateAsync({ currentPassword: form.currentPassword, newPassword: form.newPassword });
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo cambiar la contraseña");
@@ -100,8 +100,8 @@ export function ChangePasswordDialog() {
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={cambiarPassword.isPending}>
-              {cambiarPassword.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={changePasswordMutation.isPending}>
+              {changePasswordMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar
             </Button>
           </DialogFooter>

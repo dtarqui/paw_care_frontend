@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 export function ForgotPasswordPage() {
   const [username, setUsername] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,7 +20,7 @@ export function ForgotPasswordPage() {
     setIsSubmitting(true);
     try {
       await authApi.requestPasswordRecovery(username);
-      setEnviado(true);
+      setSent(true);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo procesar la solicitud");
     } finally {
@@ -33,13 +33,13 @@ export function ForgotPasswordPage() {
       <Card className="w-full max-w-sm shadow-lg">
         <CardHeader className="items-center text-center">
           <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
-            {enviado ? <MailCheck className="size-6 text-primary" /> : <KeyRound className="size-6 text-primary" />}
+            {sent ? <MailCheck className="size-6 text-primary" /> : <KeyRound className="size-6 text-primary" />}
           </div>
           <CardTitle className="text-xl">Recuperar contraseña</CardTitle>
-          {!enviado && <CardDescription>Ingresa tu usuario y te enviamos un enlace a tu email registrado</CardDescription>}
+          {!sent && <CardDescription>Ingresa tu usuario y te enviamos un enlace a tu email registrado</CardDescription>}
         </CardHeader>
         <CardContent>
-          {enviado ? (
+          {sent ? (
             <p className="text-center text-sm text-muted-foreground">
               Si la cuenta existe y tiene un email registrado, te enviamos un enlace de recuperación — revisa tu bandeja
               (y la carpeta de spam). El enlace vence en 1 hora.

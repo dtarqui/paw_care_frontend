@@ -14,14 +14,14 @@ import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 export function RegisterStockInDialog({ medication, onClose }: { medication: Medication | null; onClose: () => void }) {
-  const [quantity, setCantidad] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const registrarEntrada = useRegisterStockIn();
+  const registerStockInMutation = useRegisterStockIn();
 
   if (!medication) return null;
 
   function handleClose() {
-    setCantidad("");
+    setQuantity("");
     setError(null);
     onClose();
   }
@@ -29,13 +29,13 @@ export function RegisterStockInDialog({ medication, onClose }: { medication: Med
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setError(null);
-    const valor = Number(quantity);
-    if (!valor || valor <= 0) {
+    const value = Number(quantity);
+    if (!value || value <= 0) {
       setError("La cantidad debe ser mayor a 0");
       return;
     }
     try {
-      await registrarEntrada.mutateAsync({ medicationId: medication!.id, quantity: valor });
+      await registerStockInMutation.mutateAsync({ medicationId: medication!.id, quantity: value });
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo registrar la entrada");
@@ -56,7 +56,7 @@ export function RegisterStockInDialog({ medication, onClose }: { medication: Med
               type="number"
               min="1"
               value={quantity}
-              onChange={(e) => setCantidad(e.target.value)}
+              onChange={(e) => setQuantity(e.target.value)}
               placeholder={`Stock actual: ${medication.currentStock}`}
             />
           </div>
@@ -65,8 +65,8 @@ export function RegisterStockInDialog({ medication, onClose }: { medication: Med
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={registrarEntrada.isPending}>
-              {registrarEntrada.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={registerStockInMutation.isPending}>
+              {registerStockInMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Registrar
             </Button>
           </DialogFooter>

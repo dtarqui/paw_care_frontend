@@ -1,22 +1,22 @@
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export interface PuntoPeso {
+export interface WeightPoint {
   date: string; // literal "YYYY-MM-DDTHH:mm"
   weight: number;
 }
 
-function formatearFechaCorta(literal: string) {
+function formatShortDate(literal: string) {
   const [fecha] = literal.split("T");
   const [, mm, dd] = fecha.split("-");
   return `${dd}/${mm}`;
 }
 
-export function PetWeightChart({ puntos }: { puntos: PuntoPeso[] }) {
-  const datos = puntos.map((p) => ({ ...p, etiqueta: formatearFechaCorta(p.date) }));
+export function PetWeightChart({ points }: { points: WeightPoint[] }) {
+  const data = points.map((p) => ({ ...p, label: formatShortDate(p.date) }));
 
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <LineChart data={datos} margin={{ top: 8, right: 16, left: -12, bottom: 0 }}>
+      <LineChart data={data} margin={{ top: 8, right: 16, left: -12, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
         <XAxis dataKey="etiqueta" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
         <YAxis

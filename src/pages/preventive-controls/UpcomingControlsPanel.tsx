@@ -3,9 +3,9 @@ import { TableSkeleton } from "@/components/TableSkeleton";
 import { useUpcomingControls } from "@/features/preventive-controls/usePreventiveControls";
 import { CalendarClock, ShieldCheck } from "lucide-react";
 
-const TIPO_LABEL = { VACCINE: "Vacuna", DEWORMING: "Desparasitación" } as const;
+const CONTROL_TYPE_LABEL = { VACCINE: "Vacuna", DEWORMING: "Desparasitación" } as const;
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   const [yyyy, mm, dd] = iso.split("-");
   return `${dd}/${mm}/${yyyy}`;
 }
@@ -41,10 +41,10 @@ export function UpcomingControlsPanel() {
                   <p className="text-sm font-medium">
                     {control.pet.name} <span className="font-normal text-muted-foreground">({control.pet.species})</span>
                   </p>
-                  <p className="text-xs text-muted-foreground">{TIPO_LABEL[control.type]}</p>
+                  <p className="text-xs text-muted-foreground">{CONTROL_TYPE_LABEL[control.type]}</p>
                 </div>
                 <span className={"text-xs font-medium " + (control.overdue ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400")}>
-                  {control.overdue ? "Vencido" : formatearFecha(control.nextDoseOn)}
+                  {control.overdue ? "Vencido" : formatDate(control.nextDoseOn)}
                 </span>
               </div>
             ))}

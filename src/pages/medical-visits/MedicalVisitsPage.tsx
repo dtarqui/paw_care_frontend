@@ -6,7 +6,7 @@ import { useState } from "react";
 import { VisitHistory } from "./VisitHistory";
 
 export function MedicalVisitsPage() {
-  const [selectedPet, setMascotaSeleccionada] = useState<Pet | null>(null);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
 
   return (
     <div className="flex flex-col gap-4">
@@ -15,7 +15,7 @@ export function MedicalVisitsPage() {
         <p className="text-muted-foreground">Busca una mascota por la cédula del propietario para ver o iniciar su atención médica</p>
       </div>
 
-      <PetSearchByNationalId selectedPetId={selectedPet?.id} onSelect={setMascotaSeleccionada} />
+      <PetSearchByNationalId selectedPetId={selectedPet?.id} onSelect={setSelectedPet} />
 
       {selectedPet ? (
         <VisitHistory pet={selectedPet} />

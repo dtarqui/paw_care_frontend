@@ -12,35 +12,35 @@ import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, Loader2, QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface CobroQrDialogProps {
-  pendiente: PendingPayment | null;
+interface QrChargeDialogProps {
+  pendingPayment: PendingPayment | null;
   onClose: () => void;
 }
 
 /** Muestra el QR generado por el banco y hace polling (cada 3s, ver useCobroQr) hasta
  * que se confirme, expire o falle — no hay websockets en el proyecto, así que no hay
  * forma de que el banco "avise" al frontend salvo preguntando periódicamente. */
-export function QrChargeDialog({ pendiente, onClose }: CobroQrDialogProps) {
+export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps) {
   const queryClient = useQueryClient();
-  const generarCobroQr = useGenerateQrCharge();
-  const [cobroId, setCobroId] = useState<number | null>(null);
-  const [errorGeneracion, setErrorGeneracion] = useState<string | null>(null);
-  const { data: charge } = useQrCharge(cobroId);
+  const generateQrChargeMutation = useGenerateQrCharge();
+  const [chargeId, setChargeId] = useState<number | null>(null);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const { data: charge } = useQrCharge(chargeId);
 
   useEffect(() => {
-    if (!pendiente) {
-      setCobroId(null);
-      setErrorGeneracion(null);
+    if (!pendingPayment) {
+      setChargeId(null);
+      setGenerationError(null);
       return;
     }
-    setErrorGeneracion(null);
-    generarCobroQr.mutate(pendiente.visitId, {
-      onSuccess: (data) => setCobroId(data.charge.id),
-      onError: (err) => setErrorGeneracion(err instanceof Error ? err.message : "No se pudo generar el cobro QR"),
+    setGenerationError(null);
+    generateQrChargeMutation.mutate(pendingPayment.visitId, {
+      onSuccess: (data) => setChargeId(data.charge.id),
+      onError: (err) => setGenerationError(err instanceof Error ? err.message : "No se pudo generar el cobro QR"),
     });
     // Solo debe re-disparar cuando cambia la atención seleccionada, no en cada render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendiente?.visitId]);
+  }, [pendingPayment?.visitId]);
 
   useEffect(() => {
     if (charge?.status === "CONFIRMED") {
@@ -49,16 +49,16 @@ export function QrChargeDialog({ pendiente, onClose }: CobroQrDialogProps) {
     }
   }, [charge?.status, queryClient]);
 
-  if (!pendiente) return null;
+  if (!pendingPayment) return null;
 
   function handleClose() {
-    setCobroId(null);
-    setErrorGeneracion(null);
+    setChargeId(null);
+    setGenerationError(null);
     onClose();
   }
 
   return (
-    <Dialog open={!!pendiente} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={!!pendingPayment} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Cobrar con QR</DialogTitle>
@@ -66,23 +66,23 @@ export function QrChargeDialog({ pendiente, onClose }: CobroQrDialogProps) {
 
         <div className="flex flex-col gap-4">
           <div className="rounded-md border bg-muted/40 p-3 text-sm">
-            <p className="font-medium">{pendiente.pet.name}</p>
+            <p className="font-medium">{pendingPayment.pet.name}</p>
             <p className="text-muted-foreground">
-              {pendiente.owner.firstName} {pendiente.owner.paternalLastName} — Bs. {pendiente.amount.toFixed(2)}
+              {pendingPayment.owner.firstName} {pendingPayment.owner.paternalLastName} — Bs. {pendingPayment.amount.toFixed(2)}
             </p>
           </div>
 
-          {generarCobroQr.isPending && (
+          {generateQrChargeMutation.isPending && (
             <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
               <Loader2 className="size-6 animate-spin" />
               <p>Generando QR con el banco...</p>
             </div>
           )}
 
-          {errorGeneracion && (
+          {generationError && (
             <div className="flex flex-col items-center gap-2 py-8 text-center">
               <AlertTriangle className="size-8 text-destructive" />
-              <p className="text-sm text-destructive">{errorGeneracion}</p>
+              <p className="text-sm text-destructive">{generationError}</p>
             </div>
           )}
 

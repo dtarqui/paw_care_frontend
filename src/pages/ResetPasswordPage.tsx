@@ -12,9 +12,9 @@ export function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") ?? "";
 
-  const [newPassword, setPasswordNuevo] = useState("");
-  const [confirmPassword, setConfirmarPassword] = useState("");
-  const [hecho, setHecho] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,7 +34,7 @@ export function ResetPasswordPage() {
     setIsSubmitting(true);
     try {
       await authApi.resetWithToken(token, newPassword);
-      setHecho(true);
+      setDone(true);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo restablecer la contraseña");
     } finally {
@@ -47,13 +47,13 @@ export function ResetPasswordPage() {
       <Card className="w-full max-w-sm shadow-lg">
         <CardHeader className="items-center text-center">
           <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-primary/10">
-            {hecho ? <CheckCircle2 className="size-6 text-primary" /> : <KeyRound className="size-6 text-primary" />}
+            {done ? <CheckCircle2 className="size-6 text-primary" /> : <KeyRound className="size-6 text-primary" />}
           </div>
-          <CardTitle className="text-xl">{hecho ? "Contraseña actualizada" : "Elige tu nueva contraseña"}</CardTitle>
-          {!hecho && !token && <CardDescription className="text-destructive">Este enlace no incluye un token válido</CardDescription>}
+          <CardTitle className="text-xl">{done ? "Contraseña actualizada" : "Elige tu nueva contraseña"}</CardTitle>
+          {!done && !token && <CardDescription className="text-destructive">Este enlace no incluye un token válido</CardDescription>}
         </CardHeader>
         <CardContent>
-          {hecho ? (
+          {done ? (
             <>
               <p className="text-center text-sm text-muted-foreground">Ya puedes iniciar sesión con tu nueva contraseña.</p>
               <Button asChild className="mt-4 w-full">
@@ -71,7 +71,7 @@ export function ResetPasswordPage() {
                   minLength={6}
                   autoFocus
                   value={newPassword}
-                  onChange={(e) => setPasswordNuevo(e.target.value)}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Mínimo 6 caracteres"
                 />
               </div>
@@ -82,7 +82,7 @@ export function ResetPasswordPage() {
                   type="password"
                   required
                   value={confirmPassword}
-                  onChange={(e) => setConfirmarPassword(e.target.value)}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
 

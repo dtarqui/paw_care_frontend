@@ -16,13 +16,13 @@ import { useState, type FormEvent } from "react";
 export function InviteVetDialog() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [nombre, setNombre] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const invitar = useInviteVet();
+  const inviteVetMutation = useInviteVet();
 
   function handleClose() {
     setEmail("");
-    setNombre("");
+    setName("");
     setError(null);
     setOpen(false);
   }
@@ -31,7 +31,7 @@ export function InviteVetDialog() {
     event.preventDefault();
     setError(null);
     try {
-      await invitar.mutateAsync({ email, name: nombre || undefined });
+      await inviteVetMutation.mutateAsync({ email, name: name || undefined });
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo enviar la invitación");
@@ -61,7 +61,7 @@ export function InviteVetDialog() {
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="inv-nombre">Nombre (opcional)</Label>
-            <Input id="inv-nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Para personalizar el email" />
+            <Input id="inv-nombre" value={name} onChange={(e) => setName(e.target.value)} placeholder="Para personalizar el email" />
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -70,8 +70,8 @@ export function InviteVetDialog() {
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={invitar.isPending}>
-              {invitar.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={inviteVetMutation.isPending}>
+              {inviteVetMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Enviar invitación
             </Button>
           </DialogFooter>

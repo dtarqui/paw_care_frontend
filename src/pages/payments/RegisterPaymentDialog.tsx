@@ -14,40 +14,40 @@ import type { PaymentMethod, PendingPayment } from "@/features/payments/types";
 import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-const METODOS: { value: PaymentMethod; label: string }[] = [
+const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: "CASH", label: "Efectivo" },
   { value: "CARD", label: "Tarjeta" },
   { value: "TRANSFER", label: "Transferencia" },
   { value: "QR", label: "QR" },
 ];
 
-interface RegistrarPagoDialogProps {
-  pendiente: PendingPayment | null;
+interface RegisterPaymentDialogProps {
+  pendingPayment: PendingPayment | null;
   onClose: () => void;
 }
 
-export function RegisterPaymentDialog({ pendiente, onClose }: RegistrarPagoDialogProps) {
-  const registrarPago = useRegisterPayment();
-  const [method, setMetodoPago] = useState<PaymentMethod | "">("");
-  const [monto, setMonto] = useState<string>("");
+export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPaymentDialogProps) {
+  const registerPaymentMutation = useRegisterPayment();
+  const [method, setMethod] = useState<PaymentMethod | "">("");
+  const [amount, setAmount] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
-  if (!pendiente) return null;
+  if (!pendingPayment) return null;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setError(null);
-    const montoNumero = Number(monto);
+    const amountNumber = Number(amount);
     if (!method) {
       setError("Selecciona un método de pago");
       return;
     }
-    if (!montoNumero || montoNumero <= 0) {
+    if (!amountNumber || amountNumber <= 0) {
       setError("El monto debe ser mayor a 0");
       return;
     }
     try {
-      await registrarPago.mutateAsync({ visitId: pendiente!.visitId, method, amount: montoNumero });
+      await registerPaymentMutation.mutateAsync({ visitId: pendingPayment!.visitId, method, amount: amountNumber });
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo registrar el pago");
@@ -55,14 +55,14 @@ export function RegisterPaymentDialog({ pendiente, onClose }: RegistrarPagoDialo
   }
 
   function handleClose() {
-    setMetodoPago("");
-    setMonto("");
+    setMethod("");
+    setAmount("");
     setError(null);
     onClose();
   }
 
   return (
-    <Dialog open={!!pendiente} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={!!pendingPayment} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Registrar pago</DialogTitle>
@@ -70,20 +70,20 @@ export function RegisterPaymentDialog({ pendiente, onClose }: RegistrarPagoDialo
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="rounded-md border bg-muted/40 p-3 text-sm">
-            <p className="font-medium">{pendiente.pet.name}</p>
+            <p className="font-medium">{pendingPayment.pet.name}</p>
             <p className="text-muted-foreground">
-              {pendiente.owner.firstName} {pendiente.owner.paternalLastName} — {pendiente.consultationReason}
+              {pendingPayment.owner.firstName} {pendingPayment.owner.paternalLastName} — {pendingPayment.consultationReason}
             </p>
           </div>
 
           <div className="flex flex-col gap-2">
             <Label>Método de pago</Label>
-            <Select value={method} onValueChange={(v) => setMetodoPago(v as PaymentMethod)}>
+            <Select value={method} onValueChange={(v) => setMethod(v as PaymentMethod)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecciona un método" />
               </SelectTrigger>
               <SelectContent>
-                {METODOS.map((m) => (
+                {PAYMENT_METHODS.map((m) => (
                   <SelectItem key={m.value} value={m.value}>
                     {m.label}
                   </SelectItem>
@@ -99,9 +99,9 @@ export function RegisterPaymentDialog({ pendiente, onClose }: RegistrarPagoDialo
               type="number"
               min={1}
               step="0.01"
-              value={monto}
-              onChange={(e) => setMonto(e.target.value)}
-              placeholder={String(pendiente.amount)}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder={String(pendingPayment.amount)}
             />
           </div>
 
@@ -111,8 +111,8 @@ export function RegisterPaymentDialog({ pendiente, onClose }: RegistrarPagoDialo
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={registrarPago.isPending}>
-              {registrarPago.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={registerPaymentMutation.isPending}>
+              {registerPaymentMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Confirmar payment
             </Button>
           </DialogFooter>

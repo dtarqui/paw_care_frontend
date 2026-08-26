@@ -204,6 +204,24 @@ Los tres ítems que la sesión 10 había dejado pendientes.
 
 ---
 
+## Correcciones y mejoras (sesión 13 — auditoría completa inglés/español)
+
+Barrido de las dos mitades de la convención (`docs/GLOSARIO_EN_ES.md`): que **nada** en pantalla quede en inglés y que **ningún** identificador quede en español. Se hizo con un enmascarador de strings, comentarios y texto JSX, para poder renombrar código sin tocar una sola palabra de las que lee el usuario.
+
+**Inglés que quedaba a la vista (corregido):**
+
+- `"Solo mis appointments"` → «Solo mis citas»; `"Guardar schedule"` → «Guardar horarios»; `"Importar clientes from Excel"` → «desde Excel»; `"Datos profesionales (solo Vet)"` → «(solo Veterinario)»; `"Te invitaron a PawCare como Vet"` → «como Veterinario».
+- `"Dashboard"` en el sidebar y en el manual → «Inicio», que es como se llama la pantalla en todos los demás lugares.
+- El badge de stock decía `OK` → «Suficiente». El diálogo de borrado hablaba de «consumos en visits» → «en atenciones».
+- La lista de columnas del importador de Excel mostraba las claves camelCase del backend (`apellidoPaterno`, `mascotaEspecie`) — ahora describe el orden esperado en español legible.
+- Tres textos en voseo rioplatense («Probá», «revisá») pasados a la forma que usa el resto de la app.
+
+**Identificadores en español (renombrados, 0 restantes):** ~670 referencias en 38 archivos. Estado y variables (`busqueda`→`search`, `monto`→`amount`, `mostrarPassword`→`showPassword`, `rol`→`role`), mutaciones (`crearMascota`→`createPetMutation`, `marcarEnviado`→`markSentMutation`), funciones (`formatearFecha`→`formatDate`, `limpiarYCerrar`→`resetAndClose`, `agruparPorDia`→`groupByDay`), tipos y props (`CitasListaTabProps`→`AppointmentsListTabProps`, `FranjaHoraria`→`TimeSlotPicker`, `onReprogramar`→`onReschedule`, `pendiente`→`pendingPayment`) y constantes (`TIPO_LABEL`→`CONTROL_TYPE_LABEL`, `OPCIONES_TEMA`→`THEME_OPTIONS`, `ESTADO_INICIAL`→`INITIAL_STATE`). Cierra la deuda que la sesión 8 había dejado anotada.
+
+**Cómo se hizo sin romper el español:** un primer intento renombró con una máscara ingenua y corrompió `useState<string>(…)` (el `>` del genérico parecía el fin de una etiqueta JSX). Se descartó por completo — `git checkout`, no parches — y se rehízo con una máscara por carácter que entiende template literals (`${…}` vuelve a ser código), comentarios y texto JSX real. La red de seguridad fue `tsc -b` + `oxlint` + `vite build` después de cada pasada.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

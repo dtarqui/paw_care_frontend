@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 import { ShieldPlus, Syringe } from "lucide-react";
 import { NewControlDialog } from "./NewControlDialog";
 
-const TIPO_LABEL = { VACCINE: "Vacuna", DEWORMING: "Desparasitación" } as const;
+const CONTROL_TYPE_LABEL = { VACCINE: "Vacuna", DEWORMING: "Desparasitación" } as const;
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   if (!iso) return "—";
   const [yyyy, mm, dd] = iso.split("-");
   return `${dd}/${mm}/${yyyy}`;
@@ -49,9 +49,9 @@ export function PreventiveHistory({ pet }: { pet: Pet }) {
               <div key={control.id} className="flex items-center gap-3 py-3">
                 <Syringe className="size-4 shrink-0 text-muted-foreground" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{TIPO_LABEL[control.type]}</p>
+                  <p className="text-sm font-medium">{CONTROL_TYPE_LABEL[control.type]}</p>
                   <p className="text-xs text-muted-foreground">
-                    Aplicada: {formatearFecha(control.appliedOn)} · Próxima dosis: {formatearFecha(control.nextDoseOn)}
+                    Aplicada: {formatDate(control.appliedOn)} · Próxima dosis: {formatDate(control.nextDoseOn)}
                   </p>
                 </div>
                 {control.overdue && (

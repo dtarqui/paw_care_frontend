@@ -49,7 +49,7 @@ export function AppointmentsPage() {
         </TabsList>
 
         <TabsContent value="list" className="mt-4">
-          <AppointmentsListTab onReprogramar={handleReschedule} />
+          <AppointmentsListTab onReschedule={handleReschedule} />
         </TabsContent>
 
         <TabsContent value="new" className="mt-4">

@@ -78,10 +78,10 @@ export function SchedulesTab() {
   const isVet = user?.role === "VET";
   const { data: vets, isLoading: loadingVets } = useVets();
   const { myVet } = useMyVet();
-  const [selectedVetId, setVeterinarioIdSeleccionado] = useState<number | undefined>();
+  const [selectedVetId, setSelectedVetId] = useState<number | undefined>();
 
   const vetId = isVet ? myVet?.id : selectedVetId;
-  const veterinarioActual = isVet ? myVet : vets?.find((v) => v.id === vetId);
+  const currentVet = isVet ? myVet : vets?.find((v) => v.id === vetId);
 
   const { data: schedules, isLoading: loadingSchedules } = useSchedules(vetId);
   const updateSchedulesMutation = useUpdateSchedules(vetId);
@@ -100,8 +100,8 @@ export function SchedulesTab() {
   async function save() {
     setError(null);
     const input = toInput(week);
-    for (const bloque of input) {
-      if (bloque.startTime >= bloque.endTime) {
+    for (const slot of input) {
+      if (slot.startTime >= slot.endTime) {
         setError("En cada turno activo, la hora de inicio debe ser anterior a la hora de fin");
         return;
       }
@@ -129,7 +129,7 @@ export function SchedulesTab() {
           ) : (
             <Select
               value={selectedVetId ? String(selectedVetId) : ""}
-              onValueChange={(v) => setVeterinarioIdSeleccionado(Number(v))}
+              onValueChange={(v) => setSelectedVetId(Number(v))}
               disabled={loadingVets}
             >
               <SelectTrigger className="w-64">
@@ -155,7 +155,7 @@ export function SchedulesTab() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              Semana {veterinarioActual ? `— ${veterinarioActual.firstName} ${veterinarioActual.paternalLastName}` : ""}
+              Semana {currentVet ? `— ${currentVet.firstName} ${currentVet.paternalLastName}` : ""}
             </CardTitle>
             <p className="text-sm text-muted-foreground">Hasta 2 turnos por día (ej. mañana y tarde). Un día sin turnos activos queda sin atención.</p>
           </CardHeader>
@@ -169,26 +169,26 @@ export function SchedulesTab() {
                     <span className="w-24 shrink-0 text-sm font-medium">{day.label}</span>
                     <div className="flex flex-1 flex-wrap gap-4">
                       {(["morningShift", "afternoonShift"] as const).map((shiftKey) => {
-                        const turno = week[day.value][shiftKey];
+                        const shift = week[day.value][shiftKey];
                         return (
                           <div key={shiftKey} className="flex items-center gap-2">
                             <Switch
-                              checked={turno.enabled}
+                              checked={shift.enabled}
                               onCheckedChange={(enabled) => updateShift(day.value, shiftKey, { enabled })}
                             />
                             <Input
                               type="time"
                               className="w-28"
-                              value={turno.start}
-                              disabled={!turno.enabled}
+                              value={shift.start}
+                              disabled={!shift.enabled}
                               onChange={(e) => updateShift(day.value, shiftKey, { start: e.target.value })}
                             />
                             <span className="text-muted-foreground">–</span>
                             <Input
                               type="time"
                               className="w-28"
-                              value={turno.end}
-                              disabled={!turno.enabled}
+                              value={shift.end}
+                              disabled={!shift.enabled}
                               onChange={(e) => updateShift(day.value, shiftKey, { end: e.target.value })}
                             />
                           </div>
@@ -205,7 +205,7 @@ export function SchedulesTab() {
             <div className="flex justify-end">
               <Button onClick={save} disabled={updateSchedulesMutation.isPending || loadingSchedules}>
                 {updateSchedulesMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-                Guardar schedule
+                Guardar horarios
               </Button>
             </div>
           </CardContent>

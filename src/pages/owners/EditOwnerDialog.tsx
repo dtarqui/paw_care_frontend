@@ -23,7 +23,7 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
     address: owner.address ?? "",
   });
   const [error, setError] = useState<string | null>(null);
-  const actualizarPropietario = useUpdateOwner();
+  const updateOwnerMutation = useUpdateOwner();
 
   function handleOpenChange(v: boolean) {
     if (v)
@@ -47,7 +47,7 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
     }
 
     try {
-      await actualizarPropietario.mutateAsync({
+      await updateOwnerMutation.mutateAsync({
         id: owner.id,
         input: {
           firstName: form.firstName.trim(),
@@ -124,8 +124,8 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={actualizarPropietario.isPending}>
-              {actualizarPropietario.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={updateOwnerMutation.isPending}>
+              {updateOwnerMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar cambios
             </Button>
           </DialogFooter>

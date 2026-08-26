@@ -13,16 +13,16 @@ import { useCreateMedication } from "@/features/medications/useMedications";
 import { Loader2, Plus } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-const ESTADO_INICIAL = { name: "", minimumStock: "", initialStock: "" };
+const INITIAL_STATE = { name: "", minimumStock: "", initialStock: "" };
 
 export function NewMedicationDialog() {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState(ESTADO_INICIAL);
+  const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
-  const crearMedicamento = useCreateMedication();
+  const createMedicationMutation = useCreateMedication();
 
   function handleClose() {
-    setForm(ESTADO_INICIAL);
+    setForm(INITIAL_STATE);
     setError(null);
     setOpen(false);
   }
@@ -40,7 +40,7 @@ export function NewMedicationDialog() {
       return;
     }
     try {
-      await crearMedicamento.mutateAsync({
+      await createMedicationMutation.mutateAsync({
         name: form.name.trim(),
         minimumStock,
         initialStock: form.initialStock ? Number(form.initialStock) : undefined,
@@ -97,8 +97,8 @@ export function NewMedicationDialog() {
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={crearMedicamento.isPending}>
-              {crearMedicamento.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={createMedicationMutation.isPending}>
+              {createMedicationMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Crear
             </Button>
           </DialogFooter>

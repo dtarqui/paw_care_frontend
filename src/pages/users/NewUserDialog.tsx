@@ -16,7 +16,7 @@ import { ROLES } from "@/lib/roles";
 import { Loader2, UserPlus } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-const ESTADO_INICIAL = {
+const INITIAL_STATE = {
   firstName: "",
   paternalLastName: "",
   maternalLastName: "",
@@ -33,18 +33,18 @@ const ESTADO_INICIAL = {
 
 export function NewUserDialog() {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState(ESTADO_INICIAL);
+  const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
-  const crearUsuario = useCreateUser();
+  const createUserMutation = useCreateUser();
 
-  const esVeterinario = form.role === "VET";
+  const isVet = form.role === "VET";
 
-  function actualizar<K extends keyof typeof ESTADO_INICIAL>(field: K, valor: (typeof ESTADO_INICIAL)[K]) {
-    setForm((prev) => ({ ...prev, [field]: valor }));
+  function update<K extends keyof typeof INITIAL_STATE>(field: K, value: (typeof INITIAL_STATE)[K]) {
+    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   function handleClose() {
-    setForm(ESTADO_INICIAL);
+    setForm(INITIAL_STATE);
     setError(null);
     setOpen(false);
   }
@@ -65,13 +65,13 @@ export function NewUserDialog() {
       setError("Las contraseñas no coinciden");
       return;
     }
-    if (esVeterinario && (!form.licenseNumber || !form.specialty)) {
+    if (isVet && (!form.licenseNumber || !form.specialty)) {
       setError("Matrícula y especialidad son obligatorias para un Veterinario");
       return;
     }
 
     try {
-      await crearUsuario.mutateAsync({
+      await createUserMutation.mutateAsync({
         firstName: form.firstName,
         paternalLastName: form.paternalLastName,
         maternalLastName: form.maternalLastName || undefined,
@@ -81,8 +81,8 @@ export function NewUserDialog() {
         username: form.username,
         role: form.role,
         password: form.password,
-        licenseNumber: esVeterinario ? form.licenseNumber : undefined,
-        specialty: esVeterinario ? form.specialty : undefined,
+        licenseNumber: isVet ? form.licenseNumber : undefined,
+        specialty: isVet ? form.specialty : undefined,
       });
       handleClose();
     } catch (err) {
@@ -108,7 +108,7 @@ export function NewUserDialog() {
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="firstName">Nombre *</Label>
-              <Input id="firstName" required value={form.firstName} onChange={(e) => actualizar("firstName", e.target.value)} />
+              <Input id="firstName" required value={form.firstName} onChange={(e) => update("firstName", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="paternalLastName">Apellido paterno *</Label>
@@ -116,7 +116,7 @@ export function NewUserDialog() {
                 id="paternalLastName"
                 required
                 value={form.paternalLastName}
-                onChange={(e) => actualizar("paternalLastName", e.target.value)}
+                onChange={(e) => update("paternalLastName", e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -124,24 +124,24 @@ export function NewUserDialog() {
               <Input
                 id="maternalLastName"
                 value={form.maternalLastName}
-                onChange={(e) => actualizar("maternalLastName", e.target.value)}
+                onChange={(e) => update("maternalLastName", e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="nationalId">CI *</Label>
-              <Input id="nationalId" required value={form.nationalId} onChange={(e) => actualizar("nationalId", e.target.value)} />
+              <Input id="nationalId" required value={form.nationalId} onChange={(e) => update("nationalId", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={form.email} onChange={(e) => actualizar("email", e.target.value)} />
+              <Input id="email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="phone">Teléfono</Label>
-              <Input id="phone" value={form.phone} onChange={(e) => actualizar("phone", e.target.value)} />
+              <Input id="phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Rol *</Label>
-              <Select value={form.role} onValueChange={(v) => actualizar("role", v as Role)}>
+              <Select value={form.role} onValueChange={(v) => update("role", v as Role)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Seleccione rol" />
                 </SelectTrigger>
@@ -156,18 +156,18 @@ export function NewUserDialog() {
             </div>
           </div>
 
-          {esVeterinario && (
+          {isVet && (
             <div className="grid grid-cols-2 gap-3 rounded-md border bg-muted/40 p-3">
               <div className="col-span-2 text-xs font-medium text-muted-foreground">
-                Datos profesionales (solo Vet)
+                Datos profesionales (solo Veterinario)
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="licenseNumber">Matrícula *</Label>
                 <Input
                   id="licenseNumber"
-                  required={esVeterinario}
+                  required={isVet}
                   value={form.licenseNumber}
-                  onChange={(e) => actualizar("licenseNumber", e.target.value)}
+                  onChange={(e) => update("licenseNumber", e.target.value)}
                   placeholder="VET-0XX"
                 />
               </div>
@@ -175,9 +175,9 @@ export function NewUserDialog() {
                 <Label htmlFor="specialty">Especialidad *</Label>
                 <Input
                   id="specialty"
-                  required={esVeterinario}
+                  required={isVet}
                   value={form.specialty}
-                  onChange={(e) => actualizar("specialty", e.target.value)}
+                  onChange={(e) => update("specialty", e.target.value)}
                 />
               </div>
             </div>
@@ -186,7 +186,7 @@ export function NewUserDialog() {
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="username">Usuario *</Label>
-              <Input id="username" required value={form.username} onChange={(e) => actualizar("username", e.target.value)} />
+              <Input id="username" required value={form.username} onChange={(e) => update("username", e.target.value)} />
             </div>
             <div />
             <div className="flex flex-col gap-1.5">
@@ -197,7 +197,7 @@ export function NewUserDialog() {
                 required
                 minLength={6}
                 value={form.password}
-                onChange={(e) => actualizar("password", e.target.value)}
+                onChange={(e) => update("password", e.target.value)}
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
@@ -208,7 +208,7 @@ export function NewUserDialog() {
                 type="password"
                 required
                 value={form.confirmPassword}
-                onChange={(e) => actualizar("confirmPassword", e.target.value)}
+                onChange={(e) => update("confirmPassword", e.target.value)}
               />
             </div>
           </div>
@@ -220,8 +220,8 @@ export function NewUserDialog() {
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={crearUsuario.isPending}>
-              {crearUsuario.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={createUserMutation.isPending}>
+              {createUserMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Registrar User
             </Button>
           </DialogFooter>

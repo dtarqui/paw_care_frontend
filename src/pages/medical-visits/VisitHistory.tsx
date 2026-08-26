@@ -9,7 +9,7 @@ import { calculateAge } from "@/lib/pet";
 import { FilePlus2, User } from "lucide-react";
 import { NewVisitDialog } from "./NewVisitDialog";
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   const [fecha] = iso.split("T");
   const [yyyy, mm, dd] = fecha.split("-");
   return `${dd}/${mm}/${yyyy}`;
@@ -17,7 +17,7 @@ function formatearFecha(iso: string) {
 
 export function VisitHistory({ pet }: { pet: Pet }) {
   const { data: visits, isLoading, isError } = useVisitHistory(pet.id);
-  const edad = calculateAge(pet.birthDate);
+  const age = calculateAge(pet.birthDate);
 
   return (
     <Card>
@@ -38,9 +38,9 @@ export function VisitHistory({ pet }: { pet: Pet }) {
                 {pet.sex}
               </Badge>
             )}
-            {edad && (
+            {age && (
               <Badge variant="secondary" className="border-none font-normal">
-                {edad}
+                {age}
               </Badge>
             )}
             {pet.weight && (
@@ -73,7 +73,7 @@ export function VisitHistory({ pet }: { pet: Pet }) {
               <div key={visit.id} className="flex flex-col gap-1 py-3">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-medium">
-                    {formatearFecha(visit.date)} <span className="font-normal text-muted-foreground">· {visit.serviceType}</span>
+                    {formatDate(visit.date)} <span className="font-normal text-muted-foreground">· {visit.serviceType}</span>
                   </span>
                   <StatusBadge status={visit.paymentStatus} />
                 </div>

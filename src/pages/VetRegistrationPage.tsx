@@ -8,7 +8,7 @@ import { ArrowLeft, CheckCircle2, Eye, EyeOff, Loader2, Stethoscope } from "luci
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 
-const ESTADO_INICIAL = {
+const INITIAL_STATE = {
   firstName: "",
   paternalLastName: "",
   maternalLastName: "",
@@ -23,14 +23,14 @@ const ESTADO_INICIAL = {
 };
 
 export function VetRegistrationPage() {
-  const [form, setForm] = useState(ESTADO_INICIAL);
-  const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [form, setForm] = useState(INITIAL_STATE);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [enviado, setEnviado] = useState(false);
-  const preregistrar = usePreRegisterVet();
+  const [sent, setSent] = useState(false);
+  const preRegisterMutation = usePreRegisterVet();
 
-  function actualizar<K extends keyof typeof ESTADO_INICIAL>(field: K, valor: (typeof ESTADO_INICIAL)[K]) {
-    setForm((prev) => ({ ...prev, [field]: valor }));
+  function update<K extends keyof typeof INITIAL_STATE>(field: K, value: (typeof INITIAL_STATE)[K]) {
+    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -47,7 +47,7 @@ export function VetRegistrationPage() {
     }
 
     try {
-      await preregistrar.mutateAsync({
+      await preRegisterMutation.mutateAsync({
         firstName: form.firstName,
         paternalLastName: form.paternalLastName,
         maternalLastName: form.maternalLastName || undefined,
@@ -59,13 +59,13 @@ export function VetRegistrationPage() {
         licenseNumber: form.licenseNumber,
         specialty: form.specialty,
       });
-      setEnviado(true);
+      setSent(true);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo enviar la solicitud");
     }
   }
 
-  if (enviado) {
+  if (sent) {
     return (
       <div className="flex min-h-svh items-center justify-center bg-gradient-to-b from-muted/60 to-muted/20 p-4">
         <Card className="w-full max-w-sm shadow-lg">
@@ -101,7 +101,7 @@ export function VetRegistrationPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="firstName">Nombre *</Label>
-                <Input id="firstName" required value={form.firstName} onChange={(e) => actualizar("firstName", e.target.value)} />
+                <Input id="firstName" required value={form.firstName} onChange={(e) => update("firstName", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="paternalLastName">Apellido paterno *</Label>
@@ -109,7 +109,7 @@ export function VetRegistrationPage() {
                   id="paternalLastName"
                   required
                   value={form.paternalLastName}
-                  onChange={(e) => actualizar("paternalLastName", e.target.value)}
+                  onChange={(e) => update("paternalLastName", e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -117,12 +117,12 @@ export function VetRegistrationPage() {
                 <Input
                   id="maternalLastName"
                   value={form.maternalLastName}
-                  onChange={(e) => actualizar("maternalLastName", e.target.value)}
+                  onChange={(e) => update("maternalLastName", e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="nationalId">CI *</Label>
-                <Input id="nationalId" required value={form.nationalId} onChange={(e) => actualizar("nationalId", e.target.value)} />
+                <Input id="nationalId" required value={form.nationalId} onChange={(e) => update("nationalId", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="email">Email *</Label>
@@ -131,17 +131,17 @@ export function VetRegistrationPage() {
                   type="email"
                   required
                   value={form.email}
-                  onChange={(e) => actualizar("email", e.target.value)}
+                  onChange={(e) => update("email", e.target.value)}
                   placeholder="Para recuperar tu contraseña si la olvidas"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="phone">Teléfono</Label>
-                <Input id="phone" value={form.phone} onChange={(e) => actualizar("phone", e.target.value)} />
+                <Input id="phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="username">Usuario *</Label>
-                <Input id="username" required value={form.username} onChange={(e) => actualizar("username", e.target.value)} />
+                <Input id="username" required value={form.username} onChange={(e) => update("username", e.target.value)} />
               </div>
             </div>
 
@@ -153,7 +153,7 @@ export function VetRegistrationPage() {
                   id="licenseNumber"
                   required
                   value={form.licenseNumber}
-                  onChange={(e) => actualizar("licenseNumber", e.target.value)}
+                  onChange={(e) => update("licenseNumber", e.target.value)}
                   placeholder="VET-0XX"
                 />
               </div>
@@ -163,7 +163,7 @@ export function VetRegistrationPage() {
                   id="specialty"
                   required
                   value={form.specialty}
-                  onChange={(e) => actualizar("specialty", e.target.value)}
+                  onChange={(e) => update("specialty", e.target.value)}
                 />
               </div>
             </div>
@@ -174,22 +174,22 @@ export function VetRegistrationPage() {
                 <div className="relative">
                   <Input
                     id="password"
-                    type={mostrarPassword ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     required
                     minLength={6}
                     value={form.password}
-                    onChange={(e) => actualizar("password", e.target.value)}
+                    onChange={(e) => update("password", e.target.value)}
                     placeholder="Mínimo 6 caracteres"
                     className="pr-10"
                   />
                   <button
                     type="button"
-                    onClick={() => setMostrarPassword((v) => !v)}
+                    onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                     tabIndex={-1}
                   >
-                    {mostrarPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>
               </div>
@@ -197,10 +197,10 @@ export function VetRegistrationPage() {
                 <Label htmlFor="confirmPassword">Confirmar contraseña *</Label>
                 <Input
                   id="confirmPassword"
-                  type={mostrarPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={form.confirmPassword}
-                  onChange={(e) => actualizar("confirmPassword", e.target.value)}
+                  onChange={(e) => update("confirmPassword", e.target.value)}
                 />
               </div>
             </div>
@@ -211,8 +211,8 @@ export function VetRegistrationPage() {
               </p>
             )}
 
-            <Button type="submit" disabled={preregistrar.isPending} className="mt-2">
-              {preregistrar.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={preRegisterMutation.isPending} className="mt-2">
+              {preRegisterMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Enviar solicitud
             </Button>
           </form>

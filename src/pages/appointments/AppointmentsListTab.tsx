@@ -22,19 +22,19 @@ function morning(): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function etiquetaDelDia(isoDate: string) {
+function dayLabel(isoDate: string) {
   if (isoDate === todayISO()) return "Hoy";
   if (isoDate === morning()) return "Mañana";
   const [yyyy, mm, dd] = isoDate.split("-").map(Number);
-  const texto = new Intl.DateTimeFormat("es-BO", {
+  const text = new Intl.DateTimeFormat("es-BO", {
     weekday: "long",
     day: "numeric",
     month: "long",
   }).format(new Date(yyyy, mm - 1, dd));
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function agruparPorDia(appointments: Appointment[]) {
+function groupByDay(appointments: Appointment[]) {
   const groups = new Map<string, Appointment[]>();
   for (const appointment of appointments) {
     const day = appointment.dateTime.slice(0, 10);
@@ -44,28 +44,28 @@ function agruparPorDia(appointments: Appointment[]) {
   return [...groups.entries()];
 }
 
-interface CitasListaTabProps {
-  onReprogramar: (appointment: Appointment) => void;
+interface AppointmentsListTabProps {
+  onReschedule: (appointment: Appointment) => void;
 }
 
-export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
+export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) {
   const { user } = useAuth();
   const isVet = user?.role === "VET";
   const { myVet } = useMyVet();
-  const [soloMisCitas, setSoloMisCitas] = useState(true);
+  const [onlyMyAppointments, setOnlyMyAppointments] = useState(true);
 
   const { data: appointments, isLoading, isError } = useAppointments();
-  const cambiarEstado = useChangeAppointmentStatus();
+  const changeStatusMutation = useChangeAppointmentStatus();
 
-  const citasFiltradas = useMemo(() => {
+  const filteredAppointments = useMemo(() => {
     if (!appointments) return [];
-    if (isVet && soloMisCitas && myVet) {
+    if (isVet && onlyMyAppointments && myVet) {
       return appointments.filter((c) => c.vet.id === myVet.id);
     }
     return appointments;
-  }, [appointments, isVet, soloMisCitas, myVet]);
+  }, [appointments, isVet, onlyMyAppointments, myVet]);
 
-  const groups = useMemo(() => agruparPorDia(citasFiltradas), [citasFiltradas]);
+  const groups = useMemo(() => groupByDay(filteredAppointments), [filteredAppointments]);
 
   if (isLoading) {
     return (
@@ -81,9 +81,9 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
     <div className="flex flex-col gap-4">
       {isVet && (
         <div className="flex items-center gap-2 self-start rounded-md border px-3 py-2">
-          <Switch id="solo-mis-citas" checked={soloMisCitas} onCheckedChange={setSoloMisCitas} />
+          <Switch id="solo-mis-citas" checked={onlyMyAppointments} onCheckedChange={setOnlyMyAppointments} />
           <Label htmlFor="solo-mis-citas" className="cursor-pointer text-sm font-normal">
-            Solo mis appointments
+            Solo mis citas
           </Label>
         </div>
       )}
@@ -91,7 +91,7 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
       {groups.length === 0 && (
         <EmptyState
           icon={CalendarDays}
-          title={soloMisCitas && isVet ? "No tienes citas asignadas todavía" : "No hay citas registradas todavía"}
+          title={onlyMyAppointments && isVet ? "No tienes citas asignadas todavía" : "No hay citas registradas todavía"}
           description="Agendá la primera desde la pestaña «Nueva Cita»."
         />
       )}
@@ -99,7 +99,7 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
       {groups.map(([day, dayAppointments]) => (
         <Card key={day}>
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-foreground">{etiquetaDelDia(day)}</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground">{dayLabel(day)}</CardTitle>
             <span className="text-xs text-muted-foreground">
               {dayAppointments.length} {dayAppointments.length === 1 ? "cita" : "citas"}
             </span>
@@ -126,15 +126,15 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
                       {/* Reprogramar es una acción de agenda: mismo criterio que crear (HU5) —
                           un veterinario solo reprograma su propia cita. */}
                       {(!isVet || appointment.vet.id === myVet?.id) && (
-                        <Button size="sm" variant="outline" onClick={() => onReprogramar(appointment)}>
+                        <Button size="sm" variant="outline" onClick={() => onReschedule(appointment)}>
                           Reprogramar
                         </Button>
                       )}
                       <Button
                         size="sm"
                         variant="outline"
-                        disabled={cambiarEstado.isPending}
-                        onClick={() => cambiarEstado.mutate({ id: appointment.id, status: "ATTENDED" })}
+                        disabled={changeStatusMutation.isPending}
+                        onClick={() => changeStatusMutation.mutate({ id: appointment.id, status: "ATTENDED" })}
                       >
                         Marcar atendida
                       </Button>
@@ -142,8 +142,8 @@ export function AppointmentsListTab({ onReprogramar }: CitasListaTabProps) {
                         size="sm"
                         variant="ghost"
                         className="text-destructive hover:text-destructive"
-                        disabled={cambiarEstado.isPending}
-                        onClick={() => cambiarEstado.mutate({ id: appointment.id, status: "CANCELLED" })}
+                        disabled={changeStatusMutation.isPending}
+                        onClick={() => changeStatusMutation.mutate({ id: appointment.id, status: "CANCELLED" })}
                       >
                         Cancelar
                       </Button>

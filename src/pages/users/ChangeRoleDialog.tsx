@@ -17,19 +17,19 @@ import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose: () => void }) {
-  const [rol, setRol] = useState<Role | "">("");
-  const [matricula, setMatricula] = useState("");
-  const [especialidad, setEspecialidad] = useState("");
+  const [role, setRole] = useState<Role | "">("");
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [specialty, setSpecialty] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const cambiarRol = useChangeUserRole();
+  const changeRoleMutation = useChangeUserRole();
 
-  const rolElegido = rol || user?.role || "";
-  const requiereDatosVeterinario = rolElegido === "VET" && user?.role !== "VET";
+  const chosenRole = role || user?.role || "";
+  const requiresVetData = chosenRole === "VET" && user?.role !== "VET";
 
-  function limpiarYCerrar() {
-    setRol("");
-    setMatricula("");
-    setEspecialidad("");
+  function resetAndClose() {
+    setRole("");
+    setLicenseNumber("");
+    setSpecialty("");
     setError(null);
     onClose();
   }
@@ -37,36 +37,36 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setError(null);
-    if (!user || !rolElegido) return;
-    if (requiereDatosVeterinario && (!matricula || !especialidad)) {
+    if (!user || !chosenRole) return;
+    if (requiresVetData && (!licenseNumber || !specialty)) {
       setError("Matrícula y especialidad son obligatorias para convertir a Veterinario");
       return;
     }
     try {
-      await cambiarRol.mutateAsync({
+      await changeRoleMutation.mutateAsync({
         id: user.id,
-        input: { role: rolElegido as Role, licenseNumber: matricula || undefined, specialty: especialidad || undefined },
+        input: { role: chosenRole as Role, licenseNumber: licenseNumber || undefined, specialty: specialty || undefined },
       });
-      limpiarYCerrar();
+      resetAndClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo cambiar el rol");
     }
   }
 
   return (
-    <Dialog open={!!user} onOpenChange={(v) => !v && limpiarYCerrar()}>
+    <Dialog open={!!user} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>Cambiar rol</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            {user?.firstName} {user?.paternalLastName} — rol actual: {user?.role}
+            {user?.firstName} {user?.paternalLastName} — role actual: {user?.role}
           </p>
 
           <div className="flex flex-col gap-1.5">
             <Label>Nuevo rol</Label>
-            <Select value={rolElegido} onValueChange={(v) => setRol(v as Role)}>
+            <Select value={chosenRole} onValueChange={(v) => setRole(v as Role)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecciona un rol" />
               </SelectTrigger>
@@ -80,16 +80,16 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
             </Select>
           </div>
 
-          {requiereDatosVeterinario && (
+          {requiresVetData && (
             <div className="flex flex-col gap-3 rounded-md border bg-muted/40 p-3">
               <div className="text-xs font-medium text-muted-foreground">Datos profesionales (obligatorios para veterinario)</div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="licenseNumber">Matrícula *</Label>
-                <Input id="licenseNumber" value={matricula} onChange={(e) => setMatricula(e.target.value)} placeholder="VET-0XX" />
+                <Input id="licenseNumber" value={licenseNumber} onChange={(e) => setLicenseNumber(e.target.value)} placeholder="VET-0XX" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="specialty">Especialidad *</Label>
-                <Input id="specialty" value={especialidad} onChange={(e) => setEspecialidad(e.target.value)} />
+                <Input id="specialty" value={specialty} onChange={(e) => setSpecialty(e.target.value)} />
               </div>
             </div>
           )}
@@ -97,11 +97,11 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={limpiarYCerrar}>
+            <Button type="button" variant="outline" onClick={resetAndClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={cambiarRol.isPending || !rolElegido || rolElegido === user?.role}>
-              {cambiarRol.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={changeRoleMutation.isPending || !chosenRole || chosenRole === user?.role}>
+              {changeRoleMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar
             </Button>
           </DialogFooter>

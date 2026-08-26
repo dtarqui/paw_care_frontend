@@ -83,7 +83,7 @@ export function InfoPage() {
                       "No es tu correo: es un nombre de usuario que asigna el Administrador de la clínica. Si te equivocas, el sistema no te dice cuál de los dos campos falló — es a propósito, por seguridad.",
                   },
                   {
-                    title: "Revisa el Dashboard",
+                    title: "Revisa el Inicio",
                     description:
                       "Es la primera pantalla. Arriba muestra las cifras del momento (mascotas registradas, citas de hoy, pagos pendientes) y debajo accesos directos a los módulos que te corresponden.",
                   },

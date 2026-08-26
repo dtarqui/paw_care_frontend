@@ -10,25 +10,25 @@ export interface MedicationItem {
   quantity: string;
 }
 
-interface MedicamentosConsumidosFieldProps {
+interface ConsumedMedicationsFieldProps {
   items: MedicationItem[];
   onChange: (items: MedicationItem[]) => void;
 }
 
-export function ConsumedMedicationsField({ items, onChange }: MedicamentosConsumidosFieldProps) {
+export function ConsumedMedicationsField({ items, onChange }: ConsumedMedicationsFieldProps) {
   const { data: medications } = useMedications();
 
-  function actualizarItem(index: number, field: keyof MedicationItem, valor: string) {
-    const copia = [...items];
-    copia[index] = { ...copia[index], [field]: valor };
-    onChange(copia);
+  function updateItem(index: number, field: keyof MedicationItem, value: string) {
+    const copy = [...items];
+    copy[index] = { ...copy[index], [field]: value };
+    onChange(copy);
   }
 
-  function agregar() {
+  function addItem() {
     onChange([...items, { medicationId: "", quantity: "1" }]);
   }
 
-  function quitar(index: number) {
+  function removeItem(index: number) {
     onChange(items.filter((_, i) => i !== index));
   }
 
@@ -36,7 +36,7 @@ export function ConsumedMedicationsField({ items, onChange }: MedicamentosConsum
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <Label>Medicamentos consumidos (opcional)</Label>
-        <Button type="button" variant="ghost" size="sm" onClick={agregar}>
+        <Button type="button" variant="ghost" size="sm" onClick={addItem}>
           <Plus className="size-3.5" />
           Agregar
         </Button>
@@ -44,7 +44,7 @@ export function ConsumedMedicationsField({ items, onChange }: MedicamentosConsum
 
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
-          <Select value={item.medicationId} onValueChange={(v) => actualizarItem(index, "medicationId", v)}>
+          <Select value={item.medicationId} onValueChange={(v) => updateItem(index, "medicationId", v)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Seleccione medicamento" />
             </SelectTrigger>
@@ -61,9 +61,9 @@ export function ConsumedMedicationsField({ items, onChange }: MedicamentosConsum
             min="1"
             className="w-20 shrink-0"
             value={item.quantity}
-            onChange={(e) => actualizarItem(index, "quantity", e.target.value)}
+            onChange={(e) => updateItem(index, "quantity", e.target.value)}
           />
-          <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => quitar(index)}>
+          <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => removeItem(index)}>
             <X className="size-4" />
           </Button>
         </div>

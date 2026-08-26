@@ -42,7 +42,7 @@ export function Sidebar({ onNavigate, onOpenSearch }: SidebarProps) {
 
         <SidebarLink to="/app" end onClick={onNavigate}>
           <LayoutDashboard className="size-4" />
-          Dashboard
+          Inicio
         </SidebarLink>
 
         {isLoading &&

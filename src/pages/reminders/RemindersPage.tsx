@@ -29,7 +29,7 @@ function formatDateTime(iso: string) {
 export function RemindersPage() {
   const { data: reminders, isLoading, isError } = usePendingReminders();
   const { data: sent, isLoading: loadingSent } = useReminderHistory(5);
-  const marcarEnviado = useMarkReminderSent();
+  const markSentMutation = useMarkReminderSent();
 
   return (
     <div className="flex flex-col gap-4">
@@ -62,10 +62,10 @@ export function RemindersPage() {
           {!isLoading && !isError && reminders && reminders.length > 0 && (
             <div className="flex flex-col divide-y">
               {reminders.map((reminder) => {
-                const Icono = reminder.type === "APPOINTMENT" ? CalendarClock : ShieldPlus;
+                const Icon = reminder.type === "APPOINTMENT" ? CalendarClock : ShieldPlus;
                 return (
                   <div key={reminder.id} className="flex flex-wrap items-center gap-3 py-3">
-                    <Icono className="size-5 shrink-0 text-muted-foreground" />
+                    <Icon className="size-5 shrink-0 text-muted-foreground" />
                     <div className="min-w-[220px] flex-1">
                       <p className="text-sm font-medium">{reminder.reference}</p>
                       <p className="text-xs text-muted-foreground">
@@ -85,8 +85,8 @@ export function RemindersPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      disabled={marcarEnviado.isPending}
-                      onClick={() => marcarEnviado.mutate(reminder.id)}
+                      disabled={markSentMutation.isPending}
+                      onClick={() => markSentMutation.mutate(reminder.id)}
                     >
                       Marcar como enviado
                     </Button>
@@ -116,19 +116,19 @@ export function RemindersPage() {
 
           {!loadingSent && sent && sent.length > 0 && (
             <div className="flex flex-col divide-y">
-              {sent.map((enviado) => (
-                <div key={enviado.id} className="flex flex-wrap items-start justify-between gap-3 py-3">
+              {sent.map((sent) => (
+                <div key={sent.id} className="flex flex-wrap items-start justify-between gap-3 py-3">
                   <div className="min-w-[220px] flex-1">
                     <p className="text-sm font-medium">
-                      {enviado.owner.firstName} {enviado.owner.paternalLastName}
+                      {sent.owner.firstName} {sent.owner.paternalLastName}
                     </p>
-                    <p className="text-xs text-muted-foreground">{enviado.message}</p>
+                    <p className="text-xs text-muted-foreground">{sent.message}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     <Badge variant="secondary" className="border-none font-normal">
                       WhatsApp
                     </Badge>
-                    <span className="text-xs text-muted-foreground">{formatDateTime(enviado.sentAt)}</span>
+                    <span className="text-xs text-muted-foreground">{formatDateTime(sent.sentAt)}</span>
                   </div>
                 </div>
               ))}

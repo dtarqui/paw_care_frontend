@@ -21,17 +21,17 @@ const PAGE_SIZE = 20;
 export function PetsPage() {
   const { user } = useAuth();
   const [page, setPage] = useState(1);
-  const [mostrarInactivas, setMostrarInactivas] = useState(false);
-  const [busqueda, setBusqueda] = useState("");
-  const { data, isLoading, isError } = usePets(page, PAGE_SIZE, mostrarInactivas);
+  const [showInactive, setShowInactive] = useState(false);
+  const [search, setSearch] = useState("");
+  const { data, isLoading, isError } = usePets(page, PAGE_SIZE, showInactive);
   const navigate = useNavigate();
 
   const pets = useMemo(() => {
     if (!data?.pets) return data?.pets;
-    const termino = busqueda.trim().toLowerCase();
-    if (!termino) return data.pets;
-    return data.pets.filter((m) => m.name.toLowerCase().includes(termino));
-  }, [data?.pets, busqueda]);
+    const term = search.trim().toLowerCase();
+    if (!term) return data.pets;
+    return data.pets.filter((m) => m.name.toLowerCase().includes(term));
+  }, [data?.pets, search]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -55,12 +55,12 @@ export function PetsPage() {
               <Input
                 placeholder="Buscar por nombre..."
                 className="w-56 pl-8"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
-              <Switch id="mostrar-inactivas" checked={mostrarInactivas} onCheckedChange={setMostrarInactivas} />
+              <Switch id="mostrar-inactivas" checked={showInactive} onCheckedChange={setShowInactive} />
               <Label htmlFor="mostrar-inactivas" className="text-sm font-normal text-muted-foreground">
                 Mostrar inactivas
               </Label>
@@ -75,13 +75,13 @@ export function PetsPage() {
           {!isLoading && !isError && pets?.length === 0 && (
             <EmptyState
               icon={PawPrint}
-              title={busqueda ? "Ninguna mascota coincide con la búsqueda" : "Sin mascotas registradas todavía"}
+              title={search ? "Ninguna mascota coincide con la búsqueda" : "Sin mascotas registradas todavía"}
               description={
-                busqueda
-                  ? "Probá con otro nombre, o revisá si está marcada como inactiva."
+                search
+                  ? "Prueba con otro nombre, o revisa si está marcada como inactiva."
                   : "Registrá la primera mascota junto con los datos de su propietario."
               }
-              action={busqueda ? undefined : <NewPetDialog />}
+              action={search ? undefined : <NewPetDialog />}
             />
           )}
 
@@ -120,7 +120,7 @@ export function PetsPage() {
                       <TableHead>Sexo</TableHead>
                       <TableHead>Peso</TableHead>
                       <TableHead>Propietario</TableHead>
-                      {mostrarInactivas && <TableHead>Estado</TableHead>}
+                      {showInactive && <TableHead>Estado</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -138,7 +138,7 @@ export function PetsPage() {
                         <TableCell>
                           {pet.owner.firstName} {pet.owner.paternalLastName}
                         </TableCell>
-                        {mostrarInactivas && (
+                        {showInactive && (
                           <TableCell>
                             {pet.status === "INACTIVE" && (
                               <Badge variant="secondary" className="border-none font-normal">

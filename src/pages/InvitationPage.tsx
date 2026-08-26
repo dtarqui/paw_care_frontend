@@ -9,7 +9,7 @@ import { AlertTriangle, ArrowLeft, CheckCircle2, Eye, EyeOff, Loader2, Mail } fr
 import { useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
-const ESTADO_INICIAL = {
+const INITIAL_STATE = {
   firstName: "",
   paternalLastName: "",
   maternalLastName: "",
@@ -27,14 +27,14 @@ export function InvitationPage() {
   const token = searchParams.get("token") ?? undefined;
   const { data: invitation, isLoading, isError } = useValidateInvitation(token);
 
-  const [form, setForm] = useState(ESTADO_INICIAL);
-  const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [form, setForm] = useState(INITIAL_STATE);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [aceptado, setAceptado] = useState(false);
-  const aceptar = useAcceptInvitation();
+  const [accepted, setAccepted] = useState(false);
+  const acceptInvitationMutation = useAcceptInvitation();
 
-  function actualizar<K extends keyof typeof ESTADO_INICIAL>(field: K, valor: (typeof ESTADO_INICIAL)[K]) {
-    setForm((prev) => ({ ...prev, [field]: valor }));
+  function update<K extends keyof typeof INITIAL_STATE>(field: K, value: (typeof INITIAL_STATE)[K]) {
+    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -51,7 +51,7 @@ export function InvitationPage() {
     }
 
     try {
-      await aceptar.mutateAsync({
+      await acceptInvitationMutation.mutateAsync({
         token: token!,
         input: {
           firstName: form.firstName || invitation?.name || "",
@@ -65,13 +65,13 @@ export function InvitationPage() {
           specialty: form.specialty,
         },
       });
-      setAceptado(true);
+      setAccepted(true);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo completar el registro");
     }
   }
 
-  if (aceptado) {
+  if (accepted) {
     return (
       <div className="flex min-h-svh items-center justify-center bg-gradient-to-b from-muted/60 to-muted/20 p-4">
         <Card className="w-full max-w-sm shadow-lg">
@@ -130,7 +130,7 @@ export function InvitationPage() {
             <Mail className="size-6 text-primary" />
           </div>
           <CardTitle className="text-xl">Completa tu registro</CardTitle>
-          <CardDescription>Te invitaron a PawCare como Vet — {invitation.email}</CardDescription>
+          <CardDescription>Te invitaron a PawCare como Veterinario — {invitation.email}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -141,7 +141,7 @@ export function InvitationPage() {
                   id="firstName"
                   required
                   value={form.firstName || invitation.name || ""}
-                  onChange={(e) => actualizar("firstName", e.target.value)}
+                  onChange={(e) => update("firstName", e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -150,7 +150,7 @@ export function InvitationPage() {
                   id="paternalLastName"
                   required
                   value={form.paternalLastName}
-                  onChange={(e) => actualizar("paternalLastName", e.target.value)}
+                  onChange={(e) => update("paternalLastName", e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -158,20 +158,20 @@ export function InvitationPage() {
                 <Input
                   id="maternalLastName"
                   value={form.maternalLastName}
-                  onChange={(e) => actualizar("maternalLastName", e.target.value)}
+                  onChange={(e) => update("maternalLastName", e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="nationalId">CI *</Label>
-                <Input id="nationalId" required value={form.nationalId} onChange={(e) => actualizar("nationalId", e.target.value)} />
+                <Input id="nationalId" required value={form.nationalId} onChange={(e) => update("nationalId", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="phone">Teléfono</Label>
-                <Input id="phone" value={form.phone} onChange={(e) => actualizar("phone", e.target.value)} />
+                <Input id="phone" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="username">Usuario *</Label>
-                <Input id="username" required value={form.username} onChange={(e) => actualizar("username", e.target.value)} />
+                <Input id="username" required value={form.username} onChange={(e) => update("username", e.target.value)} />
               </div>
             </div>
 
@@ -183,7 +183,7 @@ export function InvitationPage() {
                   id="licenseNumber"
                   required
                   value={form.licenseNumber}
-                  onChange={(e) => actualizar("licenseNumber", e.target.value)}
+                  onChange={(e) => update("licenseNumber", e.target.value)}
                   placeholder="VET-0XX"
                 />
               </div>
@@ -193,7 +193,7 @@ export function InvitationPage() {
                   id="specialty"
                   required
                   value={form.specialty}
-                  onChange={(e) => actualizar("specialty", e.target.value)}
+                  onChange={(e) => update("specialty", e.target.value)}
                 />
               </div>
             </div>
@@ -204,22 +204,22 @@ export function InvitationPage() {
                 <div className="relative">
                   <Input
                     id="password"
-                    type={mostrarPassword ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     required
                     minLength={6}
                     value={form.password}
-                    onChange={(e) => actualizar("password", e.target.value)}
+                    onChange={(e) => update("password", e.target.value)}
                     placeholder="Mínimo 6 caracteres"
                     className="pr-10"
                   />
                   <button
                     type="button"
-                    onClick={() => setMostrarPassword((v) => !v)}
+                    onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                     tabIndex={-1}
                   >
-                    {mostrarPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>
               </div>
@@ -227,10 +227,10 @@ export function InvitationPage() {
                 <Label htmlFor="confirmPassword">Confirmar contraseña *</Label>
                 <Input
                   id="confirmPassword"
-                  type={mostrarPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={form.confirmPassword}
-                  onChange={(e) => actualizar("confirmPassword", e.target.value)}
+                  onChange={(e) => update("confirmPassword", e.target.value)}
                 />
               </div>
             </div>
@@ -241,8 +241,8 @@ export function InvitationPage() {
               </p>
             )}
 
-            <Button type="submit" disabled={aceptar.isPending} className="mt-2">
-              {aceptar.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={acceptInvitationMutation.isPending} className="mt-2">
+              {acceptInvitationMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Completar log
             </Button>
           </form>

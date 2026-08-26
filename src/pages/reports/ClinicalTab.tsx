@@ -15,31 +15,31 @@ import { FileSearch, FileDown, FileSpreadsheet, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-type TipoReporte = "atenciones" | "ingresos-por-servicio";
+type ReportType = "atenciones" | "ingresos-por-servicio";
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   const [fecha] = iso.split("T");
   const [yyyy, mm, dd] = fecha.split("-");
   return `${dd}/${mm}/${yyyy}`;
 }
 
 export function ClinicalTab() {
-  const [tipo, setTipo] = useState<TipoReporte>("ingresos-por-servicio");
-  const [from, setDesde] = useState("");
-  const [to, setHasta] = useState("");
-  const [descargando, setDescargando] = useState<"excel" | "pdf" | null>(null);
+  const [type, setType] = useState<ReportType>("ingresos-por-servicio");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [downloading, setDownloading] = useState<"excel" | "pdf" | null>(null);
 
-  const filtros = { from: from || undefined, to: to || undefined };
-  const reporteAtenciones = useVisitsReport(filtros, tipo === "atenciones");
-  const reporteIngresos = useRevenueByServiceTypeReport(filtros, tipo === "ingresos-por-servicio");
+  const filters = { from: from || undefined, to: to || undefined };
+  const visitsReport = useVisitsReport(filters, type === "atenciones");
+  const incomeReport = useRevenueByServiceTypeReport(filters, type === "ingresos-por-servicio");
 
-  async function descargar(formato: "excel" | "pdf") {
-    setDescargando(formato);
+  async function download(format: "excel" | "pdf") {
+    setDownloading(format);
     try {
-      if (formato === "excel") await reportsApi.downloadExcel(tipo, filtros);
-      else await reportsApi.downloadPdf(tipo, filtros);
+      if (format === "excel") await reportsApi.downloadExcel(type, filters);
+      else await reportsApi.downloadPdf(type, filters);
     } finally {
-      setDescargando(null);
+      setDownloading(null);
     }
   }
 
@@ -50,7 +50,7 @@ export function ClinicalTab() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5">
               <Label>Tipo de reporte</Label>
-              <Select value={tipo} onValueChange={(v) => setTipo(v as TipoReporte)}>
+              <Select value={type} onValueChange={(v) => setType(v as ReportType)}>
                 <SelectTrigger className="w-full sm:w-56">
                   <SelectValue />
                 </SelectTrigger>
@@ -62,42 +62,42 @@ export function ClinicalTab() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="desdeClinico">Desde</Label>
-              <Input id="desdeClinico" type="date" value={from} onChange={(e) => setDesde(e.target.value)} />
+              <Input id="desdeClinico" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="hastaClinico">Hasta</Label>
-              <Input id="hastaClinico" type="date" value={to} onChange={(e) => setHasta(e.target.value)} />
+              <Input id="hastaClinico" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
             </div>
           </div>
 
           <div className="flex gap-2">
-            <Button type="button" variant="outline" size="sm" disabled={!!descargando} onClick={() => descargar("excel")}>
-              {descargando === "excel" ? <Loader2 className="size-4 animate-spin" /> : <FileSpreadsheet className="size-4" />}
+            <Button type="button" variant="outline" size="sm" disabled={!!downloading} onClick={() => download("excel")}>
+              {downloading === "excel" ? <Loader2 className="size-4 animate-spin" /> : <FileSpreadsheet className="size-4" />}
               Exportar Excel
             </Button>
-            <Button type="button" variant="outline" size="sm" disabled={!!descargando} onClick={() => descargar("pdf")}>
-              {descargando === "pdf" ? <Loader2 className="size-4 animate-spin" /> : <FileDown className="size-4" />}
+            <Button type="button" variant="outline" size="sm" disabled={!!downloading} onClick={() => download("pdf")}>
+              {downloading === "pdf" ? <Loader2 className="size-4 animate-spin" /> : <FileDown className="size-4" />}
               Exportar PDF
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {tipo === "ingresos-por-servicio" && (
+      {type === "ingresos-por-servicio" && (
         <Card>
           <CardContent className="pt-6">
-            {reporteIngresos.isLoading && <Skeleton className="h-64 w-full" />}
-            {reporteIngresos.isError && <ErrorState message="No se pudo cargar el reporte." />}
-            {!reporteIngresos.isLoading && reporteIngresos.data?.length === 0 && (
+            {incomeReport.isLoading && <Skeleton className="h-64 w-full" />}
+            {incomeReport.isError && <ErrorState message="No se pudo cargar el reporte." />}
+            {!incomeReport.isLoading && incomeReport.data?.length === 0 && (
               <EmptyState
                 icon={FileSearch}
                 title="No hay ingresos que cumplan estos filtros"
                 description="Probá ampliando el rango de fechas."
               />
             )}
-            {!reporteIngresos.isLoading && reporteIngresos.data && reporteIngresos.data.length > 0 && (
-              <ResponsiveContainer width="100%" height={Math.max(220, reporteIngresos.data.length * 48)}>
-                <BarChart data={reporteIngresos.data} layout="vertical" margin={{ left: 8, right: 24 }}>
+            {!incomeReport.isLoading && incomeReport.data && incomeReport.data.length > 0 && (
+              <ResponsiveContainer width="100%" height={Math.max(220, incomeReport.data.length * 48)}>
+                <BarChart data={incomeReport.data} layout="vertical" margin={{ left: 8, right: 24 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" />
                   <XAxis type="number" tickFormatter={(v) => `Bs.${v}`} stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis type="category" dataKey="serviceType" width={150} stroke="var(--muted-foreground)" fontSize={12} />
@@ -116,7 +116,7 @@ export function ClinicalTab() {
               </ResponsiveContainer>
             )}
 
-            {!reporteIngresos.isLoading && reporteIngresos.data && reporteIngresos.data.length > 0 && (
+            {!incomeReport.isLoading && incomeReport.data && incomeReport.data.length > 0 && (
               <div className="mt-6 overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -127,11 +127,11 @@ export function ClinicalTab() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reporteIngresos.data.map((grupo) => (
-                      <TableRow key={grupo.serviceType}>
-                        <TableCell className="font-medium">{grupo.serviceType}</TableCell>
-                        <TableCell className="tabular-nums">{grupo.count}</TableCell>
-                        <TableCell className="tabular-nums">{grupo.amount.toFixed(2)}</TableCell>
+                    {incomeReport.data.map((group) => (
+                      <TableRow key={group.serviceType}>
+                        <TableCell className="font-medium">{group.serviceType}</TableCell>
+                        <TableCell className="tabular-nums">{group.count}</TableCell>
+                        <TableCell className="tabular-nums">{group.amount.toFixed(2)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -142,29 +142,29 @@ export function ClinicalTab() {
         </Card>
       )}
 
-      {tipo === "atenciones" && (
+      {type === "atenciones" && (
         <Card>
           <CardContent className="pt-6">
-            {reporteAtenciones.isLoading && <TableSkeleton rows={4} />}
-            {reporteAtenciones.isError && <ErrorState message="No se pudo cargar el reporte." />}
-            {!reporteAtenciones.isLoading && reporteAtenciones.data?.length === 0 && (
+            {visitsReport.isLoading && <TableSkeleton rows={4} />}
+            {visitsReport.isError && <ErrorState message="No se pudo cargar el reporte." />}
+            {!visitsReport.isLoading && visitsReport.data?.length === 0 && (
               <EmptyState
                 icon={FileSearch}
                 title="No hay atenciones que cumplan estos filtros"
                 description="Probá ampliando el rango de fechas o quitando el filtro de tipo de servicio."
               />
             )}
-            {!reporteAtenciones.isLoading && reporteAtenciones.data && reporteAtenciones.data.length > 0 && (
+            {!visitsReport.isLoading && visitsReport.data && visitsReport.data.length > 0 && (
               <>
                 <MobileCardList>
-                  {reporteAtenciones.data.map((visit) => (
+                  {visitsReport.data.map((visit) => (
                     <MobileCard
                       key={visit.id}
                       title={visit.pet}
                       subtitle={visit.owner}
                       badge={<StatusBadge status={visit.paymentStatus} />}
                       rows={[
-                        { label: "Fecha", value: formatearFecha(visit.date) },
+                        { label: "Fecha", value: formatDate(visit.date) },
                         { label: "Servicio", value: visit.serviceType },
                         {
                           label: "Monto",
@@ -188,9 +188,9 @@ export function ClinicalTab() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reporteAtenciones.data.map((visit) => (
+                    {visitsReport.data.map((visit) => (
                       <TableRow key={visit.id}>
-                        <TableCell>{formatearFecha(visit.date)}</TableCell>
+                        <TableCell>{formatDate(visit.date)}</TableCell>
                         <TableCell>{visit.pet}</TableCell>
                         <TableCell>{visit.owner}</TableCell>
                         <TableCell>{visit.serviceType}</TableCell>

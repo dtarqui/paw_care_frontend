@@ -13,7 +13,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ChangePasswordDialog } from "./ChangePasswordDialog";
 
-const OPCIONES_TEMA = [
+const THEME_OPTIONS = [
   { value: "light", label: "Claro", icon: Sun },
   { value: "dark", label: "Oscuro", icon: Moon },
   { value: "system", label: "Sistema", icon: Laptop },
@@ -23,19 +23,19 @@ export function SettingsPage() {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
   const { colorTheme, setColorTheme } = useColorTheme();
-  const [exportando, setExportando] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
-  const iniciales = user ? `${user.firstName[0]}${user.paternalLastName[0]}` : "?";
+  const initials = user ? `${user.firstName[0]}${user.paternalLastName[0]}` : "?";
 
-  async function handleExportar() {
-    setExportando(true);
+  async function handleExport() {
+    setExporting(true);
     try {
       await exportsApi.downloadFull();
       toast.success("Datos exportados correctamente");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "No se pudo exportar");
     } finally {
-      setExportando(false);
+      setExporting(false);
     }
   }
 
@@ -54,7 +54,7 @@ export function SettingsPage() {
         <CardContent>
           <div className="flex items-center gap-4">
             <Avatar className="size-14">
-              <AvatarFallback className="bg-primary text-lg text-primary-foreground">{iniciales}</AvatarFallback>
+              <AvatarFallback className="bg-primary text-lg text-primary-foreground">{initials}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <span className="text-base font-medium">
@@ -79,21 +79,21 @@ export function SettingsPage() {
           <div>
             <Label className="mb-3 block">Tema</Label>
             <div className="grid grid-cols-3 gap-3 sm:max-w-md">
-              {OPCIONES_TEMA.map((opcion) => {
-                const Icon = opcion.icon;
-                const activo = theme === opcion.value;
+              {THEME_OPTIONS.map((option) => {
+                const Icon = option.icon;
+                const isActive = theme === option.value;
                 return (
                   <button
-                    key={opcion.value}
+                    key={option.value}
                     type="button"
-                    onClick={() => setTheme(opcion.value)}
+                    onClick={() => setTheme(option.value)}
                     className={cn(
                       "flex flex-col items-center gap-2 rounded-lg border p-4 text-sm font-medium transition-colors",
-                      activo ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
+                      isActive ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
                     )}
                   >
                     <Icon className="size-5" />
-                    {opcion.label}
+                    {option.label}
                   </button>
                 );
               })}
@@ -103,25 +103,25 @@ export function SettingsPage() {
           <div>
             <Label className="mb-3 block">Color</Label>
             <div className="grid grid-cols-3 gap-3 sm:max-w-md">
-              {COLOR_THEMES.map((opcion) => {
-                const activo = colorTheme === opcion.value;
+              {COLOR_THEMES.map((option) => {
+                const isActive = colorTheme === option.value;
                 return (
                   <button
-                    key={opcion.value}
+                    key={option.value}
                     type="button"
-                    onClick={() => setColorTheme(opcion.value)}
+                    onClick={() => setColorTheme(option.value)}
                     className={cn(
                       "flex flex-col items-center gap-2 rounded-lg border p-4 text-sm font-medium transition-colors",
-                      activo ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
+                      isActive ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent"
                     )}
                   >
                     <span
                       className="relative flex size-7 items-center justify-center rounded-full"
-                      style={{ backgroundColor: opcion.swatch }}
+                      style={{ backgroundColor: option.swatch }}
                     >
-                      {activo && <Check className="size-4 text-white drop-shadow" />}
+                      {isActive && <Check className="size-4 text-white drop-shadow" />}
                     </span>
-                    {opcion.label}
+                    {option.label}
                   </button>
                 );
               })}
@@ -137,8 +137,8 @@ export function SettingsPage() {
             <CardDescription>Exporta toda la información de la clínica en cualquier momento, sin depender de PawCare</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" onClick={handleExportar} disabled={exportando}>
-              {exportando ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+            <Button variant="outline" onClick={handleExport} disabled={exporting}>
+              {exporting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
               Exportar todos mis datos
             </Button>
           </CardContent>

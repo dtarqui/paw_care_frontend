@@ -17,7 +17,7 @@ import { todayISO } from "@/lib/date";
 import { Loader2, Plus } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
-const ESTADO_INICIAL = {
+const INITIAL_STATE = {
   type: "" as PreventiveControlType | "",
   appliedOn: todayISO(),
   nextDoseOn: "",
@@ -25,16 +25,16 @@ const ESTADO_INICIAL = {
 
 export function NewControlDialog({ pet }: { pet: Pet }) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState(ESTADO_INICIAL);
+  const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
-  const crearControl = useCreatePreventiveControl();
+  const createControlMutation = useCreatePreventiveControl();
 
-  function actualizar<K extends keyof typeof ESTADO_INICIAL>(field: K, valor: (typeof ESTADO_INICIAL)[K]) {
-    setForm((prev) => ({ ...prev, [field]: valor }));
+  function update<K extends keyof typeof INITIAL_STATE>(field: K, value: (typeof INITIAL_STATE)[K]) {
+    setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   function handleClose() {
-    setForm(ESTADO_INICIAL);
+    setForm(INITIAL_STATE);
     setError(null);
     setOpen(false);
   }
@@ -49,7 +49,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
     }
 
     try {
-      await crearControl.mutateAsync({
+      await createControlMutation.mutateAsync({
         petId: pet.id,
         type: form.type,
         appliedOn: form.appliedOn,
@@ -79,7 +79,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <Label>Tipo *</Label>
-            <Select value={form.type} onValueChange={(v) => actualizar("type", v as PreventiveControlType)}>
+            <Select value={form.type} onValueChange={(v) => update("type", v as PreventiveControlType)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccione tipo" />
               </SelectTrigger>
@@ -98,7 +98,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
                 type="date"
                 required
                 value={form.appliedOn}
-                onChange={(e) => actualizar("appliedOn", e.target.value)}
+                onChange={(e) => update("appliedOn", e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -107,7 +107,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
                 id="nextDoseOn"
                 type="date"
                 value={form.nextDoseOn}
-                onChange={(e) => actualizar("nextDoseOn", e.target.value)}
+                onChange={(e) => update("nextDoseOn", e.target.value)}
               />
             </div>
           </div>
@@ -118,8 +118,8 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={crearControl.isPending}>
-              {crearControl.isPending && <Loader2 className="size-4 animate-spin" />}
+            <Button type="submit" disabled={createControlMutation.isPending}>
+              {createControlMutation.isPending && <Loader2 className="size-4 animate-spin" />}
               Guardar
             </Button>
           </DialogFooter>

@@ -13,10 +13,10 @@ import { AlertTriangle, Loader2, PawPrint, Phone, User } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { EditPetDialog } from "./EditPetDialog";
-import { PetWeightChart, type PuntoPeso } from "./PetWeightChart";
+import { PetWeightChart, type WeightPoint } from "./PetWeightChart";
 import { PetHistoryTimeline } from "./PetHistoryTimeline";
 
-function formatearFecha(iso: string) {
+function formatDate(iso: string) {
   if (!iso) return "—";
   const [yyyy, mm, dd] = iso.split("-");
   return `${dd}/${mm}/${yyyy}`;
@@ -24,26 +24,26 @@ function formatearFecha(iso: string) {
 
 export function PetDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const mascotaId = Number(id);
+  const petId = Number(id);
 
-  const { data: pet, isLoading, isError } = usePet(mascotaId);
-  const { data: events, isLoading: cargandoHistorial } = usePetHistory(mascotaId);
-  const cambiarEstado = useChangePetStatus(mascotaId);
-  const [confirmando, setConfirmando] = useState(false);
+  const { data: pet, isLoading, isError } = usePet(petId);
+  const { data: events, isLoading: loadingHistory } = usePetHistory(petId);
+  const changeStatusMutation = useChangePetStatus(petId);
+  const [confirming, setConfirming] = useState(false);
 
-  async function confirmarCambioEstado() {
+  async function confirmStatusChange() {
     if (!pet) return;
-    await cambiarEstado.mutateAsync(pet.status === "ACTIVE" ? "INACTIVE" : "ACTIVE");
-    setConfirmando(false);
+    await changeStatusMutation.mutateAsync(pet.status === "ACTIVE" ? "INACTIVE" : "ACTIVE");
+    setConfirming(false);
   }
 
-  function esAtencionConPeso(e: PetHistoryEvent): e is Extract<PetHistoryEvent, { type: "VISIT" }> {
+  function isVisitWithWeight(e: PetHistoryEvent): e is Extract<PetHistoryEvent, { type: "VISIT" }> {
     return e.type === "VISIT" && e.visit.weight !== undefined;
   }
 
-  const puntosPeso: PuntoPeso[] =
+  const weightPoints: WeightPoint[] =
     events
-      ?.filter(esAtencionConPeso)
+      ?.filter(isVisitWithWeight)
       .map((e) => ({ date: e.visit.date, weight: e.visit.weight! }))
       .reverse() ?? []; // el historial viene descendente; el gráfico necesita orden ascendente
 
@@ -93,7 +93,7 @@ export function PetDetailPage() {
                 <EditPetDialog pet={pet} />
                 <Button
                   variant={pet.status === "ACTIVE" ? "destructive" : "outline"}
-                  onClick={() => setConfirmando(true)}
+                  onClick={() => setConfirming(true)}
                 >
                   {pet.status === "ACTIVE" ? "Eliminar mascota" : "Reactivar"}
                 </Button>
@@ -103,7 +103,7 @@ export function PetDetailPage() {
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <div>
                   <p className="text-xs text-muted-foreground">Fecha de nacimiento</p>
-                  <p className="text-sm font-medium">{formatearFecha(pet.birthDate)}</p>
+                  <p className="text-sm font-medium">{formatDate(pet.birthDate)}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Edad</p>
@@ -136,13 +136,13 @@ export function PetDetailPage() {
             </CardContent>
           </Card>
 
-          {puntosPeso.length >= 2 && (
+          {weightPoints.length >= 2 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Evolución de peso</CardTitle>
               </CardHeader>
               <CardContent>
-                <PetWeightChart puntos={puntosPeso} />
+                <PetWeightChart points={weightPoints} />
               </CardContent>
             </Card>
           )}
@@ -153,17 +153,17 @@ export function PetDetailPage() {
               <p className="text-sm text-muted-foreground">Atenciones, citas, controles preventivos y ediciones, en orden cronológico</p>
             </CardHeader>
             <CardContent>
-              {cargandoHistorial && (
+              {loadingHistory && (
 <TableSkeleton rows={3} />
               )}
-              {!cargandoHistorial && <PetHistoryTimeline events={events ?? []} />}
+              {!loadingHistory && <PetHistoryTimeline events={events ?? []} />}
             </CardContent>
           </Card>
         </>
       )}
 
       {pet && (
-        <Dialog open={confirmando} onOpenChange={setConfirmando}>
+        <Dialog open={confirming} onOpenChange={setConfirming}>
           <DialogContent className="max-w-sm">
             <DialogHeader>
               <DialogTitle>{pet.status === "ACTIVE" ? "¿Eliminar mascota?" : "¿Reactivar mascota?"}</DialogTitle>
@@ -174,15 +174,15 @@ export function PetDetailPage() {
                 : `${pet.name} volverá a aparecer en el listado principal y en los buscadores.`}
             </p>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setConfirmando(false)}>
+              <Button variant="outline" onClick={() => setConfirming(false)}>
                 Cancelar
               </Button>
               <Button
                 variant={pet.status === "ACTIVE" ? "destructive" : "default"}
-                onClick={confirmarCambioEstado}
-                disabled={cambiarEstado.isPending}
+                onClick={confirmStatusChange}
+                disabled={changeStatusMutation.isPending}
               >
-                {cambiarEstado.isPending && <Loader2 className="size-4 animate-spin" />}
+                {changeStatusMutation.isPending && <Loader2 className="size-4 animate-spin" />}
                 {pet.status === "ACTIVE" ? "Eliminar" : "Reactivar"}
               </Button>
             </DialogFooter>

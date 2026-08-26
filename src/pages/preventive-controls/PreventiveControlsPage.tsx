@@ -5,7 +5,7 @@ import { PreventiveHistory } from "./PreventiveHistory";
 import { UpcomingControlsPanel } from "./UpcomingControlsPanel";
 
 export function PreventiveControlsPage() {
-  const [selectedPet, setMascotaSeleccionada] = useState<Pet | null>(null);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
 
   return (
     <div className="flex flex-col gap-4">
@@ -16,7 +16,7 @@ export function PreventiveControlsPage() {
 
       <UpcomingControlsPanel />
 
-      <PetSearchByNationalId selectedPetId={selectedPet?.id} onSelect={setMascotaSeleccionada} />
+      <PetSearchByNationalId selectedPetId={selectedPet?.id} onSelect={setSelectedPet} />
 
       {selectedPet && <PreventiveHistory pet={selectedPet} />}
     </div>

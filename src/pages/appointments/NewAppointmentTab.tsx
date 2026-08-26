@@ -170,9 +170,9 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
                   <SelectValue placeholder="Seleccione tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SERVICE_TYPES.map((tipo) => (
-                    <SelectItem key={tipo} value={tipo}>
-                      {tipo}
+                  {SERVICE_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -213,8 +213,8 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         )}
         {vetId && !loadingAvailability && (
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-            <FranjaHoraria icon={Sunrise} title="Mañana" slots={morning} selectedTime={time} onSelect={setTime} />
-            <FranjaHoraria icon={Sunset} title="Tarde" slots={afternoon} selectedTime={time} onSelect={setTime} />
+            <TimeSlotPicker icon={Sunrise} title="Mañana" slots={morning} selectedTime={time} onSelect={setTime} />
+            <TimeSlotPicker icon={Sunset} title="Tarde" slots={afternoon} selectedTime={time} onSelect={setTime} />
           </div>
         )}
       </div>
@@ -257,8 +257,8 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
   );
 }
 
-function FranjaHoraria({
-  icon: Icono,
+function TimeSlotPicker({
+  icon: Icon,
   title,
   slots,
   selectedTime,
@@ -275,26 +275,26 @@ function FranjaHoraria({
   return (
     <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-        <Icono className="size-3.5" />
+        <Icon className="size-3.5" />
         {title}
       </div>
       <div className="flex flex-wrap gap-2">
-        {slots.map((bloque) => (
+        {slots.map((slot) => (
           <button
             type="button"
-            key={bloque.time}
-            disabled={!bloque.available}
-            onClick={() => onSelect(bloque.time)}
+            key={slot.time}
+            disabled={!slot.available}
+            onClick={() => onSelect(slot.time)}
             className={cn(
               "rounded-md border px-3 py-2 text-sm font-medium transition-colors",
-              !bloque.available && "cursor-not-allowed bg-muted text-muted-foreground line-through",
-              bloque.available && selectedTime !== bloque.time && "hover:bg-accent",
-              bloque.available &&
-                selectedTime === bloque.time &&
+              !slot.available && "cursor-not-allowed bg-muted text-muted-foreground line-through",
+              slot.available && selectedTime !== slot.time && "hover:bg-accent",
+              slot.available &&
+                selectedTime === slot.time &&
                 "border-primary bg-primary text-primary-foreground"
             )}
           >
-            {bloque.time}
+            {slot.time}
           </button>
         ))}
       </div>
