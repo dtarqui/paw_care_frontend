@@ -33,7 +33,7 @@ Un grupo sin módulos para ese rol no se dibuja (un Veterinario, por ejemplo, no
 | **Clientes** | Propietarios, Mascotas | Mascotas | Propietarios, Mascotas |
 | **Clínica** | Agenda, Atención Médica, Control Preventivo, Recordatorios | Agenda, Atención Médica, Control Preventivo | Agenda, Recordatorios |
 | **Administración** | Pagos, Inventario, Reportes | — | Pagos |
-| **Sistema** | Usuarios, Configuración | Configuración | Configuración |
+| **Sistema** | Usuarios, Información, Configuración | Información, Configuración | Información, Configuración |
 
 *(Dashboard va siempre arriba, fuera de los grupos.)*
 
@@ -198,9 +198,10 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 | P15 | Ficha de Mascota | `/app/pets/:id` | Admin, Veterinario, Recepcionista | B (detalle) + historial unificado | Gap cerrado (sesión posterior) |
 | P16 | Horarios de Veterinario | `/app/schedules` | Administrador, Veterinario | A (grilla semanal) | Gap cerrado — mencionado en HU1, sin pantalla propia hasta ahora |
 | P17 | Olvidé mi contraseña | `/forgot-password` | público (sin sesión) | formulario simple | Sesión 5 |
-| P18 | Restablecer contraseña | `/restablecer-password?token=` | público (sin sesión) | formulario simple | Sesión 5 |
-| P19 | Aceptar invitación de Veterinario | `/invitacion?token=` | público (sin sesión) | formulario (variante del alta de P02) | Sesión 5 |
-| P20 | Auditoría | `/app/audit-log` | Administrador | tabla paginada de solo lectura | Sesión 5 |
+| P18 | Restablecer contraseña | `/reset-password?token=` | público (sin sesión) | formulario simple | Sesión 5 |
+| P19 | Aceptar invitación de Veterinario | `/invitation?token=` | público (sin sesión) | formulario (variante del alta de P02) | Sesión 5 |
+| P20 | Auditoría | `/app/users` (pestaña) | Administrador | tabla paginada de solo lectura | Sesión 5 · fusionada en sesión 8 |
+| P21 | Información | `/app/info` | todos | documento de lectura con índice lateral | Sesión 12 |
 
 ---
 
@@ -306,6 +307,13 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 - Lee el `token` de la query string. Pide la contraseña nueva + confirmación (mínimo 6 caracteres).
 - Si el token no existe, ya expiró (1 hora) o ya se usó, muestra el error del backend invitando a solicitar un enlace nuevo (vuelve a P17).
 - Al confirmar, no inicia sesión automáticamente — redirige a `/login` para que el usuario entre con la contraseña nueva.
+
+### P21 — Información (manual de uso)
+- **Manual de uso para el personal de la clínica, no documentación técnica.** No menciona arquitectura, código ni modelo de datos a propósito: la audiencia es quien usa el sistema, no quien lo mantiene.
+- Visible para los **tres roles**, en el grupo «Sistema» del menú.
+- Estructura: índice lateral fijo (`lg:sticky`; en móvil colapsa a un `<details>`) + 14 secciones — primeros pasos, roles, el día a día, clientes y mascotas, agenda, atención médica, control preventivo, cobros, recordatorios, inventario, reportes, cuentas del personal, tu cuenta y preguntas frecuentes.
+- **Los bloques visuales viven en `pages/info/InfoBlocks.tsx`** y no conocen el contenido: `Section`, `Steps` (pasos numerados), `Callout` (info/warning/tip), `FlowDiagram` (secuencia horizontal que se apila en móvil), `RoleMatrix`, `StateFlow` y `Faq`. Agregar una sección al manual es escribir texto, no maquetar de nuevo.
+- **Documenta los límites reales, no solo lo que funciona:** que el cobro por QR todavía no está conectado a ningún banco, que los recordatorios son manuales, y que los correos (recuperar contraseña, invitaciones) dependen de que la clínica configure el envío. Si esos estados cambian, hay que actualizar esta pantalla.
 
 ### P19 — Aceptar invitación de Veterinario (variante del alta de P02, público)
 - Valida el `token` de la URL contra el backend antes de mostrar el formulario; si no es válido, ya se usó o expiró, muestra un estado de error con link a `/login` (no hay forma de "reenviar" desde acá — eso lo hace un Administrador desde P02).

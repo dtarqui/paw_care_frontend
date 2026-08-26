@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  BookOpen,
   CalendarDays,
   Clock,
   History,
@@ -31,4 +32,5 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   Clock,
   History,
   Settings,
+  BookOpen,
 };

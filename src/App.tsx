@@ -6,6 +6,7 @@ import { AppointmentsPage } from "@/pages/appointments/AppointmentsPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { PreventiveControlsPage } from "@/pages/preventive-controls/PreventiveControlsPage";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { InfoPage } from "@/pages/info/InfoPage";
 import { InventoryPage } from "@/pages/inventory/InventoryPage";
 import { InvitationPage } from "@/pages/InvitationPage";
 import { LoginPage } from "@/pages/LoginPage";
@@ -45,6 +46,7 @@ export function App() {
             <Route path="reports" element={<ReportsPage />} />
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="users" element={<UsersPage />} />
+            <Route path="info" element={<InfoPage />} />
             <Route path="settings" element={<SettingsPage />} />
 
             {/* Horarios y Auditoría se fusionaron como pestañas de Agenda y Usuarios;

@@ -190,6 +190,20 @@ Los tres ítems que la sesión 10 había dejado pendientes.
 
 ---
 
+## Correcciones y mejoras (sesión 12 — pantalla de Información / manual de uso)
+
+- [x] **Pantalla «Información» (`/app/info`)** — manual de uso para el personal de la clínica, visible para los tres roles desde el grupo «Sistema». **No documenta arquitectura ni código a propósito**: la audiencia es quien usa el sistema, no quien lo mantiene.
+- [x] **14 secciones con índice lateral** — primeros pasos, qué hace cada rol, el día a día, clientes y mascotas, agenda, atención médica, vacunas y desparasitación, cobros, recordatorios, inventario, reportes, cuentas del personal, tu cuenta y preguntas frecuentes. El índice queda fijo al costado en escritorio y colapsa en móvil.
+- [x] **Explicado con diagramas, no con muros de texto** (`pages/info/InfoBlocks.tsx`): `FlowDiagram` para el recorrido Cliente → Mascota → Cita → Atención → Cobro (horizontal en escritorio, apilado en móvil), `RoleMatrix` para qué módulo ve cada rol, `StateFlow` para el ciclo de una cita (Confirmada → Atendida | Cancelada), más `Steps`, `Callout` y `Faq`. Los bloques no conocen el contenido: agregar una sección es escribir texto.
+- [x] **Contenido verificado contra el comportamiento real**, no redactado de memoria: los 30 días de «próximos a vencer», las 24 h / 7 días de los recordatorios, los campos obligatorios de cada formulario, el mínimo de 6 caracteres de contraseña y las 8 horas de sesión salen de leer el código.
+- [x] **Documenta también los límites**, que es lo que evita sorpresas en una demostración: el botón «Cobrar con QR» todavía no cobra (falta conectar el banco) y explica la alternativa; los recordatorios son manuales; los correos dependen de que la clínica configure el envío.
+
+**Corrección durante la escritura:** el borrador afirmaba que nadie puede entrar a un módulo ajeno «ni escribiendo la dirección a mano». Al verificarlo resultó falso — las rutas del frontend están protegidas por sesión (`ProtectedRoute`) pero **no por rol**, así que la pantalla sí abre; lo que la protege es que la API responde 403 y no entrega datos. La sección se reescribió para decir exactamente eso.
+
+**Brecha menor detectada, no corregida:** si alguien navega a mano a un módulo que no le corresponde (ej. Recepción a `/app/users`), ve la pantalla armada con un error de carga en vez de un «no tienes permiso» claro. Los datos están protegidos, pero la experiencia es confusa. Se arregla con una guarda de rol en las rutas del frontend.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).
