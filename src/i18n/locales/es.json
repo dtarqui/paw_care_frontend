@@ -614,6 +614,11 @@
       "staff": {
         "callouts": [
           {
+            "body": "**Ingresó** es una entrada correcta. **Credenciales incorrectas** puede ser un olvido de contraseña o un nombre de usuario que ni siquiera existe —en ese caso se guarda igual, con el texto tecleado— y **Cuenta desactivada** es alguien con cuenta suspendida intentando entrar. A la persona que intenta entrar el sistema siempre le dice lo mismo, sin pistas: la diferencia solo queda registrada acá.",
+            "title": "Qué significa cada resultado",
+            "tone": "info"
+          },
+          {
             "body": "Las cuentas no se eliminan, se desactivan: quien está desactivado no puede iniciar sesión y desaparece de las listas para agendar o atender, pero su historial queda intacto. Se reactiva cuando haga falta.",
             "title": "Desactivar en vez de borrar",
             "tone": "warning"
@@ -635,6 +640,10 @@
           {
             "description": "La segunda pestaña registra quién activó, desactivó, cambió de rol, restableció contraseñas o invitó a alguien, y cuándo.",
             "title": "Auditoría"
+          },
+          {
+            "description": "La tercera pestaña registra **cada intento de inicio de sesión**: quién entró, cuándo, desde qué dirección IP y con qué navegador. También los intentos fallidos — si alguien estuvo probando contraseñas, acá se ve.",
+            "title": "Ingresos al sistema"
           }
         ],
         "intro": "Solo Administrador. Quién puede entrar al sistema y con qué permisos.",
@@ -737,6 +746,31 @@
     "usernameHelpLabel": "Ayuda sobre el nombre de usuario",
     "usernamePlaceholder": "Ej. veterinario"
   },
+  "logins": {
+    "cardTitle": "Intentos de inicio de sesión",
+    "device": "Navegador",
+    "emptyDescription": "Acá va a aparecer cada inicio de sesión desde que se activó el registro. Los intentos anteriores no quedaron guardados.",
+    "emptyTitle": "Todavía no hay ingresos registrados",
+    "failuresToday": "Intentos fallidos (últimas 24 h)",
+    "filterByUser": "Filtrar por usuario…",
+    "filters": {
+      "all": "Todos",
+      "failed": "Solo fallidos",
+      "success": "Solo ingresos"
+    },
+    "intro": "Cada intento de inicio de sesión: quién entró, cuándo, desde qué IP y con qué navegador. También se registran los intentos fallidos, que son los que interesan cuando alguien pregunta quién estuvo tratando de entrar.",
+    "ipAddress": "Dirección IP",
+    "loadError": "No se pudo cargar el registro de ingresos.",
+    "noMatch": "Ningún intento coincide con el filtro",
+    "noMatchDescription": "Prueba con otro nombre de usuario, o quita el filtro de resultado.",
+    "outcomes": {
+      "INACTIVE_ACCOUNT": "Cuenta desactivada",
+      "INVALID_CREDENTIALS": "Credenciales incorrectas",
+      "SUCCESS": "Ingresó"
+    },
+    "successesToday": "Ingresos (últimas 24 h)",
+    "who": "Quién"
+  },
   "nav": {
     "breadcrumb": "Ruta de navegación",
     "groups": {
@@ -822,7 +856,7 @@
       },
       "users": {
         "description": {
-          "default": "Cuentas, roles y registro de auditoría"
+          "default": "Cuentas, roles, auditoría e ingresos al sistema"
         },
         "title": "Usuarios"
       }
@@ -1157,10 +1191,11 @@
     "reset": "Restablecer",
     "resetPassword": "Restablecer contraseña",
     "resetPasswordBody": "Se le asignará una contraseña nueva a {{name}} ({{username}}). Comunícasela directamente — no se envía por email ni SMS.",
-    "subtitle": "Registro y gestión de cuentas",
+    "subtitle": "Cuentas, roles, auditoría e ingresos al sistema",
     "tabs": {
       "accounts": "Cuentas",
-      "audit": "Auditoría"
+      "audit": "Auditoría",
+      "logins": "Ingresos"
     },
     "title": "Usuarios"
   },

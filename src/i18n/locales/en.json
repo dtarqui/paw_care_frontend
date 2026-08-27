@@ -614,6 +614,11 @@
       "staff": {
         "callouts": [
           {
+            "body": "**Signed in** is a successful entry. **Wrong credentials** can be a forgotten password or a username that doesn't even exist — that attempt is recorded too, with whatever was typed — and **Deactivated account** is someone with a suspended account trying to get in. The person signing in always gets the same message with no hints: the difference is only recorded here.",
+            "title": "What each outcome means",
+            "tone": "info"
+          },
+          {
             "body": "Accounts aren't deleted, they're deactivated: someone deactivated can't sign in and drops off the lists for booking or seeing pets, but their history stays intact. Reactivate them whenever it's needed.",
             "title": "Deactivate instead of deleting",
             "tone": "warning"
@@ -635,6 +640,10 @@
           {
             "description": "The second tab records who activated, deactivated, changed a role, reset a password or invited someone, and when.",
             "title": "Audit log"
+          },
+          {
+            "description": "The third tab records **every sign-in attempt**: who got in, when, from which IP address and with which browser. Failed attempts too — if someone has been trying passwords, you'll see it here.",
+            "title": "Sign-ins"
           }
         ],
         "intro": "Administrator only. Who can get into the system, and with what permissions.",
@@ -737,6 +746,31 @@
     "usernameHelpLabel": "Help with the username",
     "usernamePlaceholder": "e.g. veterinario"
   },
+  "logins": {
+    "cardTitle": "Sign-in attempts",
+    "device": "Browser",
+    "emptyDescription": "Every sign-in since the log was switched on will show up here. Earlier attempts weren't recorded.",
+    "emptyTitle": "No sign-ins recorded yet",
+    "failuresToday": "Failed attempts (last 24 h)",
+    "filterByUser": "Filter by username…",
+    "filters": {
+      "all": "All",
+      "failed": "Failed only",
+      "success": "Successful only"
+    },
+    "intro": "Every sign-in attempt: who got in, when, from which IP and with which browser. Failed attempts are recorded too — those are the ones that matter when someone asks who's been trying to get in.",
+    "ipAddress": "IP address",
+    "loadError": "Couldn't load the sign-in log.",
+    "noMatch": "No attempt matches the filter",
+    "noMatchDescription": "Try another username, or clear the outcome filter.",
+    "outcomes": {
+      "INACTIVE_ACCOUNT": "Deactivated account",
+      "INVALID_CREDENTIALS": "Wrong credentials",
+      "SUCCESS": "Signed in"
+    },
+    "successesToday": "Sign-ins (last 24 h)",
+    "who": "Who"
+  },
   "nav": {
     "breadcrumb": "Breadcrumb",
     "groups": {
@@ -822,7 +856,7 @@
       },
       "users": {
         "description": {
-          "default": "Accounts, roles and the audit log"
+          "default": "Accounts, roles, the audit log and sign-ins"
         },
         "title": "Users"
       }
@@ -1157,10 +1191,11 @@
     "reset": "Reset",
     "resetPassword": "Reset password",
     "resetPasswordBody": "{{name}} ({{username}}) will be given a new password. Pass it on to them in person — it isn't sent by email or SMS.",
-    "subtitle": "Registering and managing accounts",
+    "subtitle": "Accounts, roles, the audit log and sign-ins",
     "tabs": {
       "accounts": "Accounts",
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "logins": "Sign-ins"
     },
     "title": "Users"
   },

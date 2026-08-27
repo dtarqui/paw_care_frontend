@@ -5,13 +5,14 @@ import { useModule } from "@/features/dashboard/useModules";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AuditLogTab } from "./AuditLogTab";
+import { LoginEventsTab } from "./LoginEventsTab";
 import { UsersListTab } from "./UsersListTab";
 
 /**
- * Usuarios: cuentas y registro de auditoría en una sola pantalla. La auditoría es,
- * literalmente, la bitácora de las acciones administrativas sobre estas mismas
- * cuentas (activar, cambiar rol, restablecer contraseña, invitar), así que se lee
- * al lado del listado y no como una sección aparte del menú.
+ * Usuarios: cuentas, auditoría e ingresos al sistema en una sola pantalla. Las tres
+ * responden preguntas sobre las mismas cuentas —quién existe, qué le hicieron a esas
+ * cuentas, y quién entró con ellas— así que se leen juntas y no como secciones
+ * separadas del menú.
  *
  * Qué pestañas se muestran lo decide el backend (`dashboard.service.ts`, campo
  * `tabs` del módulo "users").
@@ -24,6 +25,8 @@ export function UsersPage() {
 
   const availableTabs = module?.tabs ?? ["list"];
   const showAudit = availableTabs.includes("audit");
+  const showLogins = availableTabs.includes("logins");
+  const hasTabs = showAudit || showLogins;
 
   return (
     <div className="flex flex-col gap-4">
@@ -34,20 +37,29 @@ export function UsersPage() {
         </p>
       </div>
 
-      {showAudit ? (
+      {hasTabs ? (
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="max-w-full overflow-x-auto">
             <TabsTrigger value="list">{t("users.tabs.accounts")}</TabsTrigger>
-            <TabsTrigger value="audit">{t("users.tabs.audit")}</TabsTrigger>
+            {showAudit && <TabsTrigger value="audit">{t("users.tabs.audit")}</TabsTrigger>}
+            {showLogins && <TabsTrigger value="logins">{t("users.tabs.logins")}</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="list" className="mt-4">
             <UsersListTab />
           </TabsContent>
 
-          <TabsContent value="audit" className="mt-4">
-            <AuditLogTab />
-          </TabsContent>
+          {showAudit && (
+            <TabsContent value="audit" className="mt-4">
+              <AuditLogTab />
+            </TabsContent>
+          )}
+
+          {showLogins && (
+            <TabsContent value="logins" className="mt-4">
+              <LoginEventsTab />
+            </TabsContent>
+          )}
         </Tabs>
       ) : (
         <UsersListTab />

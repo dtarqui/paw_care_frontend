@@ -280,6 +280,17 @@ Además, la matriz de permisos **deja de ser tabla en celular**: cuatro columnas
 
 ---
 
+## Correcciones y mejoras (sesión 16 — pestaña «Ingresos» en Usuarios)
+
+- [x] **Tercera pestaña en `/app/users`**: Cuentas · Auditoría · **Ingresos**. Las tres responden preguntas sobre las mismas cuentas —quién existe, qué le hicieron a esas cuentas, y quién entró con ellas—, así que se leen juntas. Qué pestañas se ven lo sigue decidiendo el backend (campo `tabs` del módulo).
+- [x] **La tabla muestra fecha, quién, resultado, IP y navegador.** En un intento fallido contra un usuario inexistente no hay nombre que mostrar, así que se muestra el texto tecleado — que es justamente el dato interesante.
+- [x] **El user agent se resume** (`lib/userAgent.ts`) a «Chrome · Windows» o «Safari · iOS», con el texto completo al pasar el mouse. Es una aproximación a propósito: los user agents mienten por diseño y reconocerlos con exactitud requeriría una biblioteca entera; para "¿esto lo hizo alguien del mostrador o vino de otro lado?" alcanza.
+- [x] **Filtros por usuario y por resultado**, y dos indicadores arriba con los ingresos y los fallos de las últimas 24 h — que es la pregunta con la que se entra a esta pantalla.
+- [x] **Tarjetas en celular y tabla en escritorio**, siguiendo el corte `lg` de la sesión 15. Verificado con capturas en los dos tamaños.
+- [x] **El manual (`/app/info`) lo explica**, incluido qué significa cada resultado y por qué a quien intenta entrar el sistema siempre le dice lo mismo.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).
