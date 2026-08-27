@@ -3,16 +3,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { Pet } from "@/features/pets/types";
 import { Stethoscope } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { VisitHistory } from "./VisitHistory";
 
 export function MedicalVisitsPage() {
+  const { t } = useTranslation();
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
 
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Atención Médica</h1>
-        <p className="text-muted-foreground">Busca una mascota por la cédula del propietario para ver o iniciar su atención médica</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("visits.title")}</h1>
+        <p className="text-muted-foreground">{t("visits.subtitle")}</p>
       </div>
 
       <PetSearchByNationalId selectedPetId={selectedPet?.id} onSelect={setSelectedPet} />
@@ -26,11 +28,8 @@ export function MedicalVisitsPage() {
               <Stethoscope className="size-7" />
             </div>
             <div>
-              <p className="font-medium text-foreground">Busca una mascota para empezar</p>
-              <p className="text-sm">
-                Ingresa la cédula de identidad del propietario en el buscador de arriba para ver el historial clínico de sus
-                mascotas o registrar una nueva atención.
-              </p>
+              <p className="font-medium text-foreground">{t("visits.searchToStart")}</p>
+              <p className="text-sm">{t("visits.searchToStartHint")}</p>
             </div>
           </CardContent>
         </Card>

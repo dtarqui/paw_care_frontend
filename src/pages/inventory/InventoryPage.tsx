@@ -11,11 +11,13 @@ import type { Medication } from "@/features/medications/types";
 import { useDeleteMedication, useMedications, useLowStockMedications } from "@/features/medications/useMedications";
 import { AlertTriangle, Loader2, Package } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { EditMedicationDialog } from "./EditMedicationDialog";
 import { NewMedicationDialog } from "./NewMedicationDialog";
 import { RegisterStockInDialog } from "./RegisterStockInDialog";
 
 export function InventoryPage() {
+  const { t } = useTranslation();
   const { data: medications, isLoading, isError } = useMedications();
   const { data: lowStock } = useLowStockMedications();
   const [selected, setSelected] = useState<Medication | null>(null);
@@ -37,16 +39,16 @@ export function InventoryPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Inventario</h1>
-          <p className="text-muted-foreground">Catálogo y stock de medicamentos</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("inventory.title")}</h1>
+          <p className="text-muted-foreground">{t("inventory.subtitle")}</p>
         </div>
         <NewMedicationDialog />
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <StatTile label="Medicamentos en catálogo" value={medications?.length ?? 0} icon={Package} isLoading={isLoading} />
+        <StatTile label={t("inventory.catalogueCount")} value={medications?.length ?? 0} icon={Package} isLoading={isLoading} />
         <StatTile
-          label="Bajo el mínimo"
+          label={t("inventory.belowMinimum")}
           value={lowStock?.length ?? 0}
           icon={AlertTriangle}
           isLoading={isLoading}
@@ -58,7 +60,7 @@ export function InventoryPage() {
         <div className="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400">
           <AlertTriangle className="mt-0.5 size-5 shrink-0" />
           <p className="text-sm">
-            <span className="font-medium">{lowStock.length} medicamento(s) con stock bajo:</span>{" "}
+            <span className="font-medium">{t("inventory.lowStockWarning", { count: lowStock.length })}</span>{" "}
             {lowStock.map((m) => m.name).join(", ")}.
           </p>
         </div>
@@ -66,19 +68,19 @@ export function InventoryPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Medicamentos</CardTitle>
+          <CardTitle className="text-base">{t("inventory.medications")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading && <TableSkeleton rows={4} />}
 
 
-          {isError && <ErrorState message="No se pudo cargar el inventario." />}
+          {isError && <ErrorState message={t("inventory.loadError")} />}
 
           {!isLoading && !isError && medications?.length === 0 && (
             <EmptyState
               icon={Package}
-              title="Sin medicamentos registrados todavía"
-              description="Cargá el catálogo para poder descontar stock al registrar atenciones."
+              title={t("inventory.emptyTitle")}
+              description={t("inventory.emptyDescription")}
               action={<NewMedicationDialog />}
             />
           )}
@@ -95,28 +97,34 @@ export function InventoryPage() {
                       badge={
                         low ? (
                           <Badge className="border-none bg-amber-100 font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">
-                            Bajo stock
+                            {t("inventory.lowStock")}
                           </Badge>
                         ) : (
                           <Badge className="border-none bg-emerald-100 font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
-                            Suficiente
+                            {t("inventory.enoughStock")}
                           </Badge>
                         )
                       }
                       rows={[
-                        { label: "Stock actual", value: <span className="tabular-nums">{medication.currentStock}</span> },
-                        { label: "Stock mínimo", value: <span className="tabular-nums">{medication.minimumStock}</span> },
+                        {
+                          label: t("inventory.currentStock"),
+                          value: <span className="tabular-nums">{medication.currentStock}</span>,
+                        },
+                        {
+                          label: t("inventory.minimumStock"),
+                          value: <span className="tabular-nums">{medication.minimumStock}</span>,
+                        },
                       ]}
                       actions={
                         <>
                           <Button size="sm" variant="outline" className="flex-1" onClick={() => setSelected(medication)}>
-                            Registrar entrada
+                            {t("inventory.registerStockIn")}
                           </Button>
                           <Button size="sm" variant="outline" onClick={() => setEditing(medication)}>
-                            Editar
+                            {t("common.edit")}
                           </Button>
                           <Button size="sm" variant="destructive" onClick={() => setDeleting(medication)}>
-                            Eliminar
+                            {t("common.delete")}
                           </Button>
                         </>
                       }
@@ -129,11 +137,11 @@ export function InventoryPage() {
                 <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Medicamento</TableHead>
-                    <TableHead>Stock actual</TableHead>
-                    <TableHead>Stock mínimo</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead className="text-right">Acción</TableHead>
+                    <TableHead>{t("inventory.medication")}</TableHead>
+                    <TableHead>{t("inventory.currentStock")}</TableHead>
+                    <TableHead>{t("inventory.minimumStock")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead className="text-right">{t("common.action")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -147,23 +155,23 @@ export function InventoryPage() {
                         <TableCell>
                           {isLow ? (
                             <Badge className="border-none bg-amber-100 font-medium text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">
-                              Bajo stock
+                              {t("inventory.lowStock")}
                             </Badge>
                           ) : (
                             <Badge className="border-none bg-emerald-100 font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
-                              Suficiente
+                              {t("inventory.enoughStock")}
                             </Badge>
                           )}
                         </TableCell>
                         <TableCell className="text-right space-x-2">
                           <Button size="sm" variant="outline" onClick={() => setSelected(medication)}>
-                            Registrar entrada
+                            {t("inventory.registerStockIn")}
                           </Button>
                           <Button size="sm" variant="outline" onClick={() => setEditing(medication)}>
-                            Editar
+                            {t("common.edit")}
                           </Button>
                           <Button size="sm" variant="destructive" onClick={() => setDeleting(medication)}>
-                            Eliminar
+                            {t("common.delete")}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -183,19 +191,18 @@ export function InventoryPage() {
       <Dialog open={!!deleting} onOpenChange={(v) => !v && setDeleting(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>¿Eliminar medicamento?</DialogTitle>
+            <DialogTitle>{t("inventory.confirmDeleteTitle")}</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Se eliminará «{deleting?.name}» del catálogo. Si ya tiene movimientos de inventario registrados (entradas o
-            consumos en atenciones), no se podrá eliminar.
+            {t("inventory.confirmDeleteBody", { name: deleting?.name ?? "" })}
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleting(null)}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button variant="destructive" onClick={confirmDelete} disabled={deleteMedicationMutation.isPending}>
               {deleteMedicationMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Eliminar
+              {t("common.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

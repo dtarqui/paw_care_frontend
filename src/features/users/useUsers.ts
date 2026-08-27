@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { usersApi } from "./api";
 import type {
@@ -23,7 +24,7 @@ export function useCreateUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["vets"] });
-      toast.success("Usuario registrado correctamente");
+      toast.success(t("toasts.userCreated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -36,7 +37,7 @@ export function useChangeUserRole() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["vets"] });
-      toast.success("Rol actualizado correctamente");
+      toast.success(t("toasts.roleUpdated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -50,7 +51,7 @@ export function useChangeUserStatus() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       queryClient.invalidateQueries({ queryKey: ["vets"] });
-      toast.success(variables.status === "ACTIVE" ? "Usuario activado" : "Usuario desactivado");
+      toast.success(variables.status === "ACTIVE" ? t("toasts.userActivated") : t("toasts.userDeactivated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -66,7 +67,7 @@ export function useChangeMyPassword() {
   return useMutation({
     mutationFn: ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) =>
       usersApi.changeMyPassword(currentPassword, newPassword),
-    onSuccess: () => toast.success("Contraseña actualizada correctamente"),
+    onSuccess: () => toast.success(t("toasts.passwordUpdated")),
     onError: (error: Error) => toast.error(error.message),
   });
 }
@@ -75,7 +76,7 @@ export function useResetPassword() {
   return useMutation({
     mutationFn: ({ id, newPassword }: { id: number; newPassword: string }) =>
       usersApi.resetPassword(id, newPassword),
-    onSuccess: () => toast.success("Contraseña restablecida correctamente"),
+    onSuccess: () => toast.success(t("toasts.passwordReset")),
     onError: (error: Error) => toast.error(error.message),
   });
 }
@@ -93,7 +94,7 @@ export function useInviteVet() {
     mutationFn: (input: InviteVetInput) => usersApi.invite(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users", "invitations"] });
-      toast.success("Invitación enviada correctamente");
+      toast.success(t("toasts.invitationSent"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -105,7 +106,7 @@ export function useCancelInvitation() {
     mutationFn: (id: number) => usersApi.cancelInvitation(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users", "invitations"] });
-      toast.success("Invitación cancelada");
+      toast.success(t("toasts.invitationCancelled"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

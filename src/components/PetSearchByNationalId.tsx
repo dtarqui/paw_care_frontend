@@ -8,6 +8,7 @@ import type { Pet } from "@/features/pets/types";
 import { cn } from "@/lib/utils";
 import { PawPrint, Search } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 interface PetSearchByNationalIdProps {
   selectedPetId?: number;
@@ -15,6 +16,7 @@ interface PetSearchByNationalIdProps {
 }
 
 export function PetSearchByNationalId({ selectedPetId, onSelect }: PetSearchByNationalIdProps) {
+  const { t } = useTranslation();
   const [nationalId, setNationalId] = useState("");
   const [searchedNationalId, setSearchedNationalId] = useState<string | undefined>();
   const { data: results, isFetching, isError } = useSearchPetsByNationalId(searchedNationalId);
@@ -29,17 +31,17 @@ export function PetSearchByNationalId({ selectedPetId, onSelect }: PetSearchByNa
       <CardContent className="pt-6">
         <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="flex flex-1 flex-col gap-1.5">
-            <Label htmlFor="ci-busqueda">CI del propietario</Label>
+            <Label htmlFor="owner-nationalId-search">{t("pets.form.ownerNationalId")}</Label>
             <Input
-              id="ci-busqueda"
+              id="owner-nationalId-search"
               value={nationalId}
               onChange={(e) => setNationalId(e.target.value)}
-              placeholder="Ej. 4521367"
+              placeholder={t("pets.form.nationalIdPlaceholder")}
             />
           </div>
           <Button type="submit" disabled={!nationalId || isFetching}>
             <Search className="size-4" />
-            Buscar
+            {t("common.search")}
           </Button>
         </form>
 
@@ -50,10 +52,10 @@ export function PetSearchByNationalId({ selectedPetId, onSelect }: PetSearchByNa
           </div>
         )}
 
-        {isError && <p className="mt-4 text-sm text-destructive">No se pudo realizar la búsqueda.</p>}
+        {isError && <p className="mt-4 text-sm text-destructive">{t("petSearch.error")}</p>}
 
         {!isFetching && searchedNationalId && results?.length === 0 && (
-          <p className="mt-4 text-sm text-muted-foreground">No se encontraron mascotas para ese CI.</p>
+          <p className="mt-4 text-sm text-muted-foreground">{t("petSearch.noResults")}</p>
         )}
 
         {!isFetching && results && results.length > 0 && (
@@ -69,7 +71,7 @@ export function PetSearchByNationalId({ selectedPetId, onSelect }: PetSearchByNa
                 )}
               >
                 <PawPrint className="size-4" />
-                {pet.name} ({pet.species})
+                {pet.name} ({t(`enums.species.${pet.species}`, { defaultValue: pet.species })})
               </button>
             ))}
           </div>

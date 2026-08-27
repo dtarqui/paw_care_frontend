@@ -1,0 +1,1283 @@
+{
+  "appointments": {
+    "afternoon": "Tarde",
+    "availableSlots": "Horarios disponibles",
+    "book": "Agendar cita",
+    "confirmReschedule": "Confirmar reprogramación",
+    "consultationType": "Tipo de consulta",
+    "count_one": "{{count}} cita",
+    "count_other": "{{count}} citas",
+    "emptyAll": "No hay citas registradas todavía",
+    "emptyDescription": "Agenda la primera desde la pestaña «Nueva Cita».",
+    "emptyMine": "No tienes citas asignadas todavía",
+    "loadError": "No se pudo cargar la agenda.",
+    "markAttended": "Marcar atendida",
+    "morning": "Mañana",
+    "noActions": "Sin acciones",
+    "onlyMine": "Solo mis citas",
+    "pickDateHint": "Elige una fecha para ver tu disponibilidad.",
+    "pickPet": "Seleccione mascota",
+    "pickVetAndDateHint": "Elige un veterinario y una fecha primero.",
+    "reason": "Motivo",
+    "reasonPlaceholder": "Describa brevemente el motivo de la consulta",
+    "reschedule": "Reprogramar",
+    "rescheduleHint": "Solo se puede cambiar la fecha y la hora al reprogramar.",
+    "reschedulingSummary": "{{pet}} ({{species}}) con {{vet}} — {{type}}",
+    "subtitle": "Citas y horarios de atención",
+    "summaryBook": "Vas a agendar {{pet}} con {{vet}} el {{date}} a las {{time}}",
+    "summaryReschedule": "Vas a reprogramar {{pet}} con {{vet}} el {{date}} a las {{time}}",
+    "tabs": {
+      "list": "Lista de Citas",
+      "new": "Nueva Cita",
+      "reschedule": "Reprogramar Cita",
+      "schedules": "Horarios"
+    },
+    "title": "Agenda",
+    "today": "Hoy",
+    "tomorrow": "Mañana"
+  },
+  "audit": {
+    "action": "Acción",
+    "actions": {
+      "ACTIVATE_ACCOUNT": "Cuenta activada",
+      "CHANGE_ROLE": "Rol cambiado",
+      "DEACTIVATE_ACCOUNT": "Cuenta desactivada",
+      "INVITE_VET": "Veterinario invitado",
+      "RESET_PASSWORD": "Contraseña restablecida"
+    },
+    "cardTitle": "Registro de acciones",
+    "detail": "Detalle",
+    "emptyDescription": "Acá van a aparecer las aprobaciones, cambios de rol, restablecimientos de contraseña e invitaciones.",
+    "emptyTitle": "Todavía no hay acciones registradas",
+    "intro": "Quién hizo qué sobre otras cuentas — aprobaciones, restablecimientos de contraseña, cambios de rol e invitaciones.",
+    "loadError": "No se pudo cargar el registro de auditoría.",
+    "performedBy": "Realizada por"
+  },
+  "auth": {
+    "changePassword": "Cambiar contraseña",
+    "changePasswordError": "No se pudo cambiar la contraseña",
+    "confirmNewPassword": "Confirmar contraseña nueva",
+    "confirmPassword": "Confirmar contraseña",
+    "currentPassword": "Contraseña actual",
+    "minSixCharacters": "Mínimo 6 caracteres",
+    "newPassword": "Contraseña nueva",
+    "newPasswordTooShort": "La contraseña nueva debe tener al menos 6 caracteres",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "resetError": "No se pudo restablecer la contraseña"
+  },
+  "common": {
+    "action": "Acción",
+    "actions": "Acciones",
+    "add": "Agregar",
+    "address": "Dirección",
+    "all": "Todos",
+    "amount": "Monto",
+    "amountBs": "Monto (Bs.)",
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "create": "Crear",
+    "date": "Fecha",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "email": "Email",
+    "expired": "Vencido",
+    "from": "Desde",
+    "genericError": "Error inesperado del servidor",
+    "loading": "Cargando…",
+    "name": "Nombre",
+    "nationalId": "CI",
+    "next": "Siguiente",
+    "owner": "Propietario",
+    "pageOf": "Página {{page}} de {{totalPages}} · {{total}} en total",
+    "password": "Contraseña",
+    "pet": "Mascota",
+    "phone": "Teléfono",
+    "previous": "Anterior",
+    "quantity": "Cantidad",
+    "register": "Registrar",
+    "remove": "Quitar",
+    "role": "Rol",
+    "save": "Guardar",
+    "saveChanges": "Guardar cambios",
+    "search": "Buscar",
+    "select": "Seleccione",
+    "status": "Estado",
+    "to": "Hasta",
+    "type": "Tipo",
+    "username": "Usuario",
+    "vet": "Veterinario",
+    "you": "Tú"
+  },
+  "dashboard": {
+    "greeting": "Hola, {{name}} 👋",
+    "pendingPayments": "Pagos pendientes",
+    "registeredPets": "Mascotas registradas",
+    "signedInAs": "Sesión iniciada como",
+    "todayAppointments": "Citas de hoy"
+  },
+  "enums": {
+    "controlType": {
+      "DEWORMING": "Desparasitación",
+      "VACCINE": "Vacuna"
+    },
+    "role": {
+      "ADMIN": "Administrador",
+      "RECEPTIONIST": "Recepcionista",
+      "VET": "Veterinario"
+    },
+    "serviceType": {
+      "Cirugía": "Cirugía",
+      "Consulta General": "Consulta General",
+      "Control": "Control",
+      "Desparasitación": "Desparasitación",
+      "Vacunación": "Vacunación"
+    },
+    "sex": {
+      "Hembra": "Hembra",
+      "Macho": "Macho"
+    },
+    "species": {
+      "Gato": "Gato",
+      "Otro": "Otro",
+      "Perro": "Perro"
+    },
+    "status": {
+      "ACTIVE": "Activo",
+      "ATTENDED": "Atendida",
+      "CANCELLED": "Cancelada",
+      "CARD": "Tarjeta",
+      "CASH": "Efectivo",
+      "CONFIRMED": "Confirmada",
+      "INACTIVE": "Inactivo",
+      "PAID": "Pagado",
+      "PENDING": "Pendiente",
+      "PENDING_APPROVAL": "Pendiente de aprobación",
+      "QR": "QR",
+      "TRANSFER": "Transferencia"
+    }
+  },
+  "errors": {
+    "codes": {
+      "AppointmentNotFoundError": "La cita solicitada no existe",
+      "CurrentAndNewPasswordRequired": "La contraseña actual y la nueva son obligatorias",
+      "DuplicateMedicationError": "Ya existe un medicamento registrado con ese nombre",
+      "DuplicatePetError": "Esta mascota ya está registrada para este propietario",
+      "DuplicateUserError": "Ya existe un usuario registrado con esos datos",
+      "EmailNotConfiguredError": "El envío de email no está configurado en este entorno",
+      "EmailRequired": "El email es obligatorio",
+      "FileRequired": "Debes adjuntar un archivo .xlsx",
+      "Forbidden": "No tienes permiso para acceder a este recurso",
+      "ForeignScheduleError": "Como veterinario solo puedes agendar citas para ti mismo",
+      "InsufficientStockError": "No hay stock suficiente para completar la atención",
+      "InternalServerError": "Error interno del servidor",
+      "InvalidCredentialsError": "Usuario o contraseña incorrectos",
+      "InvalidInvitationError": "La invitación no es válida, ya fue usada o expiró",
+      "InvalidRecordStatus": "El estado debe ser activo o inactivo",
+      "InvalidResetTokenError": "El enlace de recuperación no es válido o ya expiró — solicita uno nuevo",
+      "InvalidRole": "Rol inválido",
+      "InvalidScheduleFormat": "El horario enviado no tiene el formato esperado",
+      "InvalidWebhookSignature": "Firma de webhook inválida",
+      "MedicationHasMovesError": "No se puede eliminar: este medicamento ya tiene movimientos de inventario registrados",
+      "MedicationNotFoundError": "El medicamento solicitado no existe",
+      "NationalIdRequired": "El CI es obligatorio para buscar",
+      "NewPasswordRequired": "La contraseña nueva es obligatoria",
+      "NotAuthenticated": "No autenticado",
+      "OwnerNationalIdRequired": "El CI del propietario es obligatorio para buscar",
+      "OwnerNotFoundError": "El propietario solicitado no existe",
+      "PetNotFoundError": "La mascota solicitada no existe",
+      "QrChargeNotFoundError": "El cobro QR indicado no existe",
+      "QrPaymentProviderNotConfiguredError": "El cobro por QR bancario no está disponible todavía — falta conectar la API del banco",
+      "ReminderNotFoundError": "El recordatorio solicitado no existe",
+      "ScheduleConflictError": "El veterinario ya tiene una cita en ese horario",
+      "SessionExpired": "Tu sesión expiró. Vuelve a iniciar sesión.",
+      "StatusRequired": "El nuevo estado es obligatorio",
+      "TokenAndPasswordRequired": "El enlace y la contraseña nueva son obligatorios",
+      "TooManyLoginAttempts": "Demasiados intentos de inicio de sesión. Intenta de nuevo en unos minutos.",
+      "TooManyRecoveryRequests": "Demasiadas solicitudes de recuperación. Intenta de nuevo más tarde.",
+      "TooManyRegistrationRequests": "Demasiadas solicitudes de registro. Intenta de nuevo más tarde.",
+      "UserNotFoundError": "El usuario solicitado no existe",
+      "UsernameAndPasswordRequired": "Usuario y contraseña son obligatorios",
+      "UsernameRequired": "El nombre de usuario es obligatorio",
+      "VetAndDateRequired": "El veterinario y la fecha son obligatorios",
+      "VisitAlreadyPaidError": "Esta atención ya fue pagada o no existe",
+      "VisitAndMethodRequired": "La atención y el método de pago son obligatorios",
+      "VisitRequired": "La atención a cobrar es obligatoria",
+      "WrongCurrentPasswordError": "La contraseña actual no es correcta"
+    },
+    "downloadFailed": "No se pudo descargar el archivo"
+  },
+  "forgot": {
+    "backToLogin": "Volver a inicio de sesión",
+    "description": "Ingresa tu usuario y te enviamos un enlace a tu email registrado",
+    "error": "No se pudo procesar la solicitud",
+    "send": "Enviar enlace de recuperación",
+    "sent": "Si la cuenta existe y tiene un email registrado, te enviamos un enlace de recuperación — revisa tu bandeja (y la carpeta de spam). El enlace vence en 1 hora.",
+    "title": "Recuperar contraseña"
+  },
+  "imports": {
+    "action": "Importar Excel",
+    "description": "El archivo se lee por posición de columna y la primera fila se ignora (es el encabezado). Orden esperado: nombre · apellido paterno · apellido materno · CI · teléfono · dirección · nombre de la mascota · especie · raza.",
+    "error": "No se pudo importar el archivo",
+    "import": "Importar",
+    "importedCount_one": "{{count}} mascota importada correctamente.",
+    "importedCount_other": "{{count}} mascotas importadas correctamente.",
+    "pickFile": "Haz clic para elegir un archivo .xlsx",
+    "reason": "Motivo",
+    "row": "Fila",
+    "rowsWithError_one": "{{count}} fila con error:",
+    "rowsWithError_other": "{{count}} filas con error:",
+    "title": "Importar clientes desde Excel"
+  },
+  "info": {
+    "hasAccess": "Sí",
+    "moduleColumn": "Módulo",
+    "noAccess": "No",
+    "sections": {
+      "account": {
+        "cards": [
+          {
+            "title": "Apariencia",
+            "description": "Tema claro, oscuro o el del sistema, y tres colores de acento. Se guarda en tu navegador."
+          },
+          {
+            "title": "Idioma",
+            "description": "Español o inglés. También se guarda en tu navegador, así que cada persona puede tenerlo en el idioma que prefiera aunque compartan la computadora."
+          },
+          {
+            "title": "Contraseña",
+            "description": "Cambiarla te pide la actual. Mínimo 6 caracteres."
+          }
+        ],
+        "intro": "Lo que puedes cambiar de tu propia sesión, desde Configuración.",
+        "notes": [
+          "Para **cerrar sesión**, usa tu nombre al pie del menú. La sesión también caduca sola a las 8 horas."
+        ],
+        "title": "Tu cuenta"
+      },
+      "care": {
+        "callouts": [
+          {
+            "tone": "tip",
+            "title": "Dos campos que hacen más de lo que parece",
+            "body": "El **peso actual** se guarda como el peso vigente de la mascota y agrega un punto al gráfico de evolución de su ficha. Los **medicamentos usados** descuentan stock del inventario automáticamente — no hay que registrar la salida por separado."
+          },
+          {
+            "tone": "warning",
+            "title": "Si falta stock, no se guarda nada",
+            "body": "El sistema revisa el stock *antes* de crear la atención. Si un medicamento no alcanza, te avisa y no guarda: así no queda una atención a medias. Carga la entrada en Inventario y vuelve a intentar."
+          }
+        ],
+        "intro": "El registro clínico de lo que se le hizo a la mascota.",
+        "notes": [
+          "Al guardar, la atención queda **pendiente de cobro** y aparece sola en la pantalla de Pagos."
+        ],
+        "steps": [
+          {
+            "title": "Busca la mascota por el CI de su dueño",
+            "description": "La pantalla arranca con un buscador. Al escribir el CI aparecen todas las mascotas de esa persona y eliges una."
+          },
+          {
+            "title": "Revisa su historial",
+            "description": "Debajo se listan las atenciones anteriores, con diagnóstico, tratamiento, peso y monto."
+          },
+          {
+            "title": "Pulsa «Nueva atención»",
+            "description": "Tipo de servicio, diagnóstico y tratamiento son obligatorios. Exámenes externos, peso actual y los medicamentos usados son opcionales."
+          }
+        ],
+        "title": "Atención médica"
+      },
+      "clients": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "La ficha de la mascota",
+            "body": "Haz clic en cualquier fila del listado para abrirla. Reúne los datos, un gráfico de evolución del peso (aparece recién con dos mediciones o más) y una línea de tiempo con todo lo que le pasó a esa mascota: atenciones, vacunas, citas y hasta las correcciones que alguien hizo a sus datos."
+          },
+          {
+            "tone": "warning",
+            "title": "«Eliminar» no borra de verdad",
+            "body": "Al eliminar una mascota deja de aparecer en los listados y buscadores, pero su historial se conserva y puedes reactivarla desde su propia ficha. Para verla otra vez, activa «Mostrar inactivas» en el listado. Se hace así a propósito: borrar de verdad significaría perder las atenciones y pagos asociados."
+          }
+        ],
+        "intro": "Los propietarios no se crean por separado: nacen al registrar su primera mascota.",
+        "notes": [
+          "En **Propietarios** se edita el nombre, teléfono y dirección de un cliente, y se ven sus mascotas como etiquetas en las que puedes hacer clic. El CI no se puede editar: es la clave con la que se busca a esa persona en todo el sistema."
+        ],
+        "steps": [
+          {
+            "title": "Ve a Mascotas → «Nueva mascota»",
+            "description": "Lo primero que pide es el CI del propietario."
+          },
+          {
+            "title": "Escribe el CI y espera un segundo",
+            "description": "Si esa persona ya está registrada, el sistema la reconoce sola y completa sus datos: no la duplicas. Si es nueva, te pide nombre, apellido y teléfono."
+          },
+          {
+            "title": "Completa los datos de la mascota",
+            "description": "Nombre, especie y sexo son obligatorios. Raza, fecha de nacimiento y peso son opcionales, pero la fecha de nacimiento es la que permite mostrar la edad, y el peso alimenta el gráfico de evolución."
+          }
+        ],
+        "title": "Clientes y mascotas"
+      },
+      "dayToDay": {
+        "flow": [
+          {
+            "label": "Cliente",
+            "caption": "Se busca por CI"
+          },
+          {
+            "label": "Mascota",
+            "caption": "Se registra o se elige"
+          },
+          {
+            "label": "Cita",
+            "caption": "Se agenda"
+          },
+          {
+            "label": "Atención",
+            "caption": "Diagnóstico y tratamiento"
+          },
+          {
+            "label": "Cobro",
+            "caption": "Queda pendiente y se cobra"
+          }
+        ],
+        "intro": "El camino habitual de un cliente que llega a la clínica, de principio a fin.",
+        "notes": [
+          "No hace falta seguir el camino completo: se puede atender a una mascota sin cita previa, o registrar una mascota hoy y agendarle recién la semana que viene. Lo único encadenado es el cobro — **una atención registrada genera automáticamente un pago pendiente**, y esa es la lista que ve Recepción en Pagos."
+        ],
+        "title": "El día a día"
+      },
+      "faq": {
+        "faq": [
+          {
+            "question": "Registré una atención pero no aparece en Pagos",
+            "answer": "Revisa que no la hayas cobrado ya: una vez pagada sale de «Pendientes» y pasa a «Últimos pagos». Si sigue sin aparecer, recarga la pantalla."
+          },
+          {
+            "question": "No me deja agendar: no hay horarios disponibles",
+            "answer": "Ese veterinario no tiene horario cargado para ese día de la semana. Cárgaselo en Agenda → Horarios. Si eres veterinario, recuerda que solo puedes agendar para ti mismo."
+          },
+          {
+            "question": "¿Por qué no puedo eliminar una mascota o un medicamento?",
+            "answer": "Las mascotas sí se pueden «eliminar», pero es un borrado reversible: se ocultan y se pueden reactivar. Los medicamentos con movimientos registrados no se borran, porque eso rompería el historial de inventario."
+          },
+          {
+            "question": "El cobro por QR me da error",
+            "answer": "Es lo esperado por ahora: falta conectar la API del banco de la clínica. Cobra con el QR de tu banco por fuera del sistema y registra el pago acá con el método «QR»."
+          },
+          {
+            "question": "Un veterinario no aparece en la lista para agendar",
+            "answer": "Probablemente su cuenta está desactivada o pendiente de aprobación. Revísalo en Usuarios: las listas para agendar y atender solo ofrecen veterinarios activos."
+          },
+          {
+            "question": "¿Puedo usar PawCare en el celular o la tablet?",
+            "answer": "Sí. Todas las pantallas se adaptan, y las tablas se muestran como tarjetas para que se lean sin desplazarse de lado. Además puedes instalarlo como aplicación desde el menú del navegador."
+          },
+          {
+            "question": "No me llegó el correo de invitación o de recuperar contraseña",
+            "answer": "El envío de correo requiere que la clínica lo tenga configurado. Si no llega, el Administrador puede crear la cuenta directamente, o restablecer la contraseña desde Usuarios y comunicarla en persona."
+          },
+          {
+            "question": "Cambié el idioma pero algunos textos siguen en español",
+            "answer": "Los datos que carga la clínica —nombres de mascotas, razas, diagnósticos, notas— se muestran tal como se escribieron: el sistema traduce su propia interfaz, no el contenido. Los mensajes de WhatsApp también van siempre en español, porque los lee el cliente."
+          }
+        ],
+        "title": "Preguntas frecuentes"
+      },
+      "gettingStarted": {
+        "callouts": [
+          {
+            "tone": "tip",
+            "title": "El buscador es el atajo más rápido",
+            "body": "Presiona **Ctrl + K** (o **⌘ + K** en Mac), o el botón «Buscar…» arriba del menú. Escribe el nombre de una mascota, o el nombre, apellido o CI de un propietario, y te lleva directo a su ficha. Sirve desde cualquier pantalla y evita tener que adivinar dónde buscar."
+          },
+          {
+            "tone": "warning",
+            "title": "Si olvidaste tu contraseña",
+            "body": "El enlace «¿Olvidaste tu contraseña?» del login envía un correo, así que solo funciona si tu cuenta tiene un email registrado *y* la clínica configuró el envío de correo. Si no, pídele al Administrador que te la restablezca desde Usuarios: te la comunica en persona."
+          }
+        ],
+        "intro": "Cómo entrar y ubicarte en el sistema.",
+        "steps": [
+          {
+            "title": "Inicia sesión con el usuario que te dieron",
+            "description": "No es tu correo: es un nombre de usuario que asigna el Administrador de la clínica. Si te equivocas, el sistema no te dice cuál de los dos campos falló — es a propósito, por seguridad."
+          },
+          {
+            "title": "Revisa el Inicio",
+            "description": "Es la primera pantalla. Arriba muestra las cifras del momento (mascotas registradas, citas de hoy, pagos pendientes) y debajo accesos directos a los módulos que te corresponden."
+          },
+          {
+            "title": "Usa el menú de la izquierda",
+            "description": "Está agrupado en cuatro secciones: Clientes, Clínica, Administración y Sistema. Solo ves los módulos de tu rol. En celular el menú se abre con el botón de las tres rayas."
+          }
+        ],
+        "title": "Primeros pasos"
+      },
+      "inventory": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "Por qué a veces no se puede eliminar un medicamento",
+            "body": "Si ya tuvo movimientos (entradas o consumos), el sistema no lo deja borrar: haría desaparecer parte del historial. Solo se pueden eliminar los que nunca se usaron."
+          }
+        ],
+        "intro": "El stock de medicamentos, y su alerta cuando algo se está por acabar.",
+        "steps": [
+          {
+            "title": "Define el stock mínimo de cada medicamento",
+            "description": "Es el umbral de la alerta. Cuando el stock actual queda igual o por debajo, el medicamento aparece marcado como «Bajo stock» y se suma al aviso de arriba."
+          },
+          {
+            "title": "Registra las entradas cuando llega mercadería",
+            "description": "El botón «Registrar entrada» suma al stock actual y queda como movimiento."
+          },
+          {
+            "title": "Las salidas se registran solas",
+            "description": "Cada vez que una atención médica consume un medicamento, el stock baja automáticamente."
+          }
+        ],
+        "title": "Inventario"
+      },
+      "payments": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "El botón «Cobrar con QR» todavía no cobra",
+            "body": "Genera un QR bancario real, pero para eso hace falta conectar la API del banco de la clínica, y eso aún no está hecho. Hoy el botón muestra un mensaje explicando exactamente eso, en vez de un QR falso que nadie podría pagar. **Para cobrar por QR mientras tanto**, usa el QR de tu banco por fuera del sistema y registra el pago acá eligiendo el método «QR»."
+          }
+        ],
+        "intro": "Todo lo que se atendió y todavía no se pagó, en una sola lista.",
+        "steps": [
+          {
+            "title": "Mira el pendiente total",
+            "description": "Arriba de la pantalla: cuánto falta cobrar en total y cuántas atenciones lo componen."
+          },
+          {
+            "title": "Pulsa «Registrar pago» en la fila que corresponda",
+            "description": "Eliges el método (Efectivo, Tarjeta, Transferencia o QR) y confirmas el monto. La atención pasa a pagada y desaparece de pendientes."
+          },
+          {
+            "title": "Revisa «Últimos pagos»",
+            "description": "Los cinco cobros más recientes, con su método y fecha."
+          }
+        ],
+        "title": "Cobros"
+      },
+      "preventive": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "Sin próxima dosis, no hay aviso",
+            "body": "Un control sin fecha de próxima dosis se guarda igual, pero **nunca va a aparecer** en «Próximos a vencer» ni va a generar un recordatorio. Cárgala siempre que la sepas."
+          }
+        ],
+        "intro": "El control preventivo lleva la cuenta de qué se aplicó y cuándo toca la próxima dosis.",
+        "steps": [
+          {
+            "title": "Panel «Próximos a vencer»",
+            "description": "Lo primero que ves: los controles cuya próxima dosis cae dentro de los próximos 30 días. Los que ya pasaron su fecha llevan una etiqueta «Vencido» en rojo."
+          },
+          {
+            "title": "Busca una mascota por CI del dueño",
+            "description": "Igual que en Atención médica, para ver su historial preventivo completo."
+          },
+          {
+            "title": "Registra el control",
+            "description": "Elige Vacuna o Desparasitación, la fecha en que se aplicó y —muy recomendable— la fecha de la próxima dosis."
+          }
+        ],
+        "title": "Vacunas y desparasitación"
+      },
+      "reminders": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "El envío es manual, no automático",
+            "body": "El sistema calcula a quién hay que avisar y prepara el mensaje, pero alguien tiene que abrir la pantalla y hacer clic. No manda nada por su cuenta. El mensaje va siempre en español, porque lo lee el cliente de la clínica."
+          }
+        ],
+        "intro": "Avisos a los clientes por WhatsApp, para reducir las ausencias.",
+        "steps": [
+          {
+            "title": "Abre Recordatorios",
+            "description": "El sistema arma solo la lista: las citas de las próximas 24 horas y los controles preventivos que vencen dentro de 7 días."
+          },
+          {
+            "title": "Pulsa «Enviar por WhatsApp»",
+            "description": "Se abre WhatsApp con el número del propietario y el mensaje ya escrito. Puedes editarlo antes de enviarlo."
+          },
+          {
+            "title": "Vuelve y marca «Marcar como enviado»",
+            "description": "Es lo que saca a ese cliente de la lista y evita que le escriban dos veces. Queda registrado en «Últimos enviados»."
+          }
+        ],
+        "title": "Recordatorios"
+      },
+      "reports": {
+        "callouts": [
+          {
+            "tone": "tip",
+            "title": "Todo se puede exportar",
+            "body": "Cada reporte tiene botones para descargarlo en Excel o PDF, con los filtros que tengas puestos. Además, en Configuración hay «Exportar todos mis datos»: un Excel con una hoja por cada tipo de información del sistema."
+          }
+        ],
+        "cards": [
+          {
+            "title": "Ingresos",
+            "description": "Cada pago cobrado, con filtros por rango de fechas, tipo de servicio y método de pago. Arriba muestra el total y la cantidad de cobros que cumplen esos filtros."
+          },
+          {
+            "title": "Clínicos y administrativos",
+            "description": "Dos vistas: las atenciones de un período, y un gráfico de ingresos agrupados por tipo de servicio, que responde qué servicio deja más."
+          }
+        ],
+        "intro": "Solo Administrador. Dos miradas sobre la misma información.",
+        "title": "Reportes"
+      },
+      "roles": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "La regla que más sorprende",
+            "body": "Un **Veterinario solo puede agendar y reprogramar citas para sí mismo**. El Administrador y Recepción pueden hacerlo para cualquier veterinario. Lo mismo con los horarios: un veterinario edita el suyo, no el de sus colegas."
+          }
+        ],
+        "intro": "Hay tres roles. El menú te muestra únicamente los módulos que te corresponden, y el servidor rechaza cualquier pedido de información fuera de tu rol: si llegaras a una pantalla ajena, no verías datos, solo un error.",
+        "matrix": {
+          "roles": [
+            "Administrador",
+            "Veterinario",
+            "Recepción"
+          ],
+          "rows": [
+            {
+              "area": "Propietarios",
+              "access": [
+                true,
+                false,
+                true
+              ]
+            },
+            {
+              "area": "Mascotas",
+              "access": [
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "area": "Agenda (citas)",
+              "access": [
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "area": "Agenda (horarios)",
+              "access": [
+                true,
+                true,
+                false
+              ]
+            },
+            {
+              "area": "Atención médica",
+              "access": [
+                true,
+                true,
+                false
+              ]
+            },
+            {
+              "area": "Control preventivo",
+              "access": [
+                true,
+                true,
+                false
+              ]
+            },
+            {
+              "area": "Recordatorios",
+              "access": [
+                true,
+                false,
+                true
+              ]
+            },
+            {
+              "area": "Pagos",
+              "access": [
+                true,
+                false,
+                true
+              ]
+            },
+            {
+              "area": "Inventario",
+              "access": [
+                true,
+                false,
+                false
+              ]
+            },
+            {
+              "area": "Reportes",
+              "access": [
+                true,
+                false,
+                false
+              ]
+            },
+            {
+              "area": "Cuentas del personal",
+              "access": [
+                true,
+                false,
+                false
+              ]
+            }
+          ]
+        },
+        "title": "Qué hace cada rol"
+      },
+      "schedule": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "Si no aparece ningún horario disponible",
+            "body": "Casi siempre es porque **ese veterinario no tiene horario cargado para ese día** de la semana. Ve a la pestaña «Horarios», actívale el turno que corresponda y vuelve a intentar. Un veterinario sin horario ese día simplemente no tiene turnos que ofrecer."
+          },
+          {
+            "tone": "info",
+            "title": "Reprogramar solo mueve fecha y hora",
+            "body": "No cambia la mascota ni el veterinario: para eso, cancela y agenda una nueva. Y una cita cancelada ya no se puede reprogramar. Tampoco se puede poner dos citas al mismo veterinario a la misma hora — el sistema lo bloquea."
+          }
+        ],
+        "intro": "Citas y horarios viven en la misma pantalla, porque el horario de cada veterinario es lo que determina qué turnos quedan libres.",
+        "states": {
+          "from": {
+            "description": "Estado con el que nace toda cita nueva",
+            "label": "Confirmada"
+          },
+          "to": [
+            {
+              "label": "Atendida",
+              "description": "La mascota vino y fue atendida",
+              "tone": "good"
+            },
+            {
+              "label": "Cancelada",
+              "description": "No se realizó; el turno vuelve a quedar libre",
+              "tone": "muted"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "title": "Pestaña «Nueva Cita»",
+            "description": "Elige mascota, veterinario, tipo de consulta y fecha. Los horarios disponibles aparecen agrupados en Mañana y Tarde; los ocupados salen deshabilitados."
+          },
+          {
+            "title": "Pestaña «Lista de Citas»",
+            "description": "La agenda agrupada por día. Desde cada cita puedes reprogramarla, marcarla como atendida o cancelarla."
+          },
+          {
+            "title": "Pestaña «Horarios»",
+            "description": "La grilla semanal de atención de cada veterinario, con hasta dos turnos por día (mañana y tarde). Recepción no ve esta pestaña."
+          }
+        ],
+        "title": "Agenda"
+      },
+      "staff": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "Desactivar en vez de borrar",
+            "body": "Las cuentas no se eliminan, se desactivan: quien está desactivado no puede iniciar sesión y desaparece de las listas para agendar o atender, pero su historial queda intacto. Se reactiva cuando haga falta."
+          }
+        ],
+        "cards": [
+          {
+            "title": "Crear una cuenta",
+            "description": "«Nuevo usuario» pide los datos y el rol. Si eliges Veterinario, aparecen dos campos más: matrícula y especialidad."
+          },
+          {
+            "title": "Invitar a un veterinario",
+            "description": "«Invitar veterinario» le manda un correo con un enlace para que complete sus datos. La cuenta queda activa apenas la acepta."
+          },
+          {
+            "title": "Aprobar una solicitud",
+            "description": "Un veterinario puede pedir acceso solo, desde el enlace del login. Aparece como «Pendiente de aprobación» y no puede entrar hasta que pulses «Aprobar»."
+          },
+          {
+            "title": "Auditoría",
+            "description": "La segunda pestaña registra quién activó, desactivó, cambió de rol, restableció contraseñas o invitó a alguien, y cuándo."
+          }
+        ],
+        "intro": "Solo Administrador. Quién puede entrar al sistema y con qué permisos.",
+        "title": "Cuentas del personal"
+      }
+    },
+    "subtitle": "Manual de uso de PawCare — qué hace cada pantalla y cómo resolver las tareas del día.",
+    "title": "Información",
+    "tocLabel": "Índice del manual",
+    "tocSummary": "Índice"
+  },
+  "inventory": {
+    "belowMinimum": "Bajo el mínimo",
+    "catalogueCount": "Medicamentos en catálogo",
+    "confirmDeleteBody": "Se eliminará «{{name}}» del catálogo. Si ya tiene movimientos de inventario registrados (entradas o consumos en atenciones), no se podrá eliminar.",
+    "confirmDeleteTitle": "¿Eliminar medicamento?",
+    "currentStock": "Stock actual",
+    "currentStockIs": "Stock actual: {{count}}",
+    "editMedication": "Editar medicamento",
+    "emptyDescription": "Carga el catálogo para poder descontar stock al registrar atenciones.",
+    "emptyTitle": "Sin medicamentos registrados todavía",
+    "enoughStock": "Suficiente",
+    "form": {
+      "createError": "No se pudo crear el medicamento",
+      "minimumStockRange": "El stock mínimo debe ser 0 o mayor",
+      "nameRequired": "El nombre es obligatorio",
+      "quantityPositive": "La cantidad debe ser mayor a 0",
+      "stockInError": "No se pudo registrar la entrada",
+      "updateError": "No se pudo actualizar el medicamento"
+    },
+    "initialStock": "Stock inicial",
+    "loadError": "No se pudo cargar el inventario.",
+    "lowStock": "Bajo stock",
+    "lowStockWarning_one": "{{count}} medicamento con stock bajo:",
+    "lowStockWarning_other": "{{count}} medicamentos con stock bajo:",
+    "medication": "Medicamento",
+    "medications": "Medicamentos",
+    "minimumStock": "Stock mínimo",
+    "newMedication": "Nuevo medicamento",
+    "quantityToAdd": "Cantidad a ingresar",
+    "registerStockIn": "Registrar entrada",
+    "registerStockInFor": "Registrar entrada — {{name}}",
+    "stockShort": "stock: {{count}}",
+    "subtitle": "Catálogo y stock de medicamentos",
+    "title": "Inventario"
+  },
+  "invitation": {
+    "createdBody": "Ya puedes iniciar sesión con tu usuario y contraseña.",
+    "createdTitle": "¡Cuenta creada!",
+    "description": "Te invitaron a PawCare como Veterinario — {{email}}",
+    "error": "No se pudo completar el registro",
+    "invalidBody": "Este enlace no es válido, ya se usó, o expiró. Pide que te envíen una invitación nueva.",
+    "invalidTitle": "Invitación no válida",
+    "title": "Completa tu registro"
+  },
+  "language": {
+    "description": "El idioma en el que ves el sistema. Se guarda en este navegador.",
+    "label": "Idioma",
+    "switch": "Cambiar idioma"
+  },
+  "login": {
+    "capsLockOn": "Bloq Mayús está activado",
+    "checking": "Verificando…",
+    "demoAccounts": "Cuentas de demostración",
+    "demoAccountsHelp": "Datos de prueba, una cuenta por rol. Haz clic en una para llenar el formulario.",
+    "demoAccountsHelpLabel": "Qué son las cuentas de demostración",
+    "demoHints": {
+      "ADMIN": "Acceso completo: reportes de ingresos, inventario, gestión de cuentas y auditoría.",
+      "RECEPTIONIST": "Propietarios, mascotas, agendar citas, cobros y recordatorios.",
+      "VET": "Su agenda y su horario, atención médica, control preventivo y fichas de mascotas."
+    },
+    "error": "No se pudo iniciar sesión",
+    "footer": "Sistema de gestión veterinaria · Bolivia",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "headline": "La clínica entera, en un solo lugar.",
+    "hidePassword": "Ocultar contraseña",
+    "highlights": {
+      "inventory": {
+        "description": "Stock de medicamentos con alertas, e ingresos por tipo de servicio.",
+        "title": "Inventario y reportes"
+      },
+      "records": {
+        "description": "Cada mascota con sus atenciones, vacunas y evolución de peso en una sola ficha.",
+        "title": "Historial clínico completo"
+      },
+      "schedule": {
+        "description": "Citas por veterinario según su horario real, con avisos previos al propietario.",
+        "title": "Agenda y recordatorios"
+      }
+    },
+    "noAccount": "¿Eres veterinario y no tienes cuenta?",
+    "requestAccess": "Solicita tu acceso",
+    "requestAccessHelp": "Completas tus datos y matrícula; un Administrador aprueba la cuenta antes del primer ingreso.",
+    "showPassword": "Mostrar contraseña",
+    "signIn": "Iniciar sesión",
+    "signInHint": "Ingresa con la cuenta que te asignó la clínica.",
+    "subheadline": "Historias clínicas, agenda, cobros e inventario conectados entre sí — sin planillas sueltas ni cuadernos.",
+    "tagline": "Sistema de gestión veterinaria",
+    "usernameHelp": "No es tu correo: es el nombre de usuario que te asignó el Administrador de la clínica.",
+    "usernameHelpLabel": "Ayuda sobre el nombre de usuario",
+    "usernamePlaceholder": "Ej. veterinario"
+  },
+  "nav": {
+    "breadcrumb": "Ruta de navegación",
+    "groups": {
+      "admin": "Administración",
+      "clients": "Clientes",
+      "clinic": "Clínica",
+      "system": "Sistema"
+    },
+    "home": "Inicio",
+    "logout": "Cerrar sesión",
+    "modules": {
+      "agenda": {
+        "description": {
+          "RECEPTIONIST": "Agendar, reprogramar y cancelar citas",
+          "VET": "Tus citas y tu horario de atención",
+          "default": "Citas y horarios de atención"
+        },
+        "title": "Agenda"
+      },
+      "info": {
+        "description": {
+          "default": "Manual de uso del sistema"
+        },
+        "title": "Información"
+      },
+      "inventory": {
+        "description": {
+          "default": "Stock de medicamentos"
+        },
+        "title": "Inventario"
+      },
+      "medical-visits": {
+        "description": {
+          "VET": "Registrar diagnóstico y tratamiento",
+          "default": "Historial médico y nuevas atenciones"
+        },
+        "title": "Atención Médica"
+      },
+      "owners": {
+        "description": {
+          "default": "Registro y gestión de dueños de mascotas"
+        },
+        "title": "Propietarios"
+      },
+      "payments": {
+        "description": {
+          "RECEPTIONIST": "Registrar cobros por atención",
+          "default": "Gestión de pagos y facturación"
+        },
+        "title": "Pagos"
+      },
+      "pets": {
+        "description": {
+          "RECEPTIONIST": "Registro de clientes y mascotas",
+          "VET": "Buscar mascotas y ver historial",
+          "default": "Gestión de mascotas y expedientes"
+        },
+        "title": "Mascotas"
+      },
+      "preventive-controls": {
+        "description": {
+          "default": "Vacunación y desparasitación"
+        },
+        "title": "Control Preventivo"
+      },
+      "reminders": {
+        "description": {
+          "default": "Avisos de citas y controles por WhatsApp"
+        },
+        "title": "Recordatorios"
+      },
+      "reports": {
+        "description": {
+          "default": "Ingresos y reportes clínicos"
+        },
+        "title": "Reportes"
+      },
+      "settings": {
+        "description": {
+          "default": "Apariencia y datos de tu cuenta"
+        },
+        "title": "Configuración"
+      },
+      "users": {
+        "description": {
+          "default": "Cuentas, roles y registro de auditoría"
+        },
+        "title": "Usuarios"
+      }
+    },
+    "openMenu": "Abrir menú",
+    "searchPlaceholder": "Buscar…"
+  },
+  "owners": {
+    "editTitle": "Editar propietario",
+    "emptyDescription": "Los propietarios se crean al registrar su primera mascota, desde la pantalla de Mascotas.",
+    "emptyTitle": "Sin propietarios registrados todavía",
+    "form": {
+      "nameRequired": "Nombre y apellido paterno no pueden quedar vacíos",
+      "nationalIdLocked": "El CI no se puede editar — es la clave usada para buscar al propietario.",
+      "updateError": "No se pudo actualizar el propietario"
+    },
+    "listTitle": "Listado",
+    "loadError": "No se pudo cargar el listado de propietarios.",
+    "noMatch": "Ningún propietario coincide con la búsqueda",
+    "noMatchDescription": "Prueba con otro nombre o con el número de CI completo.",
+    "petsInTheirCare": "Mascotas a su cargo",
+    "registeredOwners": "Propietarios registrados",
+    "searchPlaceholder": "Buscar por nombre o CI...",
+    "subtitle": "Registro y gestión de dueños de mascotas",
+    "title": "Propietarios"
+  },
+  "payments": {
+    "chargeWithQr": "Cobrar con QR",
+    "confirmPayment": "Confirmar pago",
+    "emptyHistoryDescription": "Los cobros que registres van a aparecer acá.",
+    "emptyHistoryTitle": "Todavía no hay pagos registrados",
+    "emptyPendingDescription": "Todas las atenciones registradas ya fueron cobradas.",
+    "emptyPendingTitle": "No hay pagos pendientes",
+    "form": {
+      "amountPositive": "El monto debe ser mayor a 0",
+      "error": "No se pudo registrar el pago",
+      "pickMethod": "Selecciona un método de pago",
+      "pickMethodShort": "Selecciona un método"
+    },
+    "latestTitle": "Últimos pagos",
+    "loadError": "No se pudo cargar la lista de pagos.",
+    "method": "Método de pago",
+    "pendingTitle": "Pendientes de pago",
+    "pendingTotal": "Pendiente de cobro",
+    "pendingVisits": "Atenciones por cobrar",
+    "qr": {
+      "bankError": "El banco reportó un error con este cobro.",
+      "confirmed": "Pago confirmado",
+      "expired": "El QR expiró antes de confirmarse el pago.",
+      "generateError": "No se pudo generar el cobro QR",
+      "generating": "Generando QR con el banco...",
+      "imageAlt": "Código QR de pago",
+      "waiting": "Esperando confirmación del banco..."
+    },
+    "registerPayment": "Registrar pago",
+    "subtitle": "Atenciones pendientes de cobro",
+    "title": "Pagos"
+  },
+  "people": {
+    "firstName": "Nombre",
+    "licenseNumber": "Matrícula",
+    "maternalLastName": "Apellido materno",
+    "paternalLastName": "Apellido paterno",
+    "professionalDetails": "Datos profesionales",
+    "specialty": "Especialidad"
+  },
+  "petSearch": {
+    "error": "No se pudo realizar la búsqueda.",
+    "noResults": "No se encontraron mascotas para ese CI."
+  },
+  "pets": {
+    "age": {
+      "label": "Edad",
+      "month_one": "{{count}} mes",
+      "month_other": "{{count}} meses",
+      "year_one": "{{count}} año",
+      "year_other": "{{count}} años"
+    },
+    "birthDate": "Fecha de nacimiento",
+    "breed": "Raza",
+    "confirmDeleteBody": "{{name}} dejará de aparecer en el listado y en los buscadores. Su historial clínico no se borra y se puede reactivar en cualquier momento desde esta misma página.",
+    "confirmDeleteTitle": "¿Eliminar mascota?",
+    "confirmReactivateBody": "{{name}} volverá a aparecer en el listado principal y en los buscadores.",
+    "confirmReactivateTitle": "¿Reactivar mascota?",
+    "currentWeight": "Peso actual",
+    "deletePet": "Eliminar mascota",
+    "detailFallback": "Ficha de mascota",
+    "detailLoadError": "No se pudo cargar esta mascota.",
+    "editTitle": "Editar datos de {{name}}",
+    "emptyDescription": "Registra la primera mascota junto con los datos de su propietario.",
+    "emptyTitle": "Sin mascotas registradas todavía",
+    "fieldEdited": "Se editó «{{field}}»",
+    "form": {
+      "createError": "No se pudo registrar la mascota",
+      "existingOwner": "Propietario existente: {{name}}",
+      "nameAndSpeciesRequired": "Nombre y especie no pueden quedar vacíos",
+      "nationalIdPlaceholder": "Ej. 4521367",
+      "newOwnerNeedsName": "Como es un propietario nuevo, indica su nombre y apellido paterno",
+      "ownerNationalId": "CI del propietario",
+      "ownerNotFound": "No encontrado — se registrará como propietario nuevo",
+      "petName": "Nombre de la mascota",
+      "pickSex": "Selecciona el sexo de la mascota",
+      "updateError": "No se pudo actualizar la mascota"
+    },
+    "history": "Historial",
+    "historyDescription": "Atenciones, citas, controles preventivos y ediciones, en orden cronológico",
+    "inactive": "Inactiva",
+    "inactiveNotice": "Esta mascota está inactiva — no aparece en el listado principal ni en los buscadores.",
+    "listTitle": "Listado",
+    "loadError": "No se pudo cargar el listado de mascotas. Intenta de nuevo.",
+    "newPet": "Nueva mascota",
+    "noMatch": "Ninguna mascota coincide con la búsqueda",
+    "noMatchDescription": "Prueba con otro nombre, o revisa si está marcada como inactiva.",
+    "reactivate": "Reactivar",
+    "registerPet": "Registrar mascota",
+    "searchPlaceholder": "Buscar por nombre...",
+    "sex": "Sexo",
+    "showInactive": "Mostrar inactivas",
+    "species": "Especie",
+    "subtitle": "Gestión de mascotas registradas",
+    "timelineEmptyDescription": "Las atenciones, controles, citas y ediciones de esta mascota van a aparecer acá en orden cronológico.",
+    "timelineEmptyTitle": "Sin actividad registrada todavía",
+    "title": "Mascotas",
+    "weight": "Peso",
+    "weightKg": "Peso (kg)",
+    "weightTrend": "Evolución de peso"
+  },
+  "preventive": {
+    "appliedOn": "Aplicada: {{date}}",
+    "appliedOnLabel": "Fecha de aplicación",
+    "form": {
+      "createError": "No se pudo registrar el control",
+      "pickType": "Selecciona el tipo de control"
+    },
+    "historyEmpty": "Sin controles preventivos registrados todavía.",
+    "historySubtitle": "Historial de vacunación y desparasitación",
+    "nextDoseLabel": "Próxima dosis",
+    "nextDoseOn": "Próxima dosis: {{date}}",
+    "nothingDue": "Nada próximo a vencer. Todo al día.",
+    "registerControl": "Registrar control",
+    "registerControlFor": "Registrar control — {{name}} ({{species}})",
+    "subtitle": "Vacunación y desparasitación",
+    "title": "Control Preventivo",
+    "upcomingLoadError": "No se pudo cargar el listado.",
+    "upcomingTitle": "Próximos a vencer (30 días)"
+  },
+  "register": {
+    "description": "Un Administrador revisará y aprobará tu cuenta antes de que puedas iniciar sesión",
+    "emailHint": "Para recuperar tu contraseña si la olvidas",
+    "error": "No se pudo enviar la solicitud",
+    "send": "Enviar solicitud",
+    "sentBody": "Un Administrador debe aprobar tu cuenta antes de que puedas iniciar sesión. Te avisarán cuando esté activa.",
+    "sentTitle": "Solicitud enviada",
+    "title": "Solicitar acceso como Veterinario"
+  },
+  "reminders": {
+    "emptyDescription": "Acá aparecen las citas de las próximas 24 horas y los controles preventivos que vencen en 7 días.",
+    "emptyTitle": "No hay recordatorios pendientes",
+    "historyEmpty": "Todavía no se marcó ningún recordatorio como enviado.",
+    "latestTitle": "Últimos enviados",
+    "loadError": "No se pudo cargar la lista.",
+    "markSent": "Marcar como enviado",
+    "pendingTitle": "Pendientes de hoy",
+    "sendOnWhatsapp": "Enviar por WhatsApp",
+    "subtitle": "Citas en las próximas 24h y controles preventivos a 7 días — envío manual por WhatsApp, sin costo ni integración externa.",
+    "title": "Recordatorios"
+  },
+  "reports": {
+    "exportExcel": "Exportar Excel",
+    "exportPdf": "Exportar PDF",
+    "loadError": "No se pudo cargar el reporte.",
+    "noPayments": "No hay pagos que cumplan estos filtros",
+    "noPaymentsHint": "Prueba ampliando el rango de fechas, o quitando el filtro de método de pago.",
+    "noRevenue": "No hay ingresos que cumplan estos filtros",
+    "noVisits": "No hay atenciones que cumplan estos filtros",
+    "noVisitsHint": "Prueba ampliando el rango de fechas o quitando el filtro de tipo de servicio.",
+    "paymentCount": "Cantidad de pagos",
+    "reportType": "Tipo de reporte",
+    "service": "Servicio",
+    "subtitle": "Ingresos y reportes clínicos y administrativos",
+    "tabs": {
+      "clinical": "Clínicos y Administrativos",
+      "revenue": "Ingresos"
+    },
+    "title": "Reportes",
+    "totalAmount": "Monto total",
+    "types": {
+      "revenueByService": "Ingresos por tipo de servicio",
+      "visits": "Atenciones por período"
+    },
+    "widenRange": "Prueba ampliando el rango de fechas."
+  },
+  "reset": {
+    "done": "Contraseña actualizada",
+    "doneHint": "Ya puedes iniciar sesión con tu nueva contraseña.",
+    "goToLogin": "Ir a inicio de sesión",
+    "invalidLink": "Este enlace no incluye un token válido",
+    "requestNewLink": "Pedir un enlace nuevo",
+    "title": "Elige tu nueva contraseña"
+  },
+  "schedules": {
+    "days": {
+      "0": "Domingo",
+      "1": "Lunes",
+      "2": "Martes",
+      "3": "Miércoles",
+      "4": "Jueves",
+      "5": "Viernes",
+      "6": "Sábado"
+    },
+    "pickVet": "Selecciona un veterinario",
+    "pickVetHint": "Selecciona un veterinario para ver y editar su horario.",
+    "save": "Guardar horarios",
+    "saveError": "No se pudo guardar el horario",
+    "shiftsHint": "Hasta 2 turnos por día (ej. mañana y tarde). Un día sin turnos activos queda sin atención.",
+    "startBeforeEnd": "En cada turno activo, la hora de inicio debe ser anterior a la hora de fin",
+    "week": "Semana"
+  },
+  "search": {
+    "ariaLabel": "Buscar mascota o propietario",
+    "close": "cerrar",
+    "hint": "Escribe al menos {{min}} caracteres. Busca por nombre de mascota, o por nombre o CI del propietario.",
+    "kinds": {
+      "other": "Resultados",
+      "owner": "Propietarios",
+      "pet": "Mascotas"
+    },
+    "navigate": "navegar",
+    "noResults": "Sin resultados para «{{term}}».",
+    "open": "abrir",
+    "placeholder": "Buscar mascota o propietario…",
+    "title": "Búsqueda global"
+  },
+  "settings": {
+    "account": {
+      "description": "Información de la sesión actual",
+      "title": "Cuenta"
+    },
+    "appearance": {
+      "color": "Color",
+      "description": "Elige cómo se ve PawCare en este dispositivo",
+      "theme": "Tema",
+      "title": "Apariencia"
+    },
+    "colors": {
+      "ocean": "Océano",
+      "pink": "Rosa",
+      "violet": "Violeta"
+    },
+    "data": {
+      "description": "Exporta toda la información de la clínica en cualquier momento, sin depender de PawCare",
+      "exportAll": "Exportar todos mis datos",
+      "title": "Datos"
+    },
+    "exportError": "No se pudo exportar",
+    "exportSuccess": "Datos exportados correctamente",
+    "subtitle": "Preferencias de la aplicación y datos de tu cuenta",
+    "themes": {
+      "dark": "Oscuro",
+      "light": "Claro",
+      "system": "Sistema"
+    },
+    "title": "Configuración"
+  },
+  "toasts": {
+    "appointmentBooked": "Cita agendada correctamente",
+    "appointmentRescheduled": "Cita reprogramada correctamente",
+    "appointmentStatusUpdated": "Estado de la cita actualizado",
+    "invitationCancelled": "Invitación cancelada",
+    "invitationSent": "Invitación enviada correctamente",
+    "medicationCreated": "Medicamento creado correctamente",
+    "medicationDeleted": "Medicamento eliminado",
+    "medicationUpdated": "Medicamento actualizado correctamente",
+    "ownerUpdated": "Propietario actualizado correctamente",
+    "passwordReset": "Contraseña restablecida correctamente",
+    "passwordUpdated": "Contraseña actualizada correctamente",
+    "petCreated": "Mascota registrada correctamente",
+    "petDeleted": "Mascota eliminada",
+    "petReactivated": "Mascota reactivada",
+    "petUpdated": "Mascota actualizada correctamente",
+    "preventiveControlRecorded": "Control preventivo registrado",
+    "reminderMarkedSent": "Recordatorio marcado como enviado",
+    "roleUpdated": "Rol actualizado correctamente",
+    "stockAdded": "Entrada registrada correctamente",
+    "userActivated": "Usuario activado",
+    "userCreated": "Usuario registrado correctamente",
+    "userDeactivated": "Usuario desactivado",
+    "visitRecorded": "Atención registrada. Queda disponible para cobro en Pagos."
+  },
+  "users": {
+    "activate": "Activar",
+    "approve": "Aprobar",
+    "cancelInvitation": "Cancelar invitación",
+    "changeRole": "Cambiar rol",
+    "confirmActivateBody": "{{name}} podrá volver a iniciar sesión.",
+    "confirmActivateTitle": "¿Activar cuenta?",
+    "confirmApproveBody": "{{name}} podrá iniciar sesión como Veterinario y aparecerá en los selectores de agendar/atender.",
+    "confirmApproveTitle": "¿Aprobar solicitud?",
+    "confirmCancelInvitationBody": "El enlace que le enviamos a {{email}} dejará de funcionar.",
+    "confirmCancelInvitationTitle": "¿Cancelar invitación?",
+    "confirmDeactivateBody": "{{name}} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.",
+    "confirmDeactivateTitle": "¿Desactivar cuenta?",
+    "currentRole": "rol actual: {{role}}",
+    "deactivate": "Desactivar",
+    "emptyDescription": "Crea cuentas para el personal, o invita a un veterinario por email.",
+    "emptyTitle": "Sin usuarios registrados todavía",
+    "form": {
+      "changeRoleError": "No se pudo cambiar el rol",
+      "createError": "No se pudo registrar el usuario",
+      "pickRole": "Selecciona un rol",
+      "vetDataRequired": "Matrícula y especialidad son obligatorias para un Veterinario",
+      "vetDataRequiredToConvert": "Matrícula y especialidad son obligatorias para convertir a Veterinario",
+      "vetSection": "Datos profesionales (solo Veterinario)",
+      "vetSectionRequired": "Datos profesionales (obligatorios para veterinario)"
+    },
+    "invitationExpires": "vence {{date}}",
+    "invite": {
+      "action": "Invitar veterinario",
+      "description": "Le enviamos un email con un enlace para que complete su registro — la cuenta queda activa apenas ponga su contraseña, sin necesitar aprobación adicional.",
+      "error": "No se pudo enviar la invitación",
+      "nameOptional": "Nombre (opcional)",
+      "namePlaceholder": "Para personalizar el email",
+      "send": "Enviar invitación"
+    },
+    "invitedBy": "invitó {{name}}",
+    "listTitle": "Listado",
+    "loadError": "No se pudo cargar el listado de usuarios.",
+    "newRole": "Nuevo rol",
+    "newUser": "Nuevo usuario",
+    "pendingInvitations": "Invitaciones pendientes",
+    "registerUser": "Registrar usuario",
+    "reset": "Restablecer",
+    "resetPassword": "Restablecer contraseña",
+    "resetPasswordBody": "Se le asignará una contraseña nueva a {{name}} ({{username}}). Comunícasela directamente — no se envía por email ni SMS.",
+    "subtitle": "Registro y gestión de cuentas",
+    "tabs": {
+      "accounts": "Cuentas",
+      "audit": "Auditoría"
+    },
+    "title": "Usuarios"
+  },
+  "visits": {
+    "consultationFee": "Monto de consulta (Bs.)",
+    "consumedMedications": "Medicamentos consumidos (opcional)",
+    "currentWeightOptional": "Peso actual (kg, opcional)",
+    "diagnosis": "Diagnóstico",
+    "diagnosisLabel": "Diagnóstico:",
+    "emptyDescription": "Usa el botón «Nueva atención» de arriba para registrar la primera.",
+    "emptyTitle": "Aún no hay atenciones registradas para {{name}}",
+    "externalExams": "Exámenes externos (opcional)",
+    "externalExamsLabel": "Exámenes externos:",
+    "form": {
+      "createError": "No se pudo registrar la atención",
+      "diagnosisAndTreatmentRequired": "Diagnóstico y tratamiento son obligatorios",
+      "pickServiceType": "Selecciona el tipo de servicio",
+      "pickVet": "Selecciona el veterinario que atiende"
+    },
+    "historyLoadError": "No se pudo cargar el historial.",
+    "newVisit": "Nueva atención",
+    "newVisitFor": "Nueva atención — {{name}} ({{species}})",
+    "pickMedication": "Seleccione medicamento",
+    "pickType": "Seleccione tipo",
+    "pickVet": "Seleccione veterinario",
+    "recordedWeight": "Peso registrado: {{weight}} kg",
+    "saveVisit": "Guardar atención",
+    "searchToStart": "Busca una mascota para empezar",
+    "searchToStartHint": "Ingresa la cédula de identidad del propietario en el buscador de arriba para ver el historial clínico de sus mascotas o registrar una nueva atención.",
+    "serviceType": "Tipo de servicio",
+    "subtitle": "Busca una mascota por la cédula del propietario para ver o iniciar su atención médica",
+    "title": "Atención Médica",
+    "treatment": "Tratamiento",
+    "treatmentLabel": "Tratamiento:"
+  }
+}

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { medicalVisitsApi } from "./api";
 import type { NewVisitInput } from "./types";
@@ -20,7 +21,7 @@ export function useCreateVisit() {
       queryClient.invalidateQueries({ queryKey: ["payments", "pending"] });
       // También afecta la ficha de mascota (peso actual + línea de tiempo unificada).
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Atención registrada. Queda disponible para cobro en Pagos.");
+      toast.success(t("toasts.visitRecorded"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

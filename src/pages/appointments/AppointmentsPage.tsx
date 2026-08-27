@@ -1,8 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Appointment } from "@/features/appointments/types";
+import { useAuth } from "@/features/auth/AuthContext";
+import { moduleDescription } from "@/features/dashboard/labels";
 import { useModule } from "@/features/dashboard/useModules";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AppointmentsListTab } from "./AppointmentsListTab";
 import { NewAppointmentTab } from "./NewAppointmentTab";
 import { SchedulesTab } from "./SchedulesTab";
@@ -17,6 +20,8 @@ import { SchedulesTab } from "./SchedulesTab";
  * horario de los veterinarios, así que no recibe la pestaña "Horarios".
  */
 export function AppointmentsPage() {
+  const { t } = useTranslation();
+  const { user } = useAuth();
   const [tab, setTab] = useState("list");
   const [appointmentBeingEdited, setAppointmentBeingEdited] = useState<Appointment | null>(null);
   const { module } = useModule("agenda");
@@ -37,15 +42,19 @@ export function AppointmentsPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Agenda</h1>
-        <p className="text-muted-foreground">{module?.description ?? "Citas y horarios de atención"}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("appointments.title")}</h1>
+        <p className="text-muted-foreground">
+          {module ? moduleDescription(t, module, user?.role) : t("appointments.subtitle")}
+        </p>
       </div>
 
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="list">Lista de Citas</TabsTrigger>
-          <TabsTrigger value="new">{appointmentBeingEdited ? "Reprogramar Cita" : "Nueva Cita"}</TabsTrigger>
-          {showSchedules && <TabsTrigger value="schedules">Horarios</TabsTrigger>}
+          <TabsTrigger value="list">{t("appointments.tabs.list")}</TabsTrigger>
+          <TabsTrigger value="new">
+            {appointmentBeingEdited ? t("appointments.tabs.reschedule") : t("appointments.tabs.new")}
+          </TabsTrigger>
+          {showSchedules && <TabsTrigger value="schedules">{t("appointments.tabs.schedules")}</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="list" className="mt-4">

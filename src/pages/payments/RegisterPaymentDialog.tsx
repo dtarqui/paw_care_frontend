@@ -13,13 +13,11 @@ import { useRegisterPayment } from "@/features/payments/usePayments";
 import type { PaymentMethod, PendingPayment } from "@/features/payments/types";
 import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
-const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: "CASH", label: "Efectivo" },
-  { value: "CARD", label: "Tarjeta" },
-  { value: "TRANSFER", label: "Transferencia" },
-  { value: "QR", label: "QR" },
-];
+/** El orden en que se ofrecen los métodos. La etiqueta visible sale de
+ * `enums.status.*`, igual que en StatusBadge. */
+const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "TRANSFER", "QR"];
 
 interface RegisterPaymentDialogProps {
   pendingPayment: PendingPayment | null;
@@ -27,6 +25,7 @@ interface RegisterPaymentDialogProps {
 }
 
 export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPaymentDialogProps) {
+  const { t } = useTranslation();
   const registerPaymentMutation = useRegisterPayment();
   const [method, setMethod] = useState<PaymentMethod | "">("");
   const [amount, setAmount] = useState<string>("");
@@ -39,18 +38,18 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
     setError(null);
     const amountNumber = Number(amount);
     if (!method) {
-      setError("Selecciona un método de pago");
+      setError(t("payments.form.pickMethod"));
       return;
     }
     if (!amountNumber || amountNumber <= 0) {
-      setError("El monto debe ser mayor a 0");
+      setError(t("payments.form.amountPositive"));
       return;
     }
     try {
       await registerPaymentMutation.mutateAsync({ visitId: pendingPayment!.visitId, method, amount: amountNumber });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo registrar el pago");
+      setError(err instanceof Error ? err.message : t("payments.form.error"));
     }
   }
 
@@ -65,7 +64,7 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
     <Dialog open={!!pendingPayment} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Registrar pago</DialogTitle>
+          <DialogTitle>{t("payments.registerPayment")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -77,15 +76,15 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label>Método de pago</Label>
+            <Label>{t("payments.method")}</Label>
             <Select value={method} onValueChange={(v) => setMethod(v as PaymentMethod)}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecciona un método" />
+                <SelectValue placeholder={t("payments.form.pickMethodShort")} />
               </SelectTrigger>
               <SelectContent>
-                {PAYMENT_METHODS.map((m) => (
-                  <SelectItem key={m.value} value={m.value}>
-                    {m.label}
+                {PAYMENT_METHODS.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(`enums.status.${value}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -93,7 +92,7 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="amount">Monto (Bs.)</Label>
+            <Label htmlFor="amount">{t("common.amountBs")}</Label>
             <Input
               id="amount"
               type="number"
@@ -109,11 +108,11 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={registerPaymentMutation.isPending}>
               {registerPaymentMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Confirmar payment
+              {t("payments.confirmPayment")}
             </Button>
           </DialogFooter>
         </form>

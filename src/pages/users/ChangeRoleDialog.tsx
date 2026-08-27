@@ -12,11 +12,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import type { Role } from "@/features/auth/types";
 import type { User } from "@/features/users/types";
 import { useChangeUserRole } from "@/features/users/useUsers";
-import { ROLES } from "@/lib/roles";
+import { ROLE_VALUES } from "@/lib/roles";
 import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose: () => void }) {
+  const { t } = useTranslation();
   const [role, setRole] = useState<Role | "">("");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [specialty, setSpecialty] = useState("");
@@ -39,7 +41,7 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
     setError(null);
     if (!user || !chosenRole) return;
     if (requiresVetData && (!licenseNumber || !specialty)) {
-      setError("Matrícula y especialidad son obligatorias para convertir a Veterinario");
+      setError(t("users.form.vetDataRequiredToConvert"));
       return;
     }
     try {
@@ -49,7 +51,7 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
       });
       resetAndClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo cambiar el rol");
+      setError(err instanceof Error ? err.message : t("users.form.changeRoleError"));
     }
   }
 
@@ -57,23 +59,24 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
     <Dialog open={!!user} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Cambiar rol</DialogTitle>
+          <DialogTitle>{t("users.changeRole")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            {user?.firstName} {user?.paternalLastName} — role actual: {user?.role}
+            {user?.firstName} {user?.paternalLastName} —{" "}
+            {t("users.currentRole", { role: user ? t(`enums.role.${user.role}`) : "" })}
           </p>
 
           <div className="flex flex-col gap-1.5">
-            <Label>Nuevo rol</Label>
+            <Label>{t("users.newRole")}</Label>
             <Select value={chosenRole} onValueChange={(v) => setRole(v as Role)}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecciona un rol" />
+                <SelectValue placeholder={t("users.form.pickRole")} />
               </SelectTrigger>
               <SelectContent>
-                {ROLES.map((r) => (
-                  <SelectItem key={r.value} value={r.value}>
-                    {r.label}
+                {ROLE_VALUES.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(`enums.role.${value}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -82,13 +85,13 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
 
           {requiresVetData && (
             <div className="flex flex-col gap-3 rounded-md border bg-muted/40 p-3">
-              <div className="text-xs font-medium text-muted-foreground">Datos profesionales (obligatorios para veterinario)</div>
+              <div className="text-xs font-medium text-muted-foreground">{t("users.form.vetSectionRequired")}</div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="licenseNumber">Matrícula *</Label>
+                <Label htmlFor="licenseNumber">{t("people.licenseNumber")} *</Label>
                 <Input id="licenseNumber" value={licenseNumber} onChange={(e) => setLicenseNumber(e.target.value)} placeholder="VET-0XX" />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="specialty">Especialidad *</Label>
+                <Label htmlFor="specialty">{t("people.specialty")} *</Label>
                 <Input id="specialty" value={specialty} onChange={(e) => setSpecialty(e.target.value)} />
               </div>
             </div>
@@ -98,11 +101,11 @@ export function ChangeRoleDialog({ user, onClose }: { user: User | null; onClose
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={resetAndClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={changeRoleMutation.isPending || !chosenRole || chosenRole === user?.role}>
               {changeRoleMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </form>

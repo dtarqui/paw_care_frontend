@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { preventiveControlsApi } from "./api";
 import type { NewPreventiveControlInput } from "./types";
@@ -26,7 +27,7 @@ export function useCreatePreventiveControl() {
       queryClient.invalidateQueries({ queryKey: ["preventive-controls", "history", variables.petId] });
       queryClient.invalidateQueries({ queryKey: ["preventive-controls", "upcoming"] });
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Control preventivo registrado");
+      toast.success(t("toasts.preventiveControlRecorded"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

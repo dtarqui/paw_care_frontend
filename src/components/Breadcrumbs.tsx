@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export interface BreadcrumbItem {
@@ -18,8 +19,10 @@ export interface BreadcrumbItem {
  * y puede derivarla del origen real de la navegación si lo conoce.
  */
 export function Breadcrumbs({ items, className }: { items: BreadcrumbItem[]; className?: string }) {
+  const { t } = useTranslation();
+
   return (
-    <nav aria-label="Ruta de navegación" className={cn("flex items-center gap-1 text-sm", className)}>
+    <nav aria-label={t("nav.breadcrumb")} className={cn("flex items-center gap-1 text-sm", className)}>
       <ol className="flex flex-wrap items-center gap-1">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

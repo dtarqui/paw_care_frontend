@@ -11,6 +11,7 @@ import type { PendingPayment } from "@/features/payments/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, Loader2, QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface QrChargeDialogProps {
   pendingPayment: PendingPayment | null;
@@ -21,6 +22,7 @@ interface QrChargeDialogProps {
  * que se confirme, expire o falle — no hay websockets en el proyecto, así que no hay
  * forma de que el banco "avise" al frontend salvo preguntando periódicamente. */
 export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const generateQrChargeMutation = useGenerateQrCharge();
   const [chargeId, setChargeId] = useState<number | null>(null);
@@ -36,7 +38,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
     setGenerationError(null);
     generateQrChargeMutation.mutate(pendingPayment.visitId, {
       onSuccess: (data) => setChargeId(data.charge.id),
-      onError: (err) => setGenerationError(err instanceof Error ? err.message : "No se pudo generar el cobro QR"),
+      onError: (err) => setGenerationError(err instanceof Error ? err.message : t("payments.qr.generateError")),
     });
     // Solo debe re-disparar cuando cambia la atención seleccionada, no en cada render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,8 +46,8 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
 
   useEffect(() => {
     if (charge?.status === "CONFIRMED") {
-      queryClient.invalidateQueries({ queryKey: ["pagos", "pendientes"] });
-      queryClient.invalidateQueries({ queryKey: ["pagos", "historial"] });
+      // Prefijo: invalida pendientes e historial de una sola vez.
+      queryClient.invalidateQueries({ queryKey: ["payments"] });
     }
   }, [charge?.status, queryClient]);
 
@@ -61,7 +63,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
     <Dialog open={!!pendingPayment} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Cobrar con QR</DialogTitle>
+          <DialogTitle>{t("payments.chargeWithQr")}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
@@ -75,7 +77,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
           {generateQrChargeMutation.isPending && (
             <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
               <Loader2 className="size-6 animate-spin" />
-              <p>Generando QR con el banco...</p>
+              <p>{t("payments.qr.generating")}</p>
             </div>
           )}
 
@@ -89,7 +91,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
           {charge?.status === "PENDING" && (
             <div className="flex flex-col items-center gap-3 py-4 text-center">
               {charge.qrPayload?.startsWith("http") ? (
-                <img src={charge.qrPayload} alt="Código QR de pago" className="size-48 rounded-md border" />
+                <img src={charge.qrPayload} alt={t("payments.qr.imageAlt")} className="size-48 rounded-md border" />
               ) : (
                 <div className="flex size-48 flex-col items-center justify-center gap-2 rounded-md border bg-muted/40 p-4">
                   <QrCode className="size-8 text-muted-foreground" />
@@ -98,7 +100,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
               )}
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Loader2 className="size-4 animate-spin" />
-                Esperando confirmación del banco...
+                {t("payments.qr.waiting")}
               </div>
             </div>
           )}
@@ -106,7 +108,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
           {charge?.status === "CONFIRMED" && (
             <div className="flex flex-col items-center gap-2 py-8 text-center">
               <CheckCircle2 className="size-8 text-emerald-600 dark:text-emerald-400" />
-              <p className="text-sm font-medium">Pago confirmado</p>
+              <p className="text-sm font-medium">{t("payments.qr.confirmed")}</p>
             </div>
           )}
 
@@ -114,7 +116,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
             <div className="flex flex-col items-center gap-2 py-8 text-center">
               <AlertTriangle className="size-8 text-destructive" />
               <p className="text-sm text-destructive">
-                {charge.status === "EXPIRED" ? "El QR expiró antes de confirmarse el pago." : "El banco reportó un error con este cobro."}
+                {charge.status === "EXPIRED" ? t("payments.qr.expired") : t("payments.qr.bankError")}
               </p>
             </div>
           )}
@@ -122,7 +124,7 @@ export function QrChargeDialog({ pendingPayment, onClose }: QrChargeDialogProps)
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={handleClose}>
-            {charge?.status === "CONFIRMED" ? "Cerrar" : "Cancelar"}
+            {charge?.status === "CONFIRMED" ? t("common.close") : t("common.cancel")}
           </Button>
         </DialogFooter>
       </DialogContent>

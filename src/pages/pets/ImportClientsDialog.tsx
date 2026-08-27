@@ -12,8 +12,10 @@ import { useImportClients } from "@/features/imports/useImports";
 import type { ImportResult } from "@/features/imports/types";
 import { CheckCircle2, FileSpreadsheet, Loader2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ImportClientsDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
@@ -35,7 +37,7 @@ export function ImportClientsDialog() {
       const result = await importClientsMutation.mutateAsync(file);
       setResult(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo importar el archivo");
+      setError(err instanceof Error ? err.message : t("imports.error"));
     }
   }
 
@@ -44,19 +46,17 @@ export function ImportClientsDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <FileSpreadsheet className="size-4" />
-          Importar Excel
+          {t("imports.action")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Importar clientes desde Excel</DialogTitle>
+          <DialogTitle>{t("imports.title")}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            El archivo se lee por posición de columna y la primera fila se ignora (es el encabezado). Orden
-            esperado: nombre · apellido paterno · apellido materno · CI · teléfono · dirección · nombre de la
-            mascota · especie · raza.
+            {t("imports.description")}
           </p>
 
           <div
@@ -64,7 +64,7 @@ export function ImportClientsDialog() {
             onClick={() => inputRef.current?.click()}
           >
             <Upload className="size-6 text-muted-foreground" />
-            <p className="text-sm">{file ? file.name : "Haz clic para elegir un archivo .xlsx"}</p>
+            <p className="text-sm">{file ? file.name : t("imports.pickFile")}</p>
             <input
               ref={inputRef}
               type="file"
@@ -83,18 +83,20 @@ export function ImportClientsDialog() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
                 <CheckCircle2 className="size-4 shrink-0" />
-                {result.imported} pet(s) importada(s) correctamente.
+                {t("imports.importedCount", { count: result.imported })}
               </div>
 
               {result.errors.length > 0 && (
                 <div>
-                  <p className="mb-2 text-sm font-medium text-destructive">{result.errors.length} fila(s) con error:</p>
+                  <p className="mb-2 text-sm font-medium text-destructive">
+                    {t("imports.rowsWithError", { count: result.errors.length })}
+                  </p>
                   <div className="max-h-48 overflow-y-auto rounded-md border">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Fila</TableHead>
-                          <TableHead>Motivo</TableHead>
+                          <TableHead>{t("imports.row")}</TableHead>
+                          <TableHead>{t("imports.reason")}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -115,11 +117,11 @@ export function ImportClientsDialog() {
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={handleClose}>
-            Cerrar
+            {t("common.close")}
           </Button>
           <Button type="button" disabled={!file || importClientsMutation.isPending} onClick={handleImport}>
             {importClientsMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-            Importar
+            {t("imports.import")}
           </Button>
         </DialogFooter>
       </DialogContent>

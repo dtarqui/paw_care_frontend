@@ -4,21 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { PetHistoryEvent } from "@/features/pets/types";
 import { CalendarDays, History, PenLine, Stethoscope, Syringe } from "lucide-react";
+import { useFormatters } from "@/lib/useFormatters";
 import type { ReactNode } from "react";
-
-const CONTROL_TYPE_LABEL = { VACCINE: "Vacuna", DEWORMING: "Desparasitación" } as const;
-
-function formatDateTime(literal: string) {
-  const [date, time] = literal.split("T");
-  const [yyyy, mm, dd] = date.split("-");
-  return time ? `${dd}/${mm}/${yyyy} · ${time}` : `${dd}/${mm}/${yyyy}`;
-}
-
-function formatDate(iso: string) {
-  if (!iso) return "—";
-  const [yyyy, mm, dd] = iso.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 function Row({
   icon,
@@ -50,7 +39,14 @@ function Row({
   );
 }
 
-function EventRow({ event }: { event: PetHistoryEvent }) {
+interface EventRowProps {
+  event: PetHistoryEvent;
+  t: TFunction;
+  formatDate: (iso: string) => string;
+  formatDateTime: (iso: string) => string;
+}
+
+function EventRow({ event, t, formatDate, formatDateTime }: EventRowProps) {
   if (event.type === "VISIT") {
     const { visit } = event;
     return (
@@ -59,8 +55,8 @@ function EventRow({ event }: { event: PetHistoryEvent }) {
         title={visit.serviceType}
         details={
           <>
-            <span className="font-medium text-foreground">Diagnóstico:</span> {visit.diagnosis}
-            {visit.weight ? ` · Peso: ${visit.weight} kg` : ""}
+            <span className="font-medium text-foreground">{t("visits.diagnosisLabel")}</span> {visit.diagnosis}
+            {visit.weight ? ` · ${t("pets.weight")}: ${visit.weight} kg` : ""}
           </>
         }
         meta={`${formatDateTime(visit.date)} · ${visit.vet.firstName} ${visit.vet.paternalLastName} · Bs. ${visit.consultationFee.toFixed(2)}`}
@@ -74,15 +70,15 @@ function EventRow({ event }: { event: PetHistoryEvent }) {
     return (
       <Row
         icon={<Syringe className="size-4" />}
-        title={CONTROL_TYPE_LABEL[control.type]}
-        details={`Próxima dosis: ${formatDate(control.nextDoseOn)}`}
-        meta={`Aplicada: ${formatDate(control.appliedOn)}`}
+        title={t(`enums.controlType.${control.type}`)}
+        details={t("preventive.nextDoseOn", { date: formatDate(control.nextDoseOn) })}
+        meta={t("preventive.appliedOn", { date: formatDate(control.appliedOn) })}
         badge={
           control.overdue ? (
             <Badge
               className={cn("border-none bg-red-100 font-medium text-red-700 dark:bg-red-500/15 dark:text-red-400")}
             >
-              Vencido
+              {t("common.expired")}
             </Badge>
           ) : undefined
         }
@@ -106,7 +102,7 @@ function EventRow({ event }: { event: PetHistoryEvent }) {
   return (
     <Row
       icon={<PenLine className="size-4" />}
-      title={`Se editó "${change.field}"`}
+      title={t("pets.fieldEdited", { field: change.field })}
       details={`${change.oldValue || "—"} → ${change.newValue || "—"}`}
       meta={`${formatDateTime(change.date)}${change.user ? ` · ${change.user}` : ""}`}
     />
@@ -114,12 +110,15 @@ function EventRow({ event }: { event: PetHistoryEvent }) {
 }
 
 export function PetHistoryTimeline({ events }: { events: PetHistoryEvent[] }) {
+  const { t } = useTranslation();
+  const { formatDate, formatDateTime } = useFormatters();
+
   if (events.length === 0) {
     return (
       <EmptyState
         icon={History}
-        title="Sin actividad registrada todavía"
-        description="Las atenciones, controles, citas y ediciones de esta mascota van a aparecer acá en orden cronológico."
+        title={t("pets.timelineEmptyTitle")}
+        description={t("pets.timelineEmptyDescription")}
       />
     );
   }
@@ -128,7 +127,7 @@ export function PetHistoryTimeline({ events }: { events: PetHistoryEvent[] }) {
     <div className="flex flex-col divide-y">
       {events.map((event, i) => (
         // eslint-disable-next-line react/no-array-index-key
-        <EventRow key={`${event.type}-${i}`} event={event} />
+        <EventRow key={`${event.type}-${i}`} event={event} t={t} formatDate={formatDate} formatDateTime={formatDateTime} />
       ))}
     </div>
   );

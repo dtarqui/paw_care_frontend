@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { remindersApi } from "./api";
 
@@ -22,7 +23,7 @@ export function useMarkReminderSent() {
     mutationFn: (id: string) => remindersApi.markSent(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reminders"] });
-      toast.success("Recordatorio marcado como enviado");
+      toast.success(t("toasts.reminderMarkedSent"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

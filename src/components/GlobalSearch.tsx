@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Loader2, PawPrint, Search, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -13,24 +14,22 @@ import { useNavigate } from "react-router-dom";
  * propietarios: lee este registro. Cuando el backend sume un proveedor nuevo
  * (medicamentos, citas…), acá va una entrada más y nada más cambia.
  */
-const RESULT_KINDS: Record<string, { icon: LucideIcon; label: string }> = {
-  pet: { icon: PawPrint, label: "Mascotas" },
-  owner: { icon: User, label: "Propietarios" },
+const RESULT_ICONS: Record<string, LucideIcon> = {
+  pet: PawPrint,
+  owner: User,
 };
 
-const FALLBACK_KIND = { icon: Search, label: "Resultados" };
-
-function kindOf(type: string) {
-  return RESULT_KINDS[type] ?? FALLBACK_KIND;
+function iconOf(type: string) {
+  return RESULT_ICONS[type] ?? Search;
 }
 
 /** Agrupa preservando el orden en que el backend devolvió los resultados. */
 function groupByType(results: SearchResult[]) {
-  const groups: { type: string; label: string; items: SearchResult[] }[] = [];
+  const groups: { type: string; items: SearchResult[] }[] = [];
   for (const result of results) {
     const existing = groups.find((g) => g.type === result.type);
     if (existing) existing.items.push(result);
-    else groups.push({ type: result.type, label: kindOf(result.type).label, items: [result] });
+    else groups.push({ type: result.type, items: [result] });
   }
   return groups;
 }
@@ -43,6 +42,7 @@ function groupByType(results: SearchResult[]) {
  * así que existe en toda la app autenticada.
  */
 export function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { t } = useTranslation();
   const [term, setTerm] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ export function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChan
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="top-[15%] max-w-lg translate-y-0 gap-0 overflow-hidden p-0" showCloseButton={false}>
-        <DialogTitle className="sr-only">Búsqueda global</DialogTitle>
+        <DialogTitle className="sr-only">{t("search.title")}</DialogTitle>
 
         <div className="flex items-center gap-2 border-b px-3">
           <Search className="size-4 shrink-0 text-muted-foreground" />
@@ -96,9 +96,9 @@ export function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChan
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Buscar mascota o propietario…"
+            placeholder={t("search.placeholder")}
             className="h-12 border-0 px-0 shadow-none focus-visible:ring-0"
-            aria-label="Buscar mascota o propietario"
+            aria-label={t("search.ariaLabel")}
           />
           {(isLoading || isTyping) && <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" />}
         </div>
@@ -106,26 +106,25 @@ export function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChan
         <div ref={listRef} className="max-h-80 overflow-y-auto p-2">
           {!isEnabled && (
             <p className="px-2 py-6 text-center text-sm text-muted-foreground">
-              Escribí al menos {MIN_SEARCH_LENGTH} caracteres. Buscá por nombre de mascota, o por nombre o CI del
-              propietario.
+              {t("search.hint", { min: MIN_SEARCH_LENGTH })}
             </p>
           )}
 
           {isEnabled && !isLoading && !isTyping && results.length === 0 && (
             <p className="px-2 py-6 text-center text-sm text-muted-foreground">
-              Sin resultados para «{term.trim()}».
+              {t("search.noResults", { term: term.trim() })}
             </p>
           )}
 
           {groups.map((group) => (
             <div key={group.type} className="mb-1 last:mb-0">
               <p className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                {group.label}
+                {t(`search.kinds.${group.type}`, { defaultValue: t("search.kinds.other") })}
               </p>
               {group.items.map((result) => {
                 flatIndex += 1;
                 const index = flatIndex;
-                const Icon = kindOf(result.type).icon;
+                const Icon = iconOf(result.type);
                 return (
                   <button
                     key={`${result.type}-${result.id}`}
@@ -157,15 +156,15 @@ export function GlobalSearch({ open, onOpenChange }: { open: boolean; onOpenChan
           <span className="flex items-center gap-1">
             <kbd className="rounded border bg-muted px-1 py-0.5 font-sans">↑</kbd>
             <kbd className="rounded border bg-muted px-1 py-0.5 font-sans">↓</kbd>
-            navegar
+            {t("search.navigate")}
           </span>
           <span className="flex items-center gap-1">
             <kbd className="rounded border bg-muted px-1 py-0.5 font-sans">Enter</kbd>
-            abrir
+            {t("search.open")}
           </span>
           <span className="flex items-center gap-1">
             <kbd className="rounded border bg-muted px-1 py-0.5 font-sans">Esc</kbd>
-            cerrar
+            {t("search.close")}
           </span>
         </div>
       </DialogContent>

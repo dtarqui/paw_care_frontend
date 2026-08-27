@@ -12,8 +12,10 @@ import type { Medication } from "@/features/medications/types";
 import { useUpdateMedication } from "@/features/medications/useMedications";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 export function EditMedicationDialog({ medication, onClose }: { medication: Medication | null; onClose: () => void }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [minimumStock, setMinimumStock] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -32,19 +34,19 @@ export function EditMedicationDialog({ medication, onClose }: { medication: Medi
     setError(null);
     if (!medication) return;
     if (!name.trim()) {
-      setError("El nombre es obligatorio");
+      setError(t("inventory.form.nameRequired"));
       return;
     }
     const value = Number(minimumStock);
     if (Number.isNaN(value) || value < 0) {
-      setError("El stock mínimo debe ser 0 o mayor");
+      setError(t("inventory.form.minimumStockRange"));
       return;
     }
     try {
       await updateMedicationMutation.mutateAsync({ id: medication.id, input: { name: name.trim(), minimumStock: value } });
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo actualizar el medicamento");
+      setError(err instanceof Error ? err.message : t("inventory.form.updateError"));
     }
   }
 
@@ -52,25 +54,25 @@ export function EditMedicationDialog({ medication, onClose }: { medication: Medi
     <Dialog open={!!medication} onOpenChange={(v) => !v && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar medicamento</DialogTitle>
+          <DialogTitle>{t("inventory.editMedication")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="edit-nombre">Nombre *</Label>
-            <Input id="edit-nombre" required value={name} onChange={(e) => setName(e.target.value)} />
+            <Label htmlFor="edit-medication-name">{t("common.name")} *</Label>
+            <Input id="edit-medication-name" required value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="edit-stockMinimo">Stock mínimo *</Label>
-            <Input id="edit-stockMinimo" type="number" min="0" required value={minimumStock} onChange={(e) => setMinimumStock(e.target.value)} />
+            <Label htmlFor="edit-minimumStock">{t("inventory.minimumStock")} *</Label>
+            <Input id="edit-minimumStock" type="number" min="0" required value={minimumStock} onChange={(e) => setMinimumStock(e.target.value)} />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateMedicationMutation.isPending}>
               {updateMedicationMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </form>

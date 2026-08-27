@@ -16,6 +16,7 @@ import type { Pet } from "@/features/pets/types";
 import { todayISO } from "@/lib/date";
 import { Loader2, Plus } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 const INITIAL_STATE = {
   type: "" as PreventiveControlType | "",
@@ -24,6 +25,7 @@ const INITIAL_STATE = {
 };
 
 export function NewControlDialog({ pet }: { pet: Pet }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
     setError(null);
 
     if (!form.type) {
-      setError("Selecciona el tipo de control");
+      setError(t("preventive.form.pickType"));
       return;
     }
 
@@ -57,7 +59,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
       });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo registrar el control");
+      setError(err instanceof Error ? err.message : t("preventive.form.createError"));
     }
   }
 
@@ -66,33 +68,36 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
       <DialogTrigger asChild>
         <Button size="sm">
           <Plus className="size-4" />
-          Registrar control
+          {t("preventive.registerControl")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Registrar control — {pet.name} ({pet.species})
+            {t("preventive.registerControlFor", {
+              name: pet.name,
+              species: t(`enums.species.${pet.species}`, { defaultValue: pet.species }),
+            })}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label>Tipo *</Label>
+            <Label>{t("common.type")} *</Label>
             <Select value={form.type} onValueChange={(v) => update("type", v as PreventiveControlType)}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Seleccione tipo" />
+                <SelectValue placeholder={t("visits.pickType")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="VACCINE">Vacuna</SelectItem>
-                <SelectItem value="DEWORMING">Desparasitación</SelectItem>
+                <SelectItem value="VACCINE">{t("enums.controlType.VACCINE")}</SelectItem>
+                <SelectItem value="DEWORMING">{t("enums.controlType.DEWORMING")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="appliedOn">Fecha de aplicación *</Label>
+              <Label htmlFor="appliedOn">{t("preventive.appliedOnLabel")} *</Label>
               <Input
                 id="appliedOn"
                 type="date"
@@ -102,7 +107,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="nextDoseOn">Próxima dosis</Label>
+              <Label htmlFor="nextDoseOn">{t("preventive.nextDoseLabel")}</Label>
               <Input
                 id="nextDoseOn"
                 type="date"
@@ -116,11 +121,11 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createControlMutation.isPending}>
               {createControlMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,0 +1,1283 @@
+{
+  "appointments": {
+    "afternoon": "Afternoon",
+    "availableSlots": "Available slots",
+    "book": "Book appointment",
+    "confirmReschedule": "Confirm reschedule",
+    "consultationType": "Consultation type",
+    "count_one": "{{count}} appointment",
+    "count_other": "{{count}} appointments",
+    "emptyAll": "No appointments booked yet",
+    "emptyDescription": "Book the first one from the “New Appointment” tab.",
+    "emptyMine": "You have no appointments assigned yet",
+    "loadError": "Couldn't load the schedule.",
+    "markAttended": "Mark as attended",
+    "morning": "Morning",
+    "noActions": "No actions",
+    "onlyMine": "Only my appointments",
+    "pickDateHint": "Pick a date to see your availability.",
+    "pickPet": "Pick a pet",
+    "pickVetAndDateHint": "Pick a vet and a date first.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Briefly describe the reason for the visit",
+    "reschedule": "Reschedule",
+    "rescheduleHint": "Only the date and time can be changed when rescheduling.",
+    "reschedulingSummary": "{{pet}} ({{species}}) with {{vet}} — {{type}}",
+    "subtitle": "Appointments and working hours",
+    "summaryBook": "You're booking {{pet}} with {{vet}} on {{date}} at {{time}}",
+    "summaryReschedule": "You're rescheduling {{pet}} with {{vet}} to {{date}} at {{time}}",
+    "tabs": {
+      "list": "Appointments",
+      "new": "New Appointment",
+      "reschedule": "Reschedule",
+      "schedules": "Working hours"
+    },
+    "title": "Schedule",
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  },
+  "audit": {
+    "action": "Action",
+    "actions": {
+      "ACTIVATE_ACCOUNT": "Account activated",
+      "CHANGE_ROLE": "Role changed",
+      "DEACTIVATE_ACCOUNT": "Account deactivated",
+      "INVITE_VET": "Vet invited",
+      "RESET_PASSWORD": "Password reset"
+    },
+    "cardTitle": "Action log",
+    "detail": "Detail",
+    "emptyDescription": "Approvals, role changes, password resets and invitations will show up here.",
+    "emptyTitle": "No actions recorded yet",
+    "intro": "Who did what to other accounts — approvals, password resets, role changes and invitations.",
+    "loadError": "Couldn't load the audit log.",
+    "performedBy": "Performed by"
+  },
+  "auth": {
+    "changePassword": "Change password",
+    "changePasswordError": "Couldn't change the password",
+    "confirmNewPassword": "Confirm new password",
+    "confirmPassword": "Confirm password",
+    "currentPassword": "Current password",
+    "minSixCharacters": "At least 6 characters",
+    "newPassword": "New password",
+    "newPasswordTooShort": "The new password must be at least 6 characters long",
+    "passwordTooShort": "The password must be at least 6 characters long",
+    "passwordsDoNotMatch": "The passwords don't match",
+    "resetError": "Couldn't reset the password"
+  },
+  "common": {
+    "action": "Action",
+    "actions": "Actions",
+    "add": "Add",
+    "address": "Address",
+    "all": "All",
+    "amount": "Amount",
+    "amountBs": "Amount (Bs.)",
+    "back": "Back",
+    "cancel": "Cancel",
+    "close": "Close",
+    "create": "Create",
+    "date": "Date",
+    "delete": "Delete",
+    "edit": "Edit",
+    "email": "Email",
+    "expired": "Overdue",
+    "from": "From",
+    "genericError": "Unexpected server error",
+    "loading": "Loading…",
+    "name": "Name",
+    "nationalId": "National ID",
+    "next": "Next",
+    "owner": "Owner",
+    "pageOf": "Page {{page}} of {{totalPages}} · {{total}} total",
+    "password": "Password",
+    "pet": "Pet",
+    "phone": "Phone",
+    "previous": "Previous",
+    "quantity": "Quantity",
+    "register": "Register",
+    "remove": "Remove",
+    "role": "Role",
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "search": "Search",
+    "select": "Select",
+    "status": "Status",
+    "to": "To",
+    "type": "Type",
+    "username": "Username",
+    "vet": "Vet",
+    "you": "You"
+  },
+  "dashboard": {
+    "greeting": "Hi, {{name}} 👋",
+    "pendingPayments": "Pending payments",
+    "registeredPets": "Registered pets",
+    "signedInAs": "Signed in as",
+    "todayAppointments": "Today's appointments"
+  },
+  "enums": {
+    "controlType": {
+      "DEWORMING": "Deworming",
+      "VACCINE": "Vaccine"
+    },
+    "role": {
+      "ADMIN": "Administrator",
+      "RECEPTIONIST": "Receptionist",
+      "VET": "Vet"
+    },
+    "serviceType": {
+      "Cirugía": "Surgery",
+      "Consulta General": "General consultation",
+      "Control": "Check-up",
+      "Desparasitación": "Deworming",
+      "Vacunación": "Vaccination"
+    },
+    "sex": {
+      "Hembra": "Female",
+      "Macho": "Male"
+    },
+    "species": {
+      "Gato": "Cat",
+      "Otro": "Other",
+      "Perro": "Dog"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "ATTENDED": "Attended",
+      "CANCELLED": "Cancelled",
+      "CARD": "Card",
+      "CASH": "Cash",
+      "CONFIRMED": "Confirmed",
+      "INACTIVE": "Inactive",
+      "PAID": "Paid",
+      "PENDING": "Pending",
+      "PENDING_APPROVAL": "Pending approval",
+      "QR": "QR",
+      "TRANSFER": "Transfer"
+    }
+  },
+  "errors": {
+    "codes": {
+      "AppointmentNotFoundError": "That appointment doesn't exist",
+      "CurrentAndNewPasswordRequired": "The current and the new password are both required",
+      "DuplicateMedicationError": "A medication with that name already exists",
+      "DuplicatePetError": "This pet is already registered to this owner",
+      "DuplicateUserError": "A user with those details is already registered",
+      "EmailNotConfiguredError": "Email sending isn't configured in this environment",
+      "EmailRequired": "The email is required",
+      "FileRequired": "You need to attach an .xlsx file",
+      "Forbidden": "You don't have permission to access this",
+      "ForeignScheduleError": "As a vet you can only book appointments for yourself",
+      "InsufficientStockError": "There isn't enough stock to complete the visit",
+      "InternalServerError": "Internal server error",
+      "InvalidCredentialsError": "Wrong username or password",
+      "InvalidInvitationError": "The invitation isn't valid, has already been used, or has expired",
+      "InvalidRecordStatus": "The status must be active or inactive",
+      "InvalidResetTokenError": "This recovery link isn't valid or has expired — request a new one",
+      "InvalidRole": "Invalid role",
+      "InvalidScheduleFormat": "The working hours sent aren't in the expected format",
+      "InvalidWebhookSignature": "Invalid webhook signature",
+      "MedicationHasMovesError": "Can't delete: this medication already has inventory movements recorded",
+      "MedicationNotFoundError": "That medication doesn't exist",
+      "NationalIdRequired": "The national ID is required to search",
+      "NewPasswordRequired": "The new password is required",
+      "NotAuthenticated": "Not signed in",
+      "OwnerNationalIdRequired": "The owner's national ID is required to search",
+      "OwnerNotFoundError": "That owner doesn't exist",
+      "PetNotFoundError": "That pet doesn't exist",
+      "QrChargeNotFoundError": "That QR charge doesn't exist",
+      "QrPaymentProviderNotConfiguredError": "Charging by bank QR isn't available yet — the bank's API still has to be connected",
+      "ReminderNotFoundError": "That reminder doesn't exist",
+      "ScheduleConflictError": "The vet already has an appointment at that time",
+      "SessionExpired": "Your session has expired. Please sign in again.",
+      "StatusRequired": "The new status is required",
+      "TokenAndPasswordRequired": "The link and the new password are required",
+      "TooManyLoginAttempts": "Too many sign-in attempts. Try again in a few minutes.",
+      "TooManyRecoveryRequests": "Too many recovery requests. Try again later.",
+      "TooManyRegistrationRequests": "Too many sign-up requests. Try again later.",
+      "UserNotFoundError": "That user doesn't exist",
+      "UsernameAndPasswordRequired": "Username and password are required",
+      "UsernameRequired": "The username is required",
+      "VetAndDateRequired": "The vet and the date are required",
+      "VisitAlreadyPaidError": "This visit has already been paid, or doesn't exist",
+      "VisitAndMethodRequired": "The visit and the payment method are required",
+      "VisitRequired": "The visit to charge is required",
+      "WrongCurrentPasswordError": "The current password isn't correct"
+    },
+    "downloadFailed": "The file couldn't be downloaded"
+  },
+  "forgot": {
+    "backToLogin": "Back to sign in",
+    "description": "Enter your username and we'll email a link to your registered address",
+    "error": "The request couldn't be processed",
+    "send": "Send recovery link",
+    "sent": "If the account exists and has an email on file, we've sent a recovery link — check your inbox (and the spam folder). The link expires in 1 hour.",
+    "title": "Recover your password"
+  },
+  "imports": {
+    "action": "Import from Excel",
+    "description": "The file is read by column position and the first row is ignored (it's the header). Expected order: first name · last name · second last name · national ID · phone · address · pet's name · species · breed.",
+    "error": "Couldn't import the file",
+    "import": "Import",
+    "importedCount_one": "{{count}} pet imported successfully.",
+    "importedCount_other": "{{count}} pets imported successfully.",
+    "pickFile": "Click to choose an .xlsx file",
+    "reason": "Reason",
+    "row": "Row",
+    "rowsWithError_one": "{{count}} row with an error:",
+    "rowsWithError_other": "{{count}} rows with errors:",
+    "title": "Import clients from Excel"
+  },
+  "info": {
+    "hasAccess": "Yes",
+    "moduleColumn": "Module",
+    "noAccess": "No",
+    "sections": {
+      "account": {
+        "cards": [
+          {
+            "title": "Appearance",
+            "description": "Light, dark or the system theme, plus three accent colours. It's saved in your browser."
+          },
+          {
+            "title": "Language",
+            "description": "Spanish or English. It's also saved in your browser, so each person can have it in the language they prefer even when sharing a computer."
+          },
+          {
+            "title": "Password",
+            "description": "Changing it asks for your current one. At least 6 characters."
+          }
+        ],
+        "intro": "What you can change about your own session, from Settings.",
+        "notes": [
+          "To **sign out**, use your name at the bottom of the menu. The session also expires on its own after 8 hours."
+        ],
+        "title": "Your account"
+      },
+      "care": {
+        "callouts": [
+          {
+            "tone": "tip",
+            "title": "Two fields that do more than they look",
+            "body": "The **current weight** is saved as the pet's current weight and adds a point to the trend chart on its record. The **medications used** are deducted from inventory stock automatically — there's no separate movement to record."
+          },
+          {
+            "tone": "warning",
+            "title": "If stock runs short, nothing is saved",
+            "body": "The system checks stock *before* creating the visit. If a medication isn't enough, it tells you and doesn't save: that way you're never left with a half-recorded visit. Add the stock under Inventory and try again."
+          }
+        ],
+        "intro": "The clinical record of what was done to the pet.",
+        "notes": [
+          "Once saved, the visit is **awaiting payment** and shows up on its own on the Payments screen."
+        ],
+        "steps": [
+          {
+            "title": "Look the pet up by its owner's national ID",
+            "description": "The screen starts with a search box. Typing the national ID brings up all of that person's pets and you pick one."
+          },
+          {
+            "title": "Review its history",
+            "description": "Below, previous visits are listed with diagnosis, treatment, weight and amount."
+          },
+          {
+            "title": "Press “New visit”",
+            "description": "Service type, diagnosis and treatment are required. External tests, current weight and the medications used are optional."
+          }
+        ],
+        "title": "Medical care"
+      },
+      "clients": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "The pet's record",
+            "body": "Click any row in the list to open it. It brings together the details, a weight trend chart (it only appears with two or more measurements) and a timeline of everything that happened to that pet: visits, vaccines, appointments and even the corrections someone made to its details."
+          },
+          {
+            "tone": "warning",
+            "title": "“Delete” doesn't really delete",
+            "body": "Deleting a pet takes it out of the lists and search, but its history is kept and you can reactivate it from its own record. To see it again, switch on “Show inactive” in the list. This is deliberate: really deleting it would mean losing the visits and payments attached to it."
+          }
+        ],
+        "intro": "Owners aren't created on their own: they come into being when you register their first pet.",
+        "notes": [
+          "Under **Owners** you edit a client's name, phone and address, and see their pets as clickable tags. The national ID can't be edited: it's the key used to look that person up everywhere in the system."
+        ],
+        "steps": [
+          {
+            "title": "Go to Pets → “New pet”",
+            "description": "The first thing it asks for is the owner's national ID."
+          },
+          {
+            "title": "Type the national ID and wait a second",
+            "description": "If that person is already registered, the system recognises them and fills in their details: no duplicate. If they're new, it asks for their name, surname and phone."
+          },
+          {
+            "title": "Fill in the pet's details",
+            "description": "Name, species and sex are required. Breed, date of birth and weight are optional, but the date of birth is what lets the age show, and the weight feeds the trend chart."
+          }
+        ],
+        "title": "Clients and pets"
+      },
+      "dayToDay": {
+        "flow": [
+          {
+            "label": "Client",
+            "caption": "Looked up by national ID"
+          },
+          {
+            "label": "Pet",
+            "caption": "Registered or picked"
+          },
+          {
+            "label": "Appointment",
+            "caption": "Booked"
+          },
+          {
+            "label": "Visit",
+            "caption": "Diagnosis and treatment"
+          },
+          {
+            "label": "Payment",
+            "caption": "Falls due and gets paid"
+          }
+        ],
+        "intro": "The usual path of a client who walks in, from start to finish.",
+        "notes": [
+          "You don't have to follow the whole path: a pet can be seen without an appointment, or registered today and booked in next week. The only linked step is payment — **recording a visit automatically creates an outstanding payment**, and that's the list Reception sees under Payments."
+        ],
+        "title": "A day in the clinic"
+      },
+      "faq": {
+        "faq": [
+          {
+            "question": "I recorded a visit but it isn't showing under Payments",
+            "answer": "Check you haven't already taken payment: once paid it leaves “Awaiting payment” and moves to “Latest payments”. If it still doesn't show, reload the screen."
+          },
+          {
+            "question": "It won't let me book: there are no slots available",
+            "answer": "That vet has no working hours set for that day of the week. Set them under Schedule → Working hours. If you're a vet, remember you can only book for yourself."
+          },
+          {
+            "question": "Why can't I delete a pet or a medication?",
+            "answer": "Pets can be “deleted”, but it's reversible: they're hidden and can be reactivated. Medications with recorded movements aren't deleted, because that would break the inventory history."
+          },
+          {
+            "question": "Charging by QR gives me an error",
+            "answer": "That's expected for now: the clinic's bank API isn't connected yet. Charge with your bank's own QR outside the system and record the payment here with the “QR” method."
+          },
+          {
+            "question": "A vet isn't in the list when I try to book",
+            "answer": "Their account is probably deactivated or pending approval. Check under Users: the lists for booking and seeing pets only offer active vets."
+          },
+          {
+            "question": "Can I use PawCare on a phone or tablet?",
+            "answer": "Yes. Every screen adapts, and tables show as cards so they read without scrolling sideways. You can also install it as an app from the browser menu."
+          },
+          {
+            "question": "The invitation or password recovery email never arrived",
+            "answer": "Sending email requires the clinic to have set it up. If it doesn't arrive, the Administrator can create the account directly, or reset the password from Users and pass it on in person."
+          },
+          {
+            "question": "I switched the language but some text is still in Spanish",
+            "answer": "The data the clinic enters — pet names, breeds, diagnoses, notes — is shown exactly as it was typed: the system translates its own interface, not the content. WhatsApp messages are also always in Spanish, because the client is the one reading them."
+          }
+        ],
+        "title": "Frequently asked questions"
+      },
+      "gettingStarted": {
+        "callouts": [
+          {
+            "tone": "tip",
+            "title": "Search is the fastest shortcut",
+            "body": "Press **Ctrl + K** (or **⌘ + K** on a Mac), or the “Search…” button above the menu. Type a pet's name, or an owner's name, surname or national ID, and it takes you straight to their record. It works from any screen and saves you guessing where to look."
+          },
+          {
+            "tone": "warning",
+            "title": "If you forgot your password",
+            "body": "The “Forgot your password?” link on the sign-in screen sends an email, so it only works if your account has an email on file *and* the clinic has set up email sending. If not, ask the Administrator to reset it from Users: they'll pass it on to you in person."
+          }
+        ],
+        "intro": "How to sign in and find your way around.",
+        "steps": [
+          {
+            "title": "Sign in with the username you were given",
+            "description": "It isn't your email: it's a username the clinic's Administrator assigns. If you get it wrong, the system won't tell you which of the two fields failed — that's deliberate, for security."
+          },
+          {
+            "title": "Check the Home screen",
+            "description": "It's the first screen. At the top it shows the current numbers (registered pets, today's appointments, outstanding payments) and below it, shortcuts to the modules your role can use."
+          },
+          {
+            "title": "Use the menu on the left",
+            "description": "It's grouped into four sections: Clients, Clinic, Administration and System. You only see the modules for your role. On a phone the menu opens with the three-line button."
+          }
+        ],
+        "title": "Getting started"
+      },
+      "inventory": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "Why a medication sometimes can't be deleted",
+            "body": "If it already has movements (stock added or used), the system won't let it be deleted: it would make part of the history disappear. Only the ones never used can be deleted."
+          }
+        ],
+        "intro": "Medication stock, and its alert when something is about to run out.",
+        "steps": [
+          {
+            "title": "Set a minimum stock for each medication",
+            "description": "That's the alert threshold. When current stock drops to it or below, the medication is flagged “Low stock” and is added to the warning at the top."
+          },
+          {
+            "title": "Add stock when a delivery arrives",
+            "description": "The “Add stock” button adds to the current stock and is kept as a movement."
+          },
+          {
+            "title": "Stock going out records itself",
+            "description": "Every time a visit uses a medication, the stock goes down automatically."
+          }
+        ],
+        "title": "Inventory"
+      },
+      "payments": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "The “Charge by QR” button doesn't charge yet",
+            "body": "It generates a real bank QR, but that needs the clinic's bank API connected, and that isn't done yet. Today the button shows a message explaining exactly that, instead of a fake QR nobody could pay. **To charge by QR in the meantime**, use your bank's own QR outside the system and record the payment here choosing the “QR” method."
+          }
+        ],
+        "intro": "Everything that's been seen and not yet paid, in a single list.",
+        "steps": [
+          {
+            "title": "Look at the outstanding total",
+            "description": "At the top of the screen: how much is left to collect in total, and how many visits make it up."
+          },
+          {
+            "title": "Press “Take payment” on the right row",
+            "description": "You pick the method (Cash, Card, Transfer or QR) and confirm the amount. The visit becomes paid and drops off the outstanding list."
+          },
+          {
+            "title": "Check “Latest payments”",
+            "description": "The five most recent payments, with their method and date."
+          }
+        ],
+        "title": "Payments"
+      },
+      "preventive": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "No next dose, no reminder",
+            "body": "Care with no next-dose date still saves, but it will **never show up** under “Due in the next 30 days”, and it won't generate a reminder. Fill it in whenever you know it."
+          }
+        ],
+        "intro": "Preventive care keeps track of what was given and when the next dose is due.",
+        "steps": [
+          {
+            "title": "The “Due in the next 30 days” panel",
+            "description": "The first thing you see: the care whose next dose falls within the next 30 days. Anything past its date carries an “Overdue” tag in red."
+          },
+          {
+            "title": "Look a pet up by its owner's national ID",
+            "description": "Same as under Medical care, to see its full preventive history."
+          },
+          {
+            "title": "Record the care",
+            "description": "Pick Vaccine or Deworming, the date it was given and — strongly recommended — the date of the next dose."
+          }
+        ],
+        "title": "Vaccines and deworming"
+      },
+      "reminders": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "Sending is manual, not automatic",
+            "body": "The system works out who needs a nudge and drafts the message, but someone has to open the screen and click. It never sends anything on its own. The message is always in Spanish, because the clinic's client is the one reading it."
+          }
+        ],
+        "intro": "Nudges to clients over WhatsApp, to cut down on no-shows.",
+        "steps": [
+          {
+            "title": "Open Reminders",
+            "description": "The system builds the list on its own: appointments in the next 24 hours and preventive care due within 7 days."
+          },
+          {
+            "title": "Press “Send on WhatsApp”",
+            "description": "WhatsApp opens with the owner's number and the message already written. You can edit it before sending."
+          },
+          {
+            "title": "Come back and press “Mark as sent”",
+            "description": "That's what takes the client off the list and stops them being messaged twice. It's recorded under “Recently sent”."
+          }
+        ],
+        "title": "Reminders"
+      },
+      "reports": {
+        "callouts": [
+          {
+            "tone": "tip",
+            "title": "Everything can be exported",
+            "body": "Each report has buttons to download it as Excel or PDF, with whatever filters you have set. On top of that, Settings has “Export all my data”: an Excel file with one sheet per kind of information in the system."
+          }
+        ],
+        "cards": [
+          {
+            "title": "Revenue",
+            "description": "Every payment taken, with filters by date range, service type and payment method. At the top it shows the total and how many payments match those filters."
+          },
+          {
+            "title": "Clinical and administrative",
+            "description": "Two views: the visits over a period, and a chart of revenue grouped by service type, which answers which service brings in the most."
+          }
+        ],
+        "intro": "Administrator only. Two views of the same information.",
+        "title": "Reports"
+      },
+      "roles": {
+        "callouts": [
+          {
+            "tone": "info",
+            "title": "The rule that surprises people most",
+            "body": "A **Vet can only book and reschedule appointments for themselves**. The Administrator and Reception can do it for any vet. Same with working hours: a vet edits their own, not their colleagues'."
+          }
+        ],
+        "intro": "There are three roles. The menu only shows you the modules for your role, and the server turns down any request for data outside it: if you reached someone else's screen, you'd see no data, only an error.",
+        "matrix": {
+          "roles": [
+            "Administrator",
+            "Vet",
+            "Reception"
+          ],
+          "rows": [
+            {
+              "area": "Owners",
+              "access": [
+                true,
+                false,
+                true
+              ]
+            },
+            {
+              "area": "Pets",
+              "access": [
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "area": "Schedule (appointments)",
+              "access": [
+                true,
+                true,
+                true
+              ]
+            },
+            {
+              "area": "Schedule (working hours)",
+              "access": [
+                true,
+                true,
+                false
+              ]
+            },
+            {
+              "area": "Medical care",
+              "access": [
+                true,
+                true,
+                false
+              ]
+            },
+            {
+              "area": "Preventive care",
+              "access": [
+                true,
+                true,
+                false
+              ]
+            },
+            {
+              "area": "Reminders",
+              "access": [
+                true,
+                false,
+                true
+              ]
+            },
+            {
+              "area": "Payments",
+              "access": [
+                true,
+                false,
+                true
+              ]
+            },
+            {
+              "area": "Inventory",
+              "access": [
+                true,
+                false,
+                false
+              ]
+            },
+            {
+              "area": "Reports",
+              "access": [
+                true,
+                false,
+                false
+              ]
+            },
+            {
+              "area": "Staff accounts",
+              "access": [
+                true,
+                false,
+                false
+              ]
+            }
+          ]
+        },
+        "title": "What each role does"
+      },
+      "schedule": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "If no slots are available",
+            "body": "Almost always it's because **that vet has no working hours set for that day** of the week. Go to the “Working hours” tab, switch on the right shift and try again. A vet with no hours that day simply has no slots to offer."
+          },
+          {
+            "tone": "info",
+            "title": "Rescheduling only moves the date and time",
+            "body": "It doesn't change the pet or the vet: for that, cancel and book a new one. And a cancelled appointment can't be rescheduled. You also can't put two appointments with the same vet at the same time — the system blocks it."
+          }
+        ],
+        "intro": "Appointments and working hours live on the same screen, because each vet's hours are what decide which slots are free.",
+        "states": {
+          "from": {
+            "description": "The state every new appointment starts in",
+            "label": "Confirmed"
+          },
+          "to": [
+            {
+              "label": "Attended",
+              "description": "The pet came in and was seen",
+              "tone": "good"
+            },
+            {
+              "label": "Cancelled",
+              "description": "It didn't happen; the slot is free again",
+              "tone": "muted"
+            }
+          ]
+        },
+        "steps": [
+          {
+            "title": "The “New Appointment” tab",
+            "description": "Pick the pet, the vet, the consultation type and the date. Available slots appear grouped into Morning and Afternoon; booked ones are disabled."
+          },
+          {
+            "title": "The “Appointments” tab",
+            "description": "The schedule grouped by day. From each appointment you can reschedule it, mark it attended or cancel it."
+          },
+          {
+            "title": "The “Working hours” tab",
+            "description": "Each vet's weekly grid, with up to two shifts a day (morning and afternoon). Reception doesn't see this tab."
+          }
+        ],
+        "title": "Schedule"
+      },
+      "staff": {
+        "callouts": [
+          {
+            "tone": "warning",
+            "title": "Deactivate instead of deleting",
+            "body": "Accounts aren't deleted, they're deactivated: someone deactivated can't sign in and drops off the lists for booking or seeing pets, but their history stays intact. Reactivate them whenever it's needed."
+          }
+        ],
+        "cards": [
+          {
+            "title": "Create an account",
+            "description": "“New user” asks for the details and the role. If you pick Vet, two more fields appear: license number and specialty."
+          },
+          {
+            "title": "Invite a vet",
+            "description": "“Invite a vet” emails them a link to fill in their own details. The account is active as soon as they accept."
+          },
+          {
+            "title": "Approve a request",
+            "description": "A vet can request access themselves, from the link on the sign-in screen. They show up as “Pending approval” and can't get in until you press “Approve”."
+          },
+          {
+            "title": "Audit log",
+            "description": "The second tab records who activated, deactivated, changed a role, reset a password or invited someone, and when."
+          }
+        ],
+        "intro": "Administrator only. Who can get into the system, and with what permissions.",
+        "title": "Staff accounts"
+      }
+    },
+    "subtitle": "The PawCare handbook — what each screen does and how to get through the day's work.",
+    "title": "Help",
+    "tocLabel": "Handbook contents",
+    "tocSummary": "Contents"
+  },
+  "inventory": {
+    "belowMinimum": "Below the minimum",
+    "catalogueCount": "Medications in the catalogue",
+    "confirmDeleteBody": "“{{name}}” will be removed from the catalogue. If it already has inventory movements (stock added, or used in a visit), it can't be deleted.",
+    "confirmDeleteTitle": "Delete this medication?",
+    "currentStock": "Current stock",
+    "currentStockIs": "Current stock: {{count}}",
+    "editMedication": "Edit medication",
+    "emptyDescription": "Load the catalogue so stock can be deducted when you record a visit.",
+    "emptyTitle": "No medications registered yet",
+    "enoughStock": "In stock",
+    "form": {
+      "createError": "Couldn't create the medication",
+      "minimumStockRange": "The minimum stock must be 0 or greater",
+      "nameRequired": "The name is required",
+      "quantityPositive": "The quantity must be greater than 0",
+      "stockInError": "Couldn't add the stock",
+      "updateError": "Couldn't update the medication"
+    },
+    "initialStock": "Starting stock",
+    "loadError": "Couldn't load the inventory.",
+    "lowStock": "Low stock",
+    "lowStockWarning_one": "{{count}} medication is low on stock:",
+    "lowStockWarning_other": "{{count}} medications are low on stock:",
+    "medication": "Medication",
+    "medications": "Medications",
+    "minimumStock": "Minimum stock",
+    "newMedication": "New medication",
+    "quantityToAdd": "Quantity to add",
+    "registerStockIn": "Add stock",
+    "registerStockInFor": "Add stock — {{name}}",
+    "stockShort": "stock: {{count}}",
+    "subtitle": "Medication catalogue and stock",
+    "title": "Inventory"
+  },
+  "invitation": {
+    "createdBody": "You can now sign in with your username and password.",
+    "createdTitle": "Account created!",
+    "description": "You were invited to PawCare as a Vet — {{email}}",
+    "error": "The sign-up couldn't be completed",
+    "invalidBody": "This link isn't valid, has already been used, or has expired. Ask for a new invitation.",
+    "invalidTitle": "Invalid invitation",
+    "title": "Finish signing up"
+  },
+  "language": {
+    "description": "The language you see the system in. It's saved in this browser.",
+    "label": "Language",
+    "switch": "Change language"
+  },
+  "login": {
+    "capsLockOn": "Caps Lock is on",
+    "checking": "Checking…",
+    "demoAccounts": "Demo accounts",
+    "demoAccountsHelp": "Test data, one account per role. Click one to fill in the form.",
+    "demoAccountsHelpLabel": "What the demo accounts are",
+    "demoHints": {
+      "ADMIN": "Full access: revenue reports, inventory, account management and the audit log.",
+      "RECEPTIONIST": "Owners, pets, booking appointments, payments and reminders.",
+      "VET": "Their own schedule and working hours, medical care, preventive care and pet records."
+    },
+    "error": "Couldn't sign in",
+    "footer": "Veterinary practice management · Bolivia",
+    "forgotPassword": "Forgot your password?",
+    "headline": "The whole clinic, in one place.",
+    "hidePassword": "Hide password",
+    "highlights": {
+      "inventory": {
+        "description": "Medication stock with alerts, and revenue by service type.",
+        "title": "Inventory and reports"
+      },
+      "records": {
+        "description": "Every pet's visits, vaccines and weight over time in a single record.",
+        "title": "Complete clinical history"
+      },
+      "schedule": {
+        "description": "Appointments per vet based on their real working hours, with advance notice to the owner.",
+        "title": "Scheduling and reminders"
+      }
+    },
+    "noAccount": "Are you a vet without an account?",
+    "requestAccess": "Request access",
+    "requestAccessHelp": "You fill in your details and license number; an Administrator approves the account before your first sign-in.",
+    "showPassword": "Show password",
+    "signIn": "Sign in",
+    "signInHint": "Sign in with the account the clinic gave you.",
+    "subheadline": "Clinical records, scheduling, payments and inventory connected to each other — no loose spreadsheets or notebooks.",
+    "tagline": "Veterinary practice management",
+    "usernameHelp": "It's not your email: it's the username the clinic's Administrator gave you.",
+    "usernameHelpLabel": "Help with the username",
+    "usernamePlaceholder": "e.g. veterinario"
+  },
+  "nav": {
+    "breadcrumb": "Breadcrumb",
+    "groups": {
+      "admin": "Administration",
+      "clients": "Clients",
+      "clinic": "Clinic",
+      "system": "System"
+    },
+    "home": "Home",
+    "logout": "Sign out",
+    "modules": {
+      "agenda": {
+        "description": {
+          "RECEPTIONIST": "Book, reschedule and cancel appointments",
+          "VET": "Your appointments and your working hours",
+          "default": "Appointments and working hours"
+        },
+        "title": "Schedule"
+      },
+      "info": {
+        "description": {
+          "default": "How to use the system"
+        },
+        "title": "Help"
+      },
+      "inventory": {
+        "description": {
+          "default": "Medication stock"
+        },
+        "title": "Inventory"
+      },
+      "medical-visits": {
+        "description": {
+          "VET": "Record diagnosis and treatment",
+          "default": "Medical history and new visits"
+        },
+        "title": "Medical Care"
+      },
+      "owners": {
+        "description": {
+          "default": "Registering and managing pet owners"
+        },
+        "title": "Owners"
+      },
+      "payments": {
+        "description": {
+          "RECEPTIONIST": "Take payment for a visit",
+          "default": "Payments and billing"
+        },
+        "title": "Payments"
+      },
+      "pets": {
+        "description": {
+          "RECEPTIONIST": "Registering clients and pets",
+          "VET": "Look up pets and view their history",
+          "default": "Pet records and files"
+        },
+        "title": "Pets"
+      },
+      "preventive-controls": {
+        "description": {
+          "default": "Vaccination and deworming"
+        },
+        "title": "Preventive Care"
+      },
+      "reminders": {
+        "description": {
+          "default": "Appointment and check-up reminders over WhatsApp"
+        },
+        "title": "Reminders"
+      },
+      "reports": {
+        "description": {
+          "default": "Revenue and clinical reports"
+        },
+        "title": "Reports"
+      },
+      "settings": {
+        "description": {
+          "default": "Appearance and your account details"
+        },
+        "title": "Settings"
+      },
+      "users": {
+        "description": {
+          "default": "Accounts, roles and the audit log"
+        },
+        "title": "Users"
+      }
+    },
+    "openMenu": "Open menu",
+    "searchPlaceholder": "Search…"
+  },
+  "owners": {
+    "editTitle": "Edit owner",
+    "emptyDescription": "Owners are created when you register their first pet, from the Pets screen.",
+    "emptyTitle": "No owners registered yet",
+    "form": {
+      "nameRequired": "First and last name can't be left empty",
+      "nationalIdLocked": "The national ID can't be edited — it's the key used to look the owner up.",
+      "updateError": "Couldn't update the owner"
+    },
+    "listTitle": "All owners",
+    "loadError": "Couldn't load the list of owners.",
+    "noMatch": "No owner matches that search",
+    "noMatchDescription": "Try another name, or the full national ID number.",
+    "petsInTheirCare": "Pets in their care",
+    "registeredOwners": "Registered owners",
+    "searchPlaceholder": "Search by name or national ID...",
+    "subtitle": "Registering and managing pet owners",
+    "title": "Owners"
+  },
+  "payments": {
+    "chargeWithQr": "Charge by QR",
+    "confirmPayment": "Confirm payment",
+    "emptyHistoryDescription": "The payments you take will show up here.",
+    "emptyHistoryTitle": "No payments recorded yet",
+    "emptyPendingDescription": "Every recorded visit has already been paid.",
+    "emptyPendingTitle": "No payments outstanding",
+    "form": {
+      "amountPositive": "The amount must be greater than 0",
+      "error": "Couldn't record the payment",
+      "pickMethod": "Pick a payment method",
+      "pickMethodShort": "Pick a method"
+    },
+    "latestTitle": "Latest payments",
+    "loadError": "Couldn't load the list of payments.",
+    "method": "Payment method",
+    "pendingTitle": "Awaiting payment",
+    "pendingTotal": "Outstanding",
+    "pendingVisits": "Visits to charge",
+    "qr": {
+      "bankError": "The bank reported an error with this charge.",
+      "confirmed": "Payment confirmed",
+      "expired": "The QR expired before the payment was confirmed.",
+      "generateError": "Couldn't generate the QR charge",
+      "generating": "Generating the QR with the bank...",
+      "imageAlt": "Payment QR code",
+      "waiting": "Waiting for the bank to confirm..."
+    },
+    "registerPayment": "Take payment",
+    "subtitle": "Visits waiting to be paid",
+    "title": "Payments"
+  },
+  "people": {
+    "firstName": "First name",
+    "licenseNumber": "License no.",
+    "maternalLastName": "Second last name",
+    "paternalLastName": "Last name",
+    "professionalDetails": "Professional details",
+    "specialty": "Specialty"
+  },
+  "petSearch": {
+    "error": "The search couldn't be completed.",
+    "noResults": "No pets found for that national ID."
+  },
+  "pets": {
+    "age": {
+      "label": "Age",
+      "month_one": "{{count}} month",
+      "month_other": "{{count}} months",
+      "year_one": "{{count}} year",
+      "year_other": "{{count}} years"
+    },
+    "birthDate": "Date of birth",
+    "breed": "Breed",
+    "confirmDeleteBody": "{{name}} will stop showing up in the list and in search. The clinical history is not deleted, and you can reactivate it at any time from this same page.",
+    "confirmDeleteTitle": "Delete this pet?",
+    "confirmReactivateBody": "{{name}} will show up again in the main list and in search.",
+    "confirmReactivateTitle": "Reactivate this pet?",
+    "currentWeight": "Current weight",
+    "deletePet": "Delete pet",
+    "detailFallback": "Pet record",
+    "detailLoadError": "Couldn't load this pet.",
+    "editTitle": "Edit {{name}}'s details",
+    "emptyDescription": "Register the first pet along with its owner's details.",
+    "emptyTitle": "No pets registered yet",
+    "fieldEdited": "“{{field}}” was edited",
+    "form": {
+      "createError": "Couldn't register the pet",
+      "existingOwner": "Existing owner: {{name}}",
+      "nameAndSpeciesRequired": "Name and species can't be left empty",
+      "nationalIdPlaceholder": "e.g. 4521367",
+      "newOwnerNeedsName": "This is a new owner, so please give their first and last name",
+      "ownerNationalId": "Owner's national ID",
+      "ownerNotFound": "Not found — they'll be registered as a new owner",
+      "petName": "Pet's name",
+      "pickSex": "Pick the pet's sex",
+      "updateError": "Couldn't update the pet"
+    },
+    "history": "History",
+    "historyDescription": "Visits, appointments, preventive care and edits, in chronological order",
+    "inactive": "Inactive",
+    "inactiveNotice": "This pet is inactive — it doesn't show up in the main list or in search.",
+    "listTitle": "All pets",
+    "loadError": "Couldn't load the list of pets. Please try again.",
+    "newPet": "New pet",
+    "noMatch": "No pet matches that search",
+    "noMatchDescription": "Try another name, or check whether it's marked as inactive.",
+    "reactivate": "Reactivate",
+    "registerPet": "Register a pet",
+    "searchPlaceholder": "Search by name...",
+    "sex": "Sex",
+    "showInactive": "Show inactive",
+    "species": "Species",
+    "subtitle": "Managing registered pets",
+    "timelineEmptyDescription": "This pet's visits, check-ups, appointments and edits will show up here in chronological order.",
+    "timelineEmptyTitle": "No activity recorded yet",
+    "title": "Pets",
+    "weight": "Weight",
+    "weightKg": "Weight (kg)",
+    "weightTrend": "Weight over time"
+  },
+  "preventive": {
+    "appliedOn": "Given: {{date}}",
+    "appliedOnLabel": "Date given",
+    "form": {
+      "createError": "Couldn't record the preventive care",
+      "pickType": "Pick the type of care"
+    },
+    "historyEmpty": "No preventive care recorded yet.",
+    "historySubtitle": "Vaccination and deworming history",
+    "nextDoseLabel": "Next dose",
+    "nextDoseOn": "Next dose: {{date}}",
+    "nothingDue": "Nothing due soon. All up to date.",
+    "registerControl": "Record care",
+    "registerControlFor": "Record care — {{name}} ({{species}})",
+    "subtitle": "Vaccination and deworming",
+    "title": "Preventive Care",
+    "upcomingLoadError": "Couldn't load the list.",
+    "upcomingTitle": "Due in the next 30 days"
+  },
+  "register": {
+    "description": "An Administrator will review and approve your account before you can sign in",
+    "emailHint": "To recover your password if you forget it",
+    "error": "The request couldn't be sent",
+    "send": "Send request",
+    "sentBody": "An Administrator has to approve your account before you can sign in. They'll let you know once it's active.",
+    "sentTitle": "Request sent",
+    "title": "Request access as a Vet"
+  },
+  "reminders": {
+    "emptyDescription": "Appointments in the next 24 hours and preventive care due within 7 days show up here.",
+    "emptyTitle": "No reminders pending",
+    "historyEmpty": "No reminder has been marked as sent yet.",
+    "latestTitle": "Recently sent",
+    "loadError": "Couldn't load the list.",
+    "markSent": "Mark as sent",
+    "pendingTitle": "Pending today",
+    "sendOnWhatsapp": "Send on WhatsApp",
+    "subtitle": "Appointments in the next 24h and preventive care due within 7 days — sent by hand over WhatsApp, with no cost or external integration.",
+    "title": "Reminders"
+  },
+  "reports": {
+    "exportExcel": "Export to Excel",
+    "exportPdf": "Export to PDF",
+    "loadError": "Couldn't load the report.",
+    "noPayments": "No payments match these filters",
+    "noPaymentsHint": "Try widening the date range, or clearing the payment method filter.",
+    "noRevenue": "No revenue matches these filters",
+    "noVisits": "No visits match these filters",
+    "noVisitsHint": "Try widening the date range or clearing the service type filter.",
+    "paymentCount": "Number of payments",
+    "reportType": "Report type",
+    "service": "Service",
+    "subtitle": "Revenue plus clinical and administrative reports",
+    "tabs": {
+      "clinical": "Clinical & Administrative",
+      "revenue": "Revenue"
+    },
+    "title": "Reports",
+    "totalAmount": "Total amount",
+    "types": {
+      "revenueByService": "Revenue by service type",
+      "visits": "Visits over a period"
+    },
+    "widenRange": "Try widening the date range."
+  },
+  "reset": {
+    "done": "Password updated",
+    "doneHint": "You can now sign in with your new password.",
+    "goToLogin": "Go to sign in",
+    "invalidLink": "This link doesn't include a valid token",
+    "requestNewLink": "Request a new link",
+    "title": "Choose your new password"
+  },
+  "schedules": {
+    "days": {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    },
+    "pickVet": "Pick a vet",
+    "pickVetHint": "Pick a vet to view and edit their working hours.",
+    "save": "Save working hours",
+    "saveError": "Couldn't save the working hours",
+    "shiftsHint": "Up to 2 shifts a day (e.g. morning and afternoon). A day with no active shifts means no appointments.",
+    "startBeforeEnd": "In every active shift, the start time must be earlier than the end time",
+    "week": "Week"
+  },
+  "search": {
+    "ariaLabel": "Search for a pet or an owner",
+    "close": "close",
+    "hint": "Type at least {{min}} characters. Search by pet name, or by the owner's name or national ID.",
+    "kinds": {
+      "other": "Results",
+      "owner": "Owners",
+      "pet": "Pets"
+    },
+    "navigate": "navigate",
+    "noResults": "No results for “{{term}}”.",
+    "open": "open",
+    "placeholder": "Search for a pet or an owner…",
+    "title": "Global search"
+  },
+  "settings": {
+    "account": {
+      "description": "Details of the current session",
+      "title": "Account"
+    },
+    "appearance": {
+      "color": "Colour",
+      "description": "Choose how PawCare looks on this device",
+      "theme": "Theme",
+      "title": "Appearance"
+    },
+    "colors": {
+      "ocean": "Ocean",
+      "pink": "Pink",
+      "violet": "Violet"
+    },
+    "data": {
+      "description": "Export all of the clinic's information at any time, without depending on PawCare",
+      "exportAll": "Export all my data",
+      "title": "Data"
+    },
+    "exportError": "Couldn't export the data",
+    "exportSuccess": "Data exported successfully",
+    "subtitle": "App preferences and your account details",
+    "themes": {
+      "dark": "Dark",
+      "light": "Light",
+      "system": "System"
+    },
+    "title": "Settings"
+  },
+  "toasts": {
+    "appointmentBooked": "Appointment booked successfully",
+    "appointmentRescheduled": "Appointment rescheduled successfully",
+    "appointmentStatusUpdated": "Appointment status updated",
+    "invitationCancelled": "Invitation cancelled",
+    "invitationSent": "Invitation sent successfully",
+    "medicationCreated": "Medication created successfully",
+    "medicationDeleted": "Medication deleted",
+    "medicationUpdated": "Medication updated successfully",
+    "ownerUpdated": "Owner updated successfully",
+    "passwordReset": "Password reset successfully",
+    "passwordUpdated": "Password updated successfully",
+    "petCreated": "Pet registered successfully",
+    "petDeleted": "Pet deleted",
+    "petReactivated": "Pet reactivated",
+    "petUpdated": "Pet updated successfully",
+    "preventiveControlRecorded": "Preventive care recorded",
+    "reminderMarkedSent": "Reminder marked as sent",
+    "roleUpdated": "Role updated successfully",
+    "stockAdded": "Stock added successfully",
+    "userActivated": "User activated",
+    "userCreated": "User registered successfully",
+    "userDeactivated": "User deactivated",
+    "visitRecorded": "Visit recorded. It's now ready to charge in Payments."
+  },
+  "users": {
+    "activate": "Activate",
+    "approve": "Approve",
+    "cancelInvitation": "Cancel invitation",
+    "changeRole": "Change role",
+    "confirmActivateBody": "{{name}} will be able to sign in again.",
+    "confirmActivateTitle": "Activate this account?",
+    "confirmApproveBody": "{{name}} will be able to sign in as a Vet and will show up when booking or recording a visit.",
+    "confirmApproveTitle": "Approve this request?",
+    "confirmCancelInvitationBody": "The link we sent to {{email}} will stop working.",
+    "confirmCancelInvitationTitle": "Cancel this invitation?",
+    "confirmDeactivateBody": "{{name}} won't be able to sign in, and will no longer show up in the vet pickers for booking or recording a visit.",
+    "confirmDeactivateTitle": "Deactivate this account?",
+    "currentRole": "current role: {{role}}",
+    "deactivate": "Deactivate",
+    "emptyDescription": "Create accounts for the staff, or invite a vet by email.",
+    "emptyTitle": "No users registered yet",
+    "form": {
+      "changeRoleError": "Couldn't change the role",
+      "createError": "Couldn't register the user",
+      "pickRole": "Pick a role",
+      "vetDataRequired": "License number and specialty are required for a Vet",
+      "vetDataRequiredToConvert": "License number and specialty are required to make someone a Vet",
+      "vetSection": "Professional details (Vet only)",
+      "vetSectionRequired": "Professional details (required for a vet)"
+    },
+    "invitationExpires": "expires {{date}}",
+    "invite": {
+      "action": "Invite a vet",
+      "description": "We'll email them a link to finish signing up — the account is active as soon as they set a password, with no extra approval needed.",
+      "error": "Couldn't send the invitation",
+      "nameOptional": "Name (optional)",
+      "namePlaceholder": "To personalise the email",
+      "send": "Send invitation"
+    },
+    "invitedBy": "invited by {{name}}",
+    "listTitle": "All accounts",
+    "loadError": "Couldn't load the list of users.",
+    "newRole": "New role",
+    "newUser": "New user",
+    "pendingInvitations": "Pending invitations",
+    "registerUser": "Register user",
+    "reset": "Reset",
+    "resetPassword": "Reset password",
+    "resetPasswordBody": "{{name}} ({{username}}) will be given a new password. Pass it on to them in person — it isn't sent by email or SMS.",
+    "subtitle": "Registering and managing accounts",
+    "tabs": {
+      "accounts": "Accounts",
+      "audit": "Audit log"
+    },
+    "title": "Users"
+  },
+  "visits": {
+    "consultationFee": "Consultation fee (Bs.)",
+    "consumedMedications": "Medications used (optional)",
+    "currentWeightOptional": "Current weight (kg, optional)",
+    "diagnosis": "Diagnosis",
+    "diagnosisLabel": "Diagnosis:",
+    "emptyDescription": "Use the “New visit” button above to record the first one.",
+    "emptyTitle": "No visits recorded for {{name}} yet",
+    "externalExams": "External tests (optional)",
+    "externalExamsLabel": "External tests:",
+    "form": {
+      "createError": "Couldn't record the visit",
+      "diagnosisAndTreatmentRequired": "Diagnosis and treatment are required",
+      "pickServiceType": "Pick the service type",
+      "pickVet": "Pick the vet seeing the pet"
+    },
+    "historyLoadError": "Couldn't load the history.",
+    "newVisit": "New visit",
+    "newVisitFor": "New visit — {{name}} ({{species}})",
+    "pickMedication": "Pick a medication",
+    "pickType": "Pick a type",
+    "pickVet": "Pick a vet",
+    "recordedWeight": "Weight recorded: {{weight}} kg",
+    "saveVisit": "Save visit",
+    "searchToStart": "Look a pet up to get started",
+    "searchToStartHint": "Enter the owner's national ID in the search box above to see their pets' clinical history or record a new visit.",
+    "serviceType": "Service type",
+    "subtitle": "Look a pet up by its owner's national ID to view or start its medical care",
+    "title": "Medical Care",
+    "treatment": "Treatment",
+    "treatmentLabel": "Treatment:"
+  }
+}

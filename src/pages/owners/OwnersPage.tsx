@@ -9,10 +9,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useOwners } from "@/features/owners/useOwners";
 import { PawPrint, Search, Users } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { EditOwnerDialog } from "./EditOwnerDialog";
 
 export function OwnersPage() {
+  const { t } = useTranslation();
   const { data: owners, isLoading, isError } = useOwners();
   const [search, setSearch] = useState("");
 
@@ -30,22 +32,22 @@ export function OwnersPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Propietarios</h1>
-        <p className="text-muted-foreground">Registro y gestión de dueños de mascotas</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("owners.title")}</h1>
+        <p className="text-muted-foreground">{t("owners.subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <StatTile label="Propietarios registrados" value={owners?.length ?? 0} icon={Users} isLoading={isLoading} />
-        <StatTile label="Mascotas a su cargo" value={totalPets} icon={PawPrint} isLoading={isLoading} />
+        <StatTile label={t("owners.registeredOwners")} value={owners?.length ?? 0} icon={Users} isLoading={isLoading} />
+        <StatTile label={t("owners.petsInTheirCare")} value={totalPets} icon={PawPrint} isLoading={isLoading} />
       </div>
 
       <Card>
         <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-base">Listado</CardTitle>
+          <CardTitle className="text-base">{t("owners.listTitle")}</CardTitle>
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nombre o CI..."
+              placeholder={t("owners.searchPlaceholder")}
               className="w-64 pl-8"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -55,13 +57,13 @@ export function OwnersPage() {
         <CardContent>
           {isLoading && <TableSkeleton rows={5} />}
 
-          {isError && <ErrorState message="No se pudo cargar el listado de propietarios." />}
+          {isError && <ErrorState message={t("owners.loadError")} />}
 
           {!isLoading && !isError && owners?.length === 0 && (
             <EmptyState
               icon={Users}
-              title="Sin propietarios registrados todavía"
-              description="Los propietarios se crean al registrar su primera mascota, desde la pantalla de Mascotas."
+              title={t("owners.emptyTitle")}
+              description={t("owners.emptyDescription")}
             />
           )}
 
@@ -72,13 +74,13 @@ export function OwnersPage() {
                   <MobileCard
                     key={owner.id}
                     title={`${owner.firstName} ${owner.paternalLastName}`}
-                    subtitle={`CI ${owner.nationalId}`}
+                    subtitle={`${t("common.nationalId")} ${owner.nationalId}`}
                     badge={<EditOwnerDialog owner={owner} />}
                     rows={[
-                      { label: "Teléfono", value: owner.phone || "—" },
-                      { label: "Dirección", value: owner.address || "—" },
+                      { label: t("common.phone"), value: owner.phone || "—" },
+                      { label: t("common.address"), value: owner.address || "—" },
                       {
-                        label: "Mascotas",
+                        label: t("pets.title"),
                         value:
                           owner.pets.length === 0 ? (
                             "—"
@@ -103,12 +105,12 @@ export function OwnersPage() {
                 <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Nombre</TableHead>
-                    <TableHead>CI</TableHead>
-                    <TableHead>Teléfono</TableHead>
-                    <TableHead>Dirección</TableHead>
-                    <TableHead>Mascotas</TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
+                    <TableHead>{t("common.name")}</TableHead>
+                    <TableHead>{t("common.nationalId")}</TableHead>
+                    <TableHead>{t("common.phone")}</TableHead>
+                    <TableHead>{t("common.address")}</TableHead>
+                    <TableHead>{t("pets.title")}</TableHead>
+                    <TableHead className="text-right">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -152,8 +154,8 @@ export function OwnersPage() {
           {!isLoading && !isError && owners && owners.length > 0 && filteredOwners?.length === 0 && (
             <EmptyState
               icon={Search}
-              title="Ningún propietario coincide con la búsqueda"
-              description="Prueba con otro nombre o con el número de CI completo."
+              title={t("owners.noMatch")}
+              description={t("owners.noMatchDescription")}
             />
           )}
         </CardContent>

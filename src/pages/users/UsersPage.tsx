@@ -1,6 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/features/auth/AuthContext";
+import { moduleDescription } from "@/features/dashboard/labels";
 import { useModule } from "@/features/dashboard/useModules";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AuditLogTab } from "./AuditLogTab";
 import { UsersListTab } from "./UsersListTab";
 
@@ -14,6 +17,8 @@ import { UsersListTab } from "./UsersListTab";
  * `tabs` del módulo "users").
  */
 export function UsersPage() {
+  const { t } = useTranslation();
+  const { user } = useAuth();
   const [tab, setTab] = useState("list");
   const { module } = useModule("users");
 
@@ -23,15 +28,17 @@ export function UsersPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Usuarios</h1>
-        <p className="text-muted-foreground">{module?.description ?? "Registro y gestión de cuentas"}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("users.title")}</h1>
+        <p className="text-muted-foreground">
+          {module ? moduleDescription(t, module, user?.role) : t("users.subtitle")}
+        </p>
       </div>
 
       {showAudit ? (
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList>
-            <TabsTrigger value="list">Cuentas</TabsTrigger>
-            <TabsTrigger value="audit">Auditoría</TabsTrigger>
+            <TabsTrigger value="list">{t("users.tabs.accounts")}</TabsTrigger>
+            <TabsTrigger value="audit">{t("users.tabs.audit")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="list" className="mt-4">

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { petsApi } from "./api";
 import type { NewPetInput, UpdatePetInput } from "./types";
@@ -31,7 +32,7 @@ export function useUpdatePet(id: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
       queryClient.invalidateQueries({ queryKey: ["pets", id, "history"] });
-      toast.success("Mascota actualizada correctamente");
+      toast.success(t("toasts.petUpdated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -43,7 +44,7 @@ export function useChangePetStatus(id: number) {
     mutationFn: (status: "ACTIVE" | "INACTIVE") => petsApi.changeStatus(id, status),
     onSuccess: (_data, status) => {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success(status === "ACTIVE" ? "Mascota reactivada" : "Mascota eliminada");
+      toast.success(status === "ACTIVE" ? t("toasts.petReactivated") : t("toasts.petDeleted"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -63,7 +64,7 @@ export function useCreatePet() {
     mutationFn: (input: NewPetInput) => petsApi.create(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Mascota registrada correctamente");
+      toast.success(t("toasts.petCreated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/features/auth/AuthContext";
-import { ROLE_LABEL } from "@/lib/roles";
 import { ChevronsUpDown, LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarUserMenuProps {
@@ -17,6 +17,7 @@ interface SidebarUserMenuProps {
 }
 
 export function SidebarUserMenu({ onNavigate }: SidebarUserMenuProps) {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -40,18 +41,18 @@ export function SidebarUserMenu({ onNavigate }: SidebarUserMenuProps) {
               {user?.firstName} {user?.paternalLastName}
             </span>
             <span className="truncate text-xs text-sidebar-foreground/60">
-              {user ? ROLE_LABEL[user.role] : ""}
+              {user ? t(`enums.role.${user.role}`) : ""}
             </span>
           </div>
           <ChevronsUpDown className="size-4 shrink-0 text-sidebar-foreground/50" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" side="top" className="w-56">
-        <DropdownMenuLabel>{user ? ROLE_LABEL[user.role] : ""}</DropdownMenuLabel>
+        <DropdownMenuLabel>{user ? t(`enums.role.${user.role}`) : ""}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="size-4" />
-          Cerrar sesión
+          {t("nav.logout")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

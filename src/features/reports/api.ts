@@ -23,9 +23,11 @@ export const reportsApi = {
       `/api/reports${query({ ...filters, type: "revenue-by-service" })}`
     ),
 
+  // El nombre del archivo lo pone el backend (ya traducido) en Content-Disposition;
+  // lo de acá es solo el respaldo por si ese header no llegara.
   downloadExcel: (type: string, filters: ReportFilters) =>
-    apiClient.download(`/api/reports/export/excel${query({ ...filters, type })}`, `reporte-${type}.xlsx`),
+    apiClient.download(`/api/reports/export/excel${query({ ...filters, type })}`, `pawcare-report-${type}.xlsx`),
 
   downloadPdf: (type: string, filters: ReportFilters) =>
-    apiClient.download(`/api/reports/export/pdf${query({ ...filters, type })}`, `reporte-${type}.pdf`),
+    apiClient.download(`/api/reports/export/pdf${query({ ...filters, type })}`, `pawcare-report-${type}.pdf`),
 };

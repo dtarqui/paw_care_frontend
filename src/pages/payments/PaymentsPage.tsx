@@ -9,21 +9,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { usePaymentHistory, usePendingPayments } from "@/features/payments/usePayments";
 import type { PendingPayment } from "@/features/payments/types";
 import { History, Receipt, Wallet } from "lucide-react";
+import { useFormatters } from "@/lib/useFormatters";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { QrChargeDialog } from "./QrChargeDialog";
 import { RegisterPaymentDialog } from "./RegisterPaymentDialog";
-
-function formatDate(iso: string) {
-  const [date] = iso.split("T");
-  const [yyyy, mm, dd] = date.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
 
 function formatAmount(amount: number) {
   return `Bs. ${amount.toFixed(2)}`;
 }
 
 export function PaymentsPage() {
+  const { t } = useTranslation();
+  const { formatDate } = useFormatters();
   const { data: pending, isLoading, isError } = usePendingPayments();
   const { data: history, isLoading: loadingHistory } = usePaymentHistory(5);
   const [selected, setSelected] = useState<PendingPayment | null>(null);
@@ -34,22 +32,22 @@ export function PaymentsPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Pagos</h1>
-        <p className="text-muted-foreground">Atenciones pendientes de cobro</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("payments.title")}</h1>
+        <p className="text-muted-foreground">{t("payments.subtitle")}</p>
       </div>
 
       {/* La pregunta que trae a alguien a esta pantalla es "cuánto falta cobrar" —
           responderla arriba evita tener que sumar la columna a ojo. */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <StatTile
-          label="Pendiente de cobro"
+          label={t("payments.pendingTotal")}
           value={formatAmount(pendingTotal)}
           icon={Wallet}
           isLoading={isLoading}
           tone={pendingTotal > 0 ? "warning" : "default"}
         />
         <StatTile
-          label="Atenciones por cobrar"
+          label={t("payments.pendingVisits")}
           value={pending?.length ?? 0}
           icon={Receipt}
           isLoading={isLoading}
@@ -58,18 +56,18 @@ export function PaymentsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Pendientes de pago</CardTitle>
+          <CardTitle className="text-base">{t("payments.pendingTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading && <TableSkeleton rows={3} />}
 
-          {isError && <ErrorState message="No se pudo cargar la lista de pagos." />}
+          {isError && <ErrorState message={t("payments.loadError")} />}
 
           {!isLoading && !isError && pending?.length === 0 && (
             <EmptyState
               icon={Wallet}
-              title="No hay pagos pendientes"
-              description="Todas las atenciones registradas ya fueron cobradas."
+              title={t("payments.emptyPendingTitle")}
+              description={t("payments.emptyPendingDescription")}
             />
           )}
 
@@ -82,14 +80,14 @@ export function PaymentsPage() {
                     title={item.pet.name}
                     subtitle={`${item.owner.firstName} ${item.owner.paternalLastName}`}
                     badge={<span className="font-medium tabular-nums">{formatAmount(item.amount)}</span>}
-                    rows={[{ label: "Motivo", value: item.consultationReason }]}
+                    rows={[{ label: t("appointments.reason"), value: item.consultationReason }]}
                     actions={
                       <>
                         <Button size="sm" variant="outline" className="flex-1" onClick={() => setSelectedQr(item)}>
-                          Cobrar con QR
+                          {t("payments.chargeWithQr")}
                         </Button>
                         <Button size="sm" className="flex-1" onClick={() => setSelected(item)}>
-                          Registrar pago
+                          {t("payments.registerPayment")}
                         </Button>
                       </>
                     }
@@ -101,11 +99,11 @@ export function PaymentsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Mascota</TableHead>
-                      <TableHead>Propietario</TableHead>
-                      <TableHead>Motivo</TableHead>
-                      <TableHead className="text-right">Monto</TableHead>
-                      <TableHead className="text-right">Acción</TableHead>
+                      <TableHead>{t("common.pet")}</TableHead>
+                      <TableHead>{t("common.owner")}</TableHead>
+                      <TableHead>{t("appointments.reason")}</TableHead>
+                      <TableHead className="text-right">{t("common.amount")}</TableHead>
+                      <TableHead className="text-right">{t("common.action")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -120,10 +118,10 @@ export function PaymentsPage() {
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             <Button size="sm" variant="outline" onClick={() => setSelectedQr(item)}>
-                              Cobrar con QR
+                              {t("payments.chargeWithQr")}
                             </Button>
                             <Button size="sm" onClick={() => setSelected(item)}>
-                              Registrar pago
+                              {t("payments.registerPayment")}
                             </Button>
                           </div>
                         </TableCell>
@@ -139,7 +137,7 @@ export function PaymentsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Últimos pagos</CardTitle>
+          <CardTitle className="text-base">{t("payments.latestTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {loadingHistory && <TableSkeleton rows={3} />}
@@ -147,8 +145,8 @@ export function PaymentsPage() {
           {!loadingHistory && history?.length === 0 && (
             <EmptyState
               icon={History}
-              title="Todavía no hay pagos registrados"
-              description="Los cobros que registres van a aparecer acá."
+              title={t("payments.emptyHistoryTitle")}
+              description={t("payments.emptyHistoryDescription")}
             />
           )}
 
@@ -162,8 +160,11 @@ export function PaymentsPage() {
                     subtitle={`${payment.owner.firstName} ${payment.owner.paternalLastName}`}
                     badge={<StatusBadge status={payment.method} />}
                     rows={[
-                      { label: "Monto", value: <span className="tabular-nums">{formatAmount(payment.amount)}</span> },
-                      { label: "Fecha", value: formatDate(payment.date) },
+                      {
+                        label: t("common.amount"),
+                        value: <span className="tabular-nums">{formatAmount(payment.amount)}</span>,
+                      },
+                      { label: t("common.date"), value: formatDate(payment.date) },
                     ]}
                   />
                 ))}
@@ -173,11 +174,11 @@ export function PaymentsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Mascota</TableHead>
-                      <TableHead>Propietario</TableHead>
-                      <TableHead className="text-right">Monto</TableHead>
-                      <TableHead>Método</TableHead>
-                      <TableHead>Fecha</TableHead>
+                      <TableHead>{t("common.pet")}</TableHead>
+                      <TableHead>{t("common.owner")}</TableHead>
+                      <TableHead className="text-right">{t("common.amount")}</TableHead>
+                      <TableHead>{t("payments.method")}</TableHead>
+                      <TableHead>{t("common.date")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

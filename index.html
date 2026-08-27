@@ -11,7 +11,9 @@
       (function () {
         try {
           var t = localStorage.getItem("pawcare.color-theme");
-          if (t === "oceano" || t === "rosa") document.documentElement.setAttribute("data-color-theme", t);
+          var legacy = { oceano: "ocean", rosa: "pink", violeta: "violet" };
+          t = legacy[t] || t;
+          if (t === "ocean" || t === "pink") document.documentElement.setAttribute("data-color-theme", t);
         } catch (e) {}
       })();
     </script>

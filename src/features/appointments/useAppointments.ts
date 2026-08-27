@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { appointmentsApi, type NewAppointmentInput } from "./api";
 import type { AppointmentStatus } from "./types";
@@ -26,7 +27,7 @@ export function useChangeAppointmentStatus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Estado de la cita actualizado");
+      toast.success(t("toasts.appointmentStatusUpdated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -39,7 +40,7 @@ export function useCreateAppointment() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Cita agendada correctamente");
+      toast.success(t("toasts.appointmentBooked"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -53,7 +54,7 @@ export function useRescheduleAppointment() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Cita reprogramada correctamente");
+      toast.success(t("toasts.appointmentRescheduled"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

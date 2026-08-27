@@ -12,6 +12,7 @@ import { useAuth } from "@/features/auth/AuthContext";
 import { usePets } from "@/features/pets/usePets";
 import { PawPrint, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ImportClientsDialog } from "./ImportClientsDialog";
 import { NewPetDialog } from "./NewPetDialog";
@@ -19,6 +20,7 @@ import { NewPetDialog } from "./NewPetDialog";
 const PAGE_SIZE = 20;
 
 export function PetsPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [page, setPage] = useState(1);
   const [showInactive, setShowInactive] = useState(false);
@@ -37,8 +39,8 @@ export function PetsPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Mascotas</h1>
-          <p className="text-muted-foreground">Gestión de mascotas registradas</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("pets.title")}</h1>
+          <p className="text-muted-foreground">{t("pets.subtitle")}</p>
         </div>
         <div className="flex gap-2">
           {user?.role === "ADMIN" && <ImportClientsDialog />}
@@ -48,21 +50,21 @@ export function PetsPage() {
 
       <Card>
         <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-base">Listado</CardTitle>
+          <CardTitle className="text-base">{t("pets.listTitle")}</CardTitle>
           <div className="flex flex-wrap items-center gap-4">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nombre..."
+                placeholder={t("pets.searchPlaceholder")}
                 className="w-56 pl-8"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
-              <Switch id="mostrar-inactivas" checked={showInactive} onCheckedChange={setShowInactive} />
-              <Label htmlFor="mostrar-inactivas" className="text-sm font-normal text-muted-foreground">
-                Mostrar inactivas
+              <Switch id="show-inactive" checked={showInactive} onCheckedChange={setShowInactive} />
+              <Label htmlFor="show-inactive" className="text-sm font-normal text-muted-foreground">
+                {t("pets.showInactive")}
               </Label>
             </div>
           </div>
@@ -70,16 +72,14 @@ export function PetsPage() {
         <CardContent>
           {isLoading && <TableSkeleton rows={5} />}
 
-          {isError && <ErrorState message="No se pudo cargar el listado de mascotas. Intenta de nuevo." />}
+          {isError && <ErrorState message={t("pets.loadError")} />}
 
           {!isLoading && !isError && pets?.length === 0 && (
             <EmptyState
               icon={PawPrint}
-              title={search ? "Ninguna mascota coincide con la búsqueda" : "Sin mascotas registradas todavía"}
+              title={search ? t("pets.noMatch") : t("pets.emptyTitle")}
               description={
-                search
-                  ? "Prueba con otro nombre, o revisa si está marcada como inactiva."
-                  : "Registrá la primera mascota junto con los datos de su propietario."
+                search ? t("pets.noMatchDescription") : t("pets.emptyDescription")
               }
               action={search ? undefined : <NewPetDialog />}
             />
@@ -92,18 +92,21 @@ export function PetsPage() {
                   <MobileCard
                     key={pet.id}
                     title={pet.name}
-                    subtitle={`${pet.species}${pet.breed ? ` · ${pet.breed}` : ""}`}
+                    subtitle={`${t(`enums.species.${pet.species}`, { defaultValue: pet.species })}${pet.breed ? ` · ${pet.breed}` : ""}`}
                     badge={
                       pet.status === "INACTIVE" ? (
                         <Badge variant="secondary" className="border-none font-normal">
-                          Inactiva
+                          {t("pets.inactive")}
                         </Badge>
                       ) : undefined
                     }
                     rows={[
-                      { label: "Sexo", value: pet.sex },
-                      { label: "Peso", value: <span className="tabular-nums">{pet.weight} kg</span> },
-                      { label: "Propietario", value: `${pet.owner.firstName} ${pet.owner.paternalLastName}` },
+                      {
+                        label: t("pets.sex"),
+                        value: pet.sex ? t(`enums.sex.${pet.sex}`, { defaultValue: pet.sex }) : "—",
+                      },
+                      { label: t("pets.weight"), value: <span className="tabular-nums">{pet.weight} kg</span> },
+                      { label: t("common.owner"), value: `${pet.owner.firstName} ${pet.owner.paternalLastName}` },
                     ]}
                     onClick={() => navigate(`/app/pets/${pet.id}`)}
                   />
@@ -114,13 +117,13 @@ export function PetsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Nombre</TableHead>
-                      <TableHead>Especie</TableHead>
-                      <TableHead>Raza</TableHead>
-                      <TableHead>Sexo</TableHead>
-                      <TableHead>Peso</TableHead>
-                      <TableHead>Propietario</TableHead>
-                      {showInactive && <TableHead>Estado</TableHead>}
+                      <TableHead>{t("common.name")}</TableHead>
+                      <TableHead>{t("pets.species")}</TableHead>
+                      <TableHead>{t("pets.breed")}</TableHead>
+                      <TableHead>{t("pets.sex")}</TableHead>
+                      <TableHead>{t("pets.weight")}</TableHead>
+                      <TableHead>{t("common.owner")}</TableHead>
+                      {showInactive && <TableHead>{t("common.status")}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -131,9 +134,9 @@ export function PetsPage() {
                         onClick={() => navigate(`/app/pets/${pet.id}`)}
                       >
                         <TableCell className="font-medium">{pet.name}</TableCell>
-                        <TableCell>{pet.species}</TableCell>
+                        <TableCell>{t(`enums.species.${pet.species}`, { defaultValue: pet.species })}</TableCell>
                         <TableCell>{pet.breed}</TableCell>
-                        <TableCell>{pet.sex}</TableCell>
+                        <TableCell>{pet.sex ? t(`enums.sex.${pet.sex}`, { defaultValue: pet.sex }) : "—"}</TableCell>
                         <TableCell>{pet.weight} kg</TableCell>
                         <TableCell>
                           {pet.owner.firstName} {pet.owner.paternalLastName}
@@ -142,7 +145,7 @@ export function PetsPage() {
                           <TableCell>
                             {pet.status === "INACTIVE" && (
                               <Badge variant="secondary" className="border-none font-normal">
-                                Inactiva
+                                {t("pets.inactive")}
                               </Badge>
                             )}
                           </TableCell>

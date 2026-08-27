@@ -12,16 +12,11 @@ import { useMyVet } from "@/features/vets/useMyVet";
 import { useVets } from "@/features/vets/useVets";
 import { Loader2, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-const DAYS = [
-  { value: 1, label: "Lunes" },
-  { value: 2, label: "Martes" },
-  { value: 3, label: "Miércoles" },
-  { value: 4, label: "Jueves" },
-  { value: 5, label: "Viernes" },
-  { value: 6, label: "Sábado" },
-  { value: 0, label: "Domingo" },
-];
+/** Lunes primero, como se lee un horario de atención. El 0 es domingo en el
+ * backend, así que va al final. Las etiquetas salen de `schedules.days.*`. */
+const DAYS = [1, 2, 3, 4, 5, 6, 0];
 
 interface Shift {
   enabled: boolean;
@@ -39,7 +34,7 @@ type WeekState = Record<number, DayState>;
 function emptyState(): WeekState {
   const week: WeekState = {};
   for (const day of DAYS) {
-    week[day.value] = {
+    week[day] = {
       morningShift: { enabled: false, start: "08:00", end: "12:00" },
       afternoonShift: { enabled: false, start: "14:00", end: "16:30" },
     };
@@ -50,15 +45,15 @@ function emptyState(): WeekState {
 function stateFromSchedules(schedules: Schedule[]): WeekState {
   const week = emptyState();
   for (const day of DAYS) {
-    const rows = schedules.filter((h) => h.dayOfWeek === day.value).sort((a, b) => a.startTime.localeCompare(b.startTime));
+    const rows = schedules.filter((h) => h.dayOfWeek === day).sort((a, b) => a.startTime.localeCompare(b.startTime));
     // El backend no guarda a qué switch (turno de mañana/tarde) pertenece cada bloque —
     // solo una lista plana de horarios. Se reconstruye por hora del día (antes/después
     // del mediodía) en vez de por orden de llegada, para que un día con solo turno de
     // tarde no se muestre encendido en el switch de "mañana" al recargar.
     const morning = rows.find((f) => f.startTime < "12:00");
     const afternoon = rows.find((f) => f !== morning && f.startTime >= "12:00") ?? rows.find((f) => f !== morning);
-    if (morning) week[day.value].morningShift = { enabled: true, start: morning.startTime, end: morning.endTime };
-    if (afternoon) week[day.value].afternoonShift = { enabled: true, start: afternoon.startTime, end: afternoon.endTime };
+    if (morning) week[day].morningShift = { enabled: true, start: morning.startTime, end: morning.endTime };
+    if (afternoon) week[day].afternoonShift = { enabled: true, start: afternoon.startTime, end: afternoon.endTime };
   }
   return week;
 }
@@ -66,14 +61,15 @@ function stateFromSchedules(schedules: Schedule[]): WeekState {
 function toInput(week: WeekState): ScheduleBlockInput[] {
   const result: ScheduleBlockInput[] = [];
   for (const day of DAYS) {
-    const { morningShift, afternoonShift } = week[day.value];
-    if (morningShift.enabled) result.push({ dayOfWeek: day.value, startTime: morningShift.start, endTime: morningShift.end });
-    if (afternoonShift.enabled) result.push({ dayOfWeek: day.value, startTime: afternoonShift.start, endTime: afternoonShift.end });
+    const { morningShift, afternoonShift } = week[day];
+    if (morningShift.enabled) result.push({ dayOfWeek: day, startTime: morningShift.start, endTime: morningShift.end });
+    if (afternoonShift.enabled) result.push({ dayOfWeek: day, startTime: afternoonShift.start, endTime: afternoonShift.end });
   }
   return result;
 }
 
 export function SchedulesTab() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const isVet = user?.role === "VET";
   const { data: vets, isLoading: loadingVets } = useVets();
@@ -102,14 +98,14 @@ export function SchedulesTab() {
     const input = toInput(week);
     for (const slot of input) {
       if (slot.startTime >= slot.endTime) {
-        setError("En cada turno activo, la hora de inicio debe ser anterior a la hora de fin");
+        setError(t("schedules.startBeforeEnd"));
         return;
       }
     }
     try {
       await updateSchedulesMutation.mutateAsync(input);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo guardar el horario");
+      setError(err instanceof Error ? err.message : t("schedules.saveError"));
     }
   }
 
@@ -117,13 +113,13 @@ export function SchedulesTab() {
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle className="text-base">Veterinario</CardTitle>
+          <CardTitle className="text-base">{t("common.vet")}</CardTitle>
           {isVet ? (
             <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
               <ShieldCheck className="size-4 shrink-0 text-primary" />
-              <span className="truncate">{myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : "Cargando…"}</span>
+              <span className="truncate">{myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : t("common.loading")}</span>
               <Badge variant="secondary" className="ml-auto shrink-0 text-[10px]">
-                Tú
+                {t("common.you")}
               </Badge>
             </div>
           ) : (
@@ -133,7 +129,7 @@ export function SchedulesTab() {
               disabled={loadingVets}
             >
               <SelectTrigger className="w-64">
-                <SelectValue placeholder="Selecciona un veterinario" />
+                <SelectValue placeholder={t("schedules.pickVet")} />
               </SelectTrigger>
               <SelectContent>
                 {vets?.map((v) => (
@@ -148,16 +144,17 @@ export function SchedulesTab() {
       </Card>
 
       {!vetId && !isVet && (
-        <p className="py-6 text-center text-sm text-muted-foreground">Selecciona un veterinario para ver y editar su horario.</p>
+        <p className="py-6 text-center text-sm text-muted-foreground">{t("schedules.pickVetHint")}</p>
       )}
 
       {vetId && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              Semana {currentVet ? `— ${currentVet.firstName} ${currentVet.paternalLastName}` : ""}
+              {t("schedules.week")}{" "}
+              {currentVet ? `— ${currentVet.firstName} ${currentVet.paternalLastName}` : ""}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">Hasta 2 turnos por día (ej. mañana y tarde). Un día sin turnos activos queda sin atención.</p>
+            <p className="text-sm text-muted-foreground">{t("schedules.shiftsHint")}</p>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             {loadingSchedules ? (
@@ -165,23 +162,23 @@ export function SchedulesTab() {
             ) : (
               <div className="flex flex-col divide-y">
                 {DAYS.map((day) => (
-                  <div key={day.value} className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
-                    <span className="w-24 shrink-0 text-sm font-medium">{day.label}</span>
+                  <div key={day} className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
+                    <span className="w-24 shrink-0 text-sm font-medium">{t(`schedules.days.${day}`)}</span>
                     <div className="flex flex-1 flex-wrap gap-4">
                       {(["morningShift", "afternoonShift"] as const).map((shiftKey) => {
-                        const shift = week[day.value][shiftKey];
+                        const shift = week[day][shiftKey];
                         return (
                           <div key={shiftKey} className="flex items-center gap-2">
                             <Switch
                               checked={shift.enabled}
-                              onCheckedChange={(enabled) => updateShift(day.value, shiftKey, { enabled })}
+                              onCheckedChange={(enabled) => updateShift(day, shiftKey, { enabled })}
                             />
                             <Input
                               type="time"
                               className="w-28"
                               value={shift.start}
                               disabled={!shift.enabled}
-                              onChange={(e) => updateShift(day.value, shiftKey, { start: e.target.value })}
+                              onChange={(e) => updateShift(day, shiftKey, { start: e.target.value })}
                             />
                             <span className="text-muted-foreground">–</span>
                             <Input
@@ -189,7 +186,7 @@ export function SchedulesTab() {
                               className="w-28"
                               value={shift.end}
                               disabled={!shift.enabled}
-                              onChange={(e) => updateShift(day.value, shiftKey, { end: e.target.value })}
+                              onChange={(e) => updateShift(day, shiftKey, { end: e.target.value })}
                             />
                           </div>
                         );
@@ -205,7 +202,7 @@ export function SchedulesTab() {
             <div className="flex justify-end">
               <Button onClick={save} disabled={updateSchedulesMutation.isPending || loadingSchedules}>
                 {updateSchedulesMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-                Guardar horarios
+                {t("schedules.save")}
               </Button>
             </div>
           </CardContent>

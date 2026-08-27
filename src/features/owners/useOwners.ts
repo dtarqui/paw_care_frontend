@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { ownersApi } from "./api";
 import type { UpdateOwnerInput } from "./types";
@@ -25,7 +26,7 @@ export function useUpdateOwner() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owners"] });
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      toast.success("Propietario actualizado correctamente");
+      toast.success(t("toasts.ownerUpdated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

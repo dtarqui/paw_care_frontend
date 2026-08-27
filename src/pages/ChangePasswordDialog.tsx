@@ -12,10 +12,12 @@ import { Label } from "@/components/ui/label";
 import { useChangeMyPassword } from "@/features/users/useUsers";
 import { KeyRound, Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 const INITIAL_STATE = { currentPassword: "", newPassword: "", confirmPassword: "" };
 
 export function ChangePasswordDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
@@ -32,11 +34,11 @@ export function ChangePasswordDialog() {
     setError(null);
 
     if (form.newPassword.length < 6) {
-      setError("La contraseña nueva debe tener al menos 6 caracteres");
+      setError(t("auth.newPasswordTooShort"));
       return;
     }
     if (form.newPassword !== form.confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      setError(t("auth.passwordsDoNotMatch"));
       return;
     }
 
@@ -44,7 +46,7 @@ export function ChangePasswordDialog() {
       await changePasswordMutation.mutateAsync({ currentPassword: form.currentPassword, newPassword: form.newPassword });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo cambiar la contraseña");
+      setError(err instanceof Error ? err.message : t("auth.changePasswordError"));
     }
   }
 
@@ -53,16 +55,16 @@ export function ChangePasswordDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <KeyRound className="size-4" />
-          Cambiar contraseña
+          {t("auth.changePassword")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Cambiar contraseña</DialogTitle>
+          <DialogTitle>{t("auth.changePassword")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="currentPassword">Contraseña actual</Label>
+            <Label htmlFor="currentPassword">{t("auth.currentPassword")}</Label>
             <Input
               id="currentPassword"
               type="password"
@@ -72,7 +74,7 @@ export function ChangePasswordDialog() {
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="newPassword">Contraseña nueva</Label>
+            <Label htmlFor="newPassword">{t("auth.newPassword")}</Label>
             <Input
               id="newPassword"
               type="password"
@@ -80,11 +82,11 @@ export function ChangePasswordDialog() {
               minLength={6}
               value={form.newPassword}
               onChange={(e) => setForm((p) => ({ ...p, newPassword: e.target.value }))}
-              placeholder="Mínimo 6 caracteres"
+              placeholder={t("auth.minSixCharacters")}
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="confirmPassword">Confirmar contraseña nueva</Label>
+            <Label htmlFor="confirmPassword">{t("auth.confirmNewPassword")}</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -98,11 +100,11 @@ export function ChangePasswordDialog() {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={changePasswordMutation.isPending}>
               {changePasswordMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </form>

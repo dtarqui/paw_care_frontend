@@ -9,20 +9,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { PetHistoryEvent } from "@/features/pets/types";
 import { useChangePetStatus, usePetHistory, usePet } from "@/features/pets/usePets";
 import { calculateAge } from "@/lib/pet";
+import { useFormatters } from "@/lib/useFormatters";
 import { AlertTriangle, Loader2, PawPrint, Phone, User } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { EditPetDialog } from "./EditPetDialog";
 import { PetWeightChart, type WeightPoint } from "./PetWeightChart";
 import { PetHistoryTimeline } from "./PetHistoryTimeline";
 
-function formatDate(iso: string) {
-  if (!iso) return "—";
-  const [yyyy, mm, dd] = iso.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
-
 export function PetDetailPage() {
+  const { t } = useTranslation();
+  const { formatDate } = useFormatters();
   const { id } = useParams<{ id: string }>();
   const petId = Number(id);
 
@@ -30,6 +28,7 @@ export function PetDetailPage() {
   const { data: events, isLoading: loadingHistory } = usePetHistory(petId);
   const changeStatusMutation = useChangePetStatus(petId);
   const [confirming, setConfirming] = useState(false);
+  const petAge = pet?.birthDate ? calculateAge(pet.birthDate) : null;
 
   async function confirmStatusChange() {
     if (!pet) return;
@@ -51,8 +50,8 @@ export function PetDetailPage() {
     <div className="flex flex-col gap-4">
       <Breadcrumbs
         items={[
-          { label: "Mascotas", to: "/app/pets" },
-          { label: pet?.name ?? "Ficha de mascota" },
+          { label: t("pets.title"), to: "/app/pets" },
+          { label: pet?.name ?? t("pets.detailFallback") },
         ]}
       />
 
@@ -63,14 +62,14 @@ export function PetDetailPage() {
         </div>
       )}
 
-      {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar esta mascota.</p>}
+      {isError && <p className="py-8 text-center text-sm text-destructive">{t("pets.detailLoadError")}</p>}
 
       {!isLoading && !isError && pet && (
         <>
           {pet.status === "INACTIVE" && (
             <div className="flex items-center gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400">
               <AlertTriangle className="size-5 shrink-0" />
-              <p className="text-sm">Esta mascota está inactiva — no aparece en el listado principal ni en los buscadores.</p>
+              <p className="text-sm">{t("pets.inactiveNotice")}</p>
             </div>
           )}
 
@@ -83,9 +82,9 @@ export function PetDetailPage() {
                 <div>
                   <CardTitle className="text-xl">{pet.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    {pet.species}
+                    {t(`enums.species.${pet.species}`, { defaultValue: pet.species })}
                     {pet.breed ? ` · ${pet.breed}` : ""}
-                    {pet.sex ? ` · ${pet.sex}` : ""}
+                    {pet.sex ? ` · ${t(`enums.sex.${pet.sex}`, { defaultValue: pet.sex })}` : ""}
                   </p>
                 </div>
               </div>
@@ -95,27 +94,29 @@ export function PetDetailPage() {
                   variant={pet.status === "ACTIVE" ? "destructive" : "outline"}
                   onClick={() => setConfirming(true)}
                 >
-                  {pet.status === "ACTIVE" ? "Eliminar mascota" : "Reactivar"}
+                  {pet.status === "ACTIVE" ? t("pets.deletePet") : t("pets.reactivate")}
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <div>
-                  <p className="text-xs text-muted-foreground">Fecha de nacimiento</p>
+                  <p className="text-xs text-muted-foreground">{t("pets.birthDate")}</p>
                   <p className="text-sm font-medium">{formatDate(pet.birthDate)}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Edad</p>
-                  <p className="text-sm font-medium">{calculateAge(pet.birthDate) ?? "—"}</p>
+                  <p className="text-xs text-muted-foreground">{t("pets.age.label")}</p>
+                  <p className="text-sm font-medium">{petAge ? t(`pets.age.${petAge.unit}`, { count: petAge.count }) : "—"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Peso actual</p>
+                  <p className="text-xs text-muted-foreground">{t("pets.currentWeight")}</p>
                   <p className="text-sm font-medium">{pet.weight ? `${pet.weight} kg` : "—"}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Sexo</p>
-                  <p className="text-sm font-medium">{pet.sex || "—"}</p>
+                  <p className="text-xs text-muted-foreground">{t("pets.sex")}</p>
+                  <p className="text-sm font-medium">
+                    {pet.sex ? t(`enums.sex.${pet.sex}`, { defaultValue: pet.sex }) : "—"}
+                  </p>
                 </div>
               </div>
 
@@ -124,7 +125,7 @@ export function PetDetailPage() {
               <div className="flex flex-wrap items-center gap-4">
                 <Badge variant="secondary" className="gap-1.5 border-none font-normal">
                   <User className="size-3.5" />
-                  {pet.owner.firstName} {pet.owner.paternalLastName} · CI {pet.owner.nationalId}
+                  {pet.owner.firstName} {pet.owner.paternalLastName} · {t("common.nationalId")} {pet.owner.nationalId}
                 </Badge>
                 {pet.owner.phone && (
                   <Badge variant="secondary" className="gap-1.5 border-none font-normal">
@@ -139,7 +140,7 @@ export function PetDetailPage() {
           {weightPoints.length >= 2 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Evolución de peso</CardTitle>
+                <CardTitle className="text-base">{t("pets.weightTrend")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <PetWeightChart points={weightPoints} />
@@ -149,8 +150,8 @@ export function PetDetailPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Historial</CardTitle>
-              <p className="text-sm text-muted-foreground">Atenciones, citas, controles preventivos y ediciones, en orden cronológico</p>
+              <CardTitle className="text-base">{t("pets.history")}</CardTitle>
+              <p className="text-sm text-muted-foreground">{t("pets.historyDescription")}</p>
             </CardHeader>
             <CardContent>
               {loadingHistory && (
@@ -166,16 +167,16 @@ export function PetDetailPage() {
         <Dialog open={confirming} onOpenChange={setConfirming}>
           <DialogContent className="max-w-sm">
             <DialogHeader>
-              <DialogTitle>{pet.status === "ACTIVE" ? "¿Eliminar mascota?" : "¿Reactivar mascota?"}</DialogTitle>
+              <DialogTitle>{pet.status === "ACTIVE" ? t("pets.confirmDeleteTitle") : t("pets.confirmReactivateTitle")}</DialogTitle>
             </DialogHeader>
             <p className="text-sm text-muted-foreground">
               {pet.status === "ACTIVE"
-                ? `${pet.name} dejará de aparecer en el listado y en los buscadores. Su historial clínico no se borra y se puede reactivar en cualquier momento desde esta misma página.`
-                : `${pet.name} volverá a aparecer en el listado principal y en los buscadores.`}
+                ? t("pets.confirmDeleteBody", { name: pet.name })
+                : t("pets.confirmReactivateBody", { name: pet.name })}
             </p>
             <DialogFooter>
               <Button variant="outline" onClick={() => setConfirming(false)}>
-                Cancelar
+                {t("common.cancel")}
               </Button>
               <Button
                 variant={pet.status === "ACTIVE" ? "destructive" : "default"}
@@ -183,7 +184,7 @@ export function PetDetailPage() {
                 disabled={changeStatusMutation.isPending}
               >
                 {changeStatusMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-                {pet.status === "ACTIVE" ? "Eliminar" : "Reactivar"}
+                {pet.status === "ACTIVE" ? t("common.delete") : t("pets.reactivate")}
               </Button>
             </DialogFooter>
           </DialogContent>

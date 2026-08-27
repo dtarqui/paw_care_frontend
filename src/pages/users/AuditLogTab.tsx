@@ -7,18 +7,12 @@ import { TableSkeleton } from "@/components/TableSkeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAuditLogs } from "@/features/audit-logs/useAuditLogs";
 import type { AuditAction } from "@/features/audit-logs/types";
+import { useFormatters } from "@/lib/useFormatters";
 import { History } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const PAGE_SIZE = 20;
-
-const ACTION_LABEL: Record<AuditAction, string> = {
-  ACTIVATE_ACCOUNT: "Cuenta activada",
-  DEACTIVATE_ACCOUNT: "Cuenta desactivada",
-  RESET_PASSWORD: "Contraseña restablecida",
-  CHANGE_ROLE: "Rol cambiado",
-  INVITE_VET: "Veterinario invitado",
-};
 
 const ACTION_STYLE: Record<AuditAction, string> = {
   ACTIVATE_ACCOUNT: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400",
@@ -28,13 +22,9 @@ const ACTION_STYLE: Record<AuditAction, string> = {
   INVITE_VET: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400",
 };
 
-function formatDateTime(iso: string) {
-  const [date, time] = iso.split("T");
-  const [yyyy, mm, dd] = date.split("-");
-  return `${dd}/${mm}/${yyyy} ${time ? time.slice(0, 5) : ""}`.trim();
-}
-
 export function AuditLogTab() {
+  const { t } = useTranslation();
+  const { formatDateTime } = useFormatters();
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useAuditLogs(page, PAGE_SIZE);
   const logs = data?.logs;
@@ -42,24 +32,23 @@ export function AuditLogTab() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted-foreground">
-        Quién hizo qué sobre otras cuentas — aprobaciones, restablecimientos de contraseña, cambios de rol e
-        invitaciones.
+        {t("audit.intro")}
       </p>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Registro de acciones</CardTitle>
+          <CardTitle className="text-base">{t("audit.cardTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading && <TableSkeleton rows={5} />}
 
-          {isError && <ErrorState message="No se pudo cargar el registro de auditoría." />}
+          {isError && <ErrorState message={t("audit.loadError")} />}
 
           {!isLoading && !isError && logs?.length === 0 && (
             <EmptyState
               icon={History}
-              title="Todavía no hay acciones registradas"
-              description="Acá van a aparecer las aprobaciones, cambios de rol, restablecimientos de contraseña e invitaciones."
+              title={t("audit.emptyTitle")}
+              description={t("audit.emptyDescription")}
             />
           )}
 
@@ -69,14 +58,14 @@ export function AuditLogTab() {
                 {logs.map((log) => (
                   <MobileCard
                     key={log.id}
-                    title={ACTION_LABEL[log.action] ?? log.action}
+                    title={t(`audit.actions.${log.action}`, { defaultValue: log.action })}
                     subtitle={log.actor ? `${log.actor.firstName} ${log.actor.paternalLastName}` : "—"}
                     badge={
                       <span className="whitespace-nowrap text-xs text-muted-foreground">
                         {formatDateTime(log.date)}
                       </span>
                     }
-                    rows={log.details ? [{ label: "Detalle", value: log.details }] : undefined}
+                    rows={log.details ? [{ label: t("audit.detail"), value: log.details }] : undefined}
                   />
                 ))}
               </MobileCardList>
@@ -85,10 +74,10 @@ export function AuditLogTab() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Fecha</TableHead>
-                      <TableHead>Acción</TableHead>
-                      <TableHead>Realizada por</TableHead>
-                      <TableHead>Detalle</TableHead>
+                      <TableHead>{t("common.date")}</TableHead>
+                      <TableHead>{t("audit.action")}</TableHead>
+                      <TableHead>{t("audit.performedBy")}</TableHead>
+                      <TableHead>{t("audit.detail")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -97,7 +86,7 @@ export function AuditLogTab() {
                         <TableCell className="whitespace-nowrap text-sm text-muted-foreground">{formatDateTime(log.date)}</TableCell>
                         <TableCell>
                           <Badge className={`border-none font-medium ${ACTION_STYLE[log.action]}`} variant="secondary">
-                            {ACTION_LABEL[log.action] ?? log.action}
+                            {t(`audit.actions.${log.action}`, { defaultValue: log.action })}
                           </Badge>
                         </TableCell>
                         <TableCell>

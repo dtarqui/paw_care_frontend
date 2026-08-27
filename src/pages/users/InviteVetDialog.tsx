@@ -12,8 +12,10 @@ import { Label } from "@/components/ui/label";
 import { useInviteVet } from "@/features/users/useUsers";
 import { Loader2, Mail } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 export function InviteVetDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -34,7 +36,7 @@ export function InviteVetDialog() {
       await inviteVetMutation.mutateAsync({ email, name: name || undefined });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo enviar la invitación");
+      setError(err instanceof Error ? err.message : t("users.invite.error"));
     }
   }
 
@@ -43,36 +45,40 @@ export function InviteVetDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Mail className="size-4" />
-          Invitar veterinario
+          {t("users.invite.action")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Invitar veterinario</DialogTitle>
+          <DialogTitle>{t("users.invite.action")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            Le enviamos un email con un enlace para que complete su registro — la cuenta queda activa apenas ponga su
-            contraseña, sin necesitar aprobación adicional.
+            {t("users.invite.description")}
           </p>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="inv-email">Email *</Label>
+            <Label htmlFor="inv-email">{t("common.email")} *</Label>
             <Input id="inv-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="inv-nombre">Nombre (opcional)</Label>
-            <Input id="inv-nombre" value={name} onChange={(e) => setName(e.target.value)} placeholder="Para personalizar el email" />
+            <Label htmlFor="inv-name">{t("users.invite.nameOptional")}</Label>
+            <Input
+              id="inv-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t("users.invite.namePlaceholder")}
+            />
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={inviteVetMutation.isPending}>
               {inviteVetMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Enviar invitación
+              {t("users.invite.send")}
             </Button>
           </DialogFooter>
         </form>

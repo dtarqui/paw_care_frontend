@@ -12,26 +12,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { reportsApi } from "@/features/reports/api";
 import { useVisitsReport, useRevenueByServiceTypeReport } from "@/features/reports/useReports";
 import { FileSearch, FileDown, FileSpreadsheet, Loader2 } from "lucide-react";
+import { useFormatters } from "@/lib/useFormatters";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-type ReportType = "atenciones" | "ingresos-por-servicio";
-
-function formatDate(iso: string) {
-  const [fecha] = iso.split("T");
-  const [yyyy, mm, dd] = fecha.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
+type ReportType = "visits" | "revenue-by-service";
 
 export function ClinicalTab() {
-  const [type, setType] = useState<ReportType>("ingresos-por-servicio");
+  const { t } = useTranslation();
+  const { formatDate } = useFormatters();
+  const [type, setType] = useState<ReportType>("revenue-by-service");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [downloading, setDownloading] = useState<"excel" | "pdf" | null>(null);
 
   const filters = { from: from || undefined, to: to || undefined };
-  const visitsReport = useVisitsReport(filters, type === "atenciones");
-  const incomeReport = useRevenueByServiceTypeReport(filters, type === "ingresos-por-servicio");
+  const visitsReport = useVisitsReport(filters, type === "visits");
+  const incomeReport = useRevenueByServiceTypeReport(filters, type === "revenue-by-service");
 
   async function download(format: "excel" | "pdf") {
     setDownloading(format);
@@ -49,50 +47,50 @@ export function ClinicalTab() {
         <CardContent className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5">
-              <Label>Tipo de reporte</Label>
+              <Label>{t("reports.reportType")}</Label>
               <Select value={type} onValueChange={(v) => setType(v as ReportType)}>
                 <SelectTrigger className="w-full sm:w-56">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ingresos-por-servicio">Ingresos por tipo de servicio</SelectItem>
-                  <SelectItem value="atenciones">Atenciones por período</SelectItem>
+                  <SelectItem value="revenue-by-service">{t("reports.types.revenueByService")}</SelectItem>
+                  <SelectItem value="visits">{t("reports.types.visits")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="desdeClinico">Desde</Label>
-              <Input id="desdeClinico" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
+              <Label htmlFor="clinical-from">{t("common.from")}</Label>
+              <Input id="clinical-from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="hastaClinico">Hasta</Label>
-              <Input id="hastaClinico" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+              <Label htmlFor="clinical-to">{t("common.to")}</Label>
+              <Input id="clinical-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
             </div>
           </div>
 
           <div className="flex gap-2">
             <Button type="button" variant="outline" size="sm" disabled={!!downloading} onClick={() => download("excel")}>
               {downloading === "excel" ? <Loader2 className="size-4 animate-spin" /> : <FileSpreadsheet className="size-4" />}
-              Exportar Excel
+              {t("reports.exportExcel")}
             </Button>
             <Button type="button" variant="outline" size="sm" disabled={!!downloading} onClick={() => download("pdf")}>
               {downloading === "pdf" ? <Loader2 className="size-4 animate-spin" /> : <FileDown className="size-4" />}
-              Exportar PDF
+              {t("reports.exportPdf")}
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {type === "ingresos-por-servicio" && (
+      {type === "revenue-by-service" && (
         <Card>
           <CardContent className="pt-6">
             {incomeReport.isLoading && <Skeleton className="h-64 w-full" />}
-            {incomeReport.isError && <ErrorState message="No se pudo cargar el reporte." />}
+            {incomeReport.isError && <ErrorState message={t("reports.loadError")} />}
             {!incomeReport.isLoading && incomeReport.data?.length === 0 && (
               <EmptyState
                 icon={FileSearch}
-                title="No hay ingresos que cumplan estos filtros"
-                description="Probá ampliando el rango de fechas."
+                title={t("reports.noRevenue")}
+                description={t("reports.widenRange")}
               />
             )}
             {!incomeReport.isLoading && incomeReport.data && incomeReport.data.length > 0 && (
@@ -102,7 +100,7 @@ export function ClinicalTab() {
                   <XAxis type="number" tickFormatter={(v) => `Bs.${v}`} stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis type="category" dataKey="serviceType" width={150} stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip
-                    formatter={(value) => [`Bs. ${Number(value).toFixed(2)}`, "Monto"]}
+                    formatter={(value) => [`Bs. ${Number(value).toFixed(2)}`, t("common.amount")]}
                     contentStyle={{
                       background: "var(--popover)",
                       border: "1px solid var(--border)",
@@ -121,15 +119,17 @@ export function ClinicalTab() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Tipo de servicio</TableHead>
-                      <TableHead>Cantidad</TableHead>
-                      <TableHead>Monto (Bs.)</TableHead>
+                      <TableHead>{t("visits.serviceType")}</TableHead>
+                      <TableHead>{t("common.quantity")}</TableHead>
+                      <TableHead>{t("common.amountBs")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {incomeReport.data.map((group) => (
                       <TableRow key={group.serviceType}>
-                        <TableCell className="font-medium">{group.serviceType}</TableCell>
+                        <TableCell className="font-medium">
+                          {t(`enums.serviceType.${group.serviceType}`, { defaultValue: group.serviceType })}
+                        </TableCell>
                         <TableCell className="tabular-nums">{group.count}</TableCell>
                         <TableCell className="tabular-nums">{group.amount.toFixed(2)}</TableCell>
                       </TableRow>
@@ -142,16 +142,16 @@ export function ClinicalTab() {
         </Card>
       )}
 
-      {type === "atenciones" && (
+      {type === "visits" && (
         <Card>
           <CardContent className="pt-6">
             {visitsReport.isLoading && <TableSkeleton rows={4} />}
-            {visitsReport.isError && <ErrorState message="No se pudo cargar el reporte." />}
+            {visitsReport.isError && <ErrorState message={t("reports.loadError")} />}
             {!visitsReport.isLoading && visitsReport.data?.length === 0 && (
               <EmptyState
                 icon={FileSearch}
-                title="No hay atenciones que cumplan estos filtros"
-                description="Probá ampliando el rango de fechas o quitando el filtro de tipo de servicio."
+                title={t("reports.noVisits")}
+                description={t("reports.noVisitsHint")}
               />
             )}
             {!visitsReport.isLoading && visitsReport.data && visitsReport.data.length > 0 && (
@@ -164,10 +164,13 @@ export function ClinicalTab() {
                       subtitle={visit.owner}
                       badge={<StatusBadge status={visit.paymentStatus} />}
                       rows={[
-                        { label: "Fecha", value: formatDate(visit.date) },
-                        { label: "Servicio", value: visit.serviceType },
+                        { label: t("common.date"), value: formatDate(visit.date) },
                         {
-                          label: "Monto",
+                          label: t("reports.service"),
+                          value: t(`enums.serviceType.${visit.serviceType}`, { defaultValue: visit.serviceType }),
+                        },
+                        {
+                          label: t("common.amount"),
                           value: <span className="font-medium tabular-nums">Bs. {visit.consultationFee.toFixed(2)}</span>,
                         },
                       ]}
@@ -179,12 +182,12 @@ export function ClinicalTab() {
                   <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Fecha</TableHead>
-                      <TableHead>Mascota</TableHead>
-                      <TableHead>Propietario</TableHead>
-                      <TableHead>Tipo de servicio</TableHead>
-                      <TableHead className="text-right">Monto</TableHead>
-                      <TableHead>Estado</TableHead>
+                      <TableHead>{t("common.date")}</TableHead>
+                      <TableHead>{t("common.pet")}</TableHead>
+                      <TableHead>{t("common.owner")}</TableHead>
+                      <TableHead>{t("visits.serviceType")}</TableHead>
+                      <TableHead className="text-right">{t("common.amount")}</TableHead>
+                      <TableHead>{t("common.status")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -193,7 +196,7 @@ export function ClinicalTab() {
                         <TableCell>{formatDate(visit.date)}</TableCell>
                         <TableCell>{visit.pet}</TableCell>
                         <TableCell>{visit.owner}</TableCell>
-                        <TableCell>{visit.serviceType}</TableCell>
+                        <TableCell>{t(`enums.serviceType.${visit.serviceType}`, { defaultValue: visit.serviceType })}</TableCell>
                         <TableCell className="font-medium tabular-nums">Bs. {visit.consultationFee.toFixed(2)}</TableCell>
                         <TableCell>
                           <StatusBadge status={visit.paymentStatus} />

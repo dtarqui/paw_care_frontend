@@ -12,8 +12,10 @@ import type { User } from "@/features/users/types";
 import { useResetPassword } from "@/features/users/useUsers";
 import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ResetPasswordDialog({ user, onClose }: { user: User | null; onClose: () => void }) {
+  const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const resetPasswordMutation = useResetPassword();
@@ -29,14 +31,14 @@ export function ResetPasswordDialog({ user, onClose }: { user: User | null; onCl
     setError(null);
     if (!user) return;
     if (newPassword.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres");
+      setError(t("auth.passwordTooShort"));
       return;
     }
     try {
       await resetPasswordMutation.mutateAsync({ id: user.id, newPassword });
       resetAndClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo restablecer la contraseña");
+      setError(err instanceof Error ? err.message : t("auth.resetError"));
     }
   }
 
@@ -44,32 +46,34 @@ export function ResetPasswordDialog({ user, onClose }: { user: User | null; onCl
     <Dialog open={!!user} onOpenChange={(v) => !v && resetAndClose()}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Restablecer contraseña</DialogTitle>
+          <DialogTitle>{t("users.resetPassword")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            Se le asignará una contraseña nueva a {user?.firstName} {user?.paternalLastName} ({user?.username}).
-            Comunícasela directamente — no se envía por email ni SMS.
+            {t("users.resetPasswordBody", {
+              name: `${user?.firstName ?? ""} ${user?.paternalLastName ?? ""}`.trim(),
+              username: user?.username ?? "",
+            })}
           </p>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="newPassword">Contraseña nueva</Label>
+            <Label htmlFor="newPassword">{t("auth.newPassword")}</Label>
             <Input
               id="newPassword"
               type="text"
               minLength={6}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres"
+              placeholder={t("auth.minSixCharacters")}
             />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={resetAndClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={resetPasswordMutation.isPending}>
               {resetPasswordMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Restablecer
+              {t("users.reset")}
             </Button>
           </DialogFooter>
         </form>

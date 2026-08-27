@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { t } from "i18next";
 import { toast } from "sonner";
 import { medicationsApi } from "./api";
 import type { NewMedicationInput, UpdateMedicationInput } from "./types";
@@ -24,7 +25,7 @@ export function useRegisterStockIn() {
       medicationsApi.registerStockIn(medicationId, quantity),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medications"] });
-      toast.success("Entrada registrada correctamente");
+      toast.success(t("toasts.stockAdded"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -36,7 +37,7 @@ export function useCreateMedication() {
     mutationFn: (input: NewMedicationInput) => medicationsApi.create(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medications"] });
-      toast.success("Medicamento creado correctamente");
+      toast.success(t("toasts.medicationCreated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -49,7 +50,7 @@ export function useUpdateMedication() {
       medicationsApi.update(id, input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medications"] });
-      toast.success("Medicamento actualizado correctamente");
+      toast.success(t("toasts.medicationUpdated"));
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -61,7 +62,7 @@ export function useDeleteMedication() {
     mutationFn: (id: number) => medicationsApi.remove(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medications"] });
-      toast.success("Medicamento eliminado");
+      toast.success(t("toasts.medicationDeleted"));
     },
     onError: (error: Error) => toast.error(error.message),
   });

@@ -1,13 +1,31 @@
+import i18n, { t } from "i18next";
+
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
 const TOKEN_STORAGE_KEY = "pawcare.token";
 
 export class ApiError extends Error {
   status: number;
-  constructor(message: string, status: number) {
+  /** Identificador estable del error del backend (`PetNotFoundError`, `Forbidden`…).
+   * Se guarda por si un caller quiere distinguir un caso puntual; el `message` ya
+   * viene traducido al idioma actual. */
+  code?: string;
+
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.code = code;
   }
+}
+
+/**
+ * El backend manda `error` en español y `code` con el nombre estable del error.
+ * Si hay traducción para ese código, gana; si no, se muestra el mensaje del
+ * servidor. Así un error nuevo se ve en español en vez de mostrar una clave cruda.
+ */
+function messageFor(body: { error?: string; code?: string }): string {
+  const fallback = body.error ?? t("common.genericError");
+  return body.code ? t(`errors.codes.${body.code}`, { defaultValue: fallback }) : fallback;
 }
 
 export const tokenStorage = {
@@ -25,6 +43,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = tokenStorage.get();
   const headers = new Headers(options.headers);
   headers.set("Content-Type", "application/json");
+  headers.set("Accept-Language", i18n.resolvedLanguage ?? i18n.language ?? "es");
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
   const response = await fetch(`${API_URL}${path}`, { ...options, headers });
@@ -36,13 +55,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (response.status === 401 && token) {
     tokenStorage.clear();
     window.location.href = "/login";
-    throw new ApiError("Sesión expirada", 401);
+    throw new ApiError(t("errors.codes.SessionExpired"), 401, "SessionExpired");
   }
 
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new ApiError(body.error ?? "Error inesperado del servidor", response.status);
+    throw new ApiError(messageFor(body), response.status, body.code);
   }
 
   return body as T;
@@ -65,15 +84,17 @@ export const apiClient = {
     const headers = new Headers();
     if (token) headers.set("Authorization", `Bearer ${token}`);
 
+    headers.set("Accept-Language", i18n.resolvedLanguage ?? i18n.language ?? "es");
+
     const response = await fetch(`${API_URL}${path}`, { method: "POST", headers, body: formData });
     if (response.status === 401) {
       tokenStorage.clear();
       window.location.href = "/login";
-      throw new ApiError("Sesión expirada", 401);
+      throw new ApiError(t("errors.codes.SessionExpired"), 401, "SessionExpired");
     }
     const body = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new ApiError(body.error ?? "Error inesperado del servidor", response.status);
+      throw new ApiError(messageFor(body), response.status, body.code);
     }
     return body as T;
   },
@@ -85,10 +106,12 @@ export const apiClient = {
     const headers = new Headers();
     if (token) headers.set("Authorization", `Bearer ${token}`);
 
+    headers.set("Accept-Language", i18n.resolvedLanguage ?? i18n.language ?? "es");
+
     const response = await fetch(`${API_URL}${path}`, { headers });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      throw new ApiError(body.error ?? "No se pudo descargar el archivo", response.status);
+      throw new ApiError(body.error ?? t("errors.downloadFailed"), response.status);
     }
 
     const blob = await response.blob();

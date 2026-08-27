@@ -20,6 +20,7 @@ import { useVets } from "@/features/vets/useVets";
 import { SERVICE_TYPES } from "@/lib/service-types";
 import { Loader2, Plus, ShieldCheck } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { ConsumedMedicationsField, type MedicationItem } from "./ConsumedMedicationsField";
 
 const INITIAL_STATE = {
@@ -39,6 +40,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
   const { myVet } = useMyVet();
   const createVisitMutation = useCreateVisit();
 
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(INITIAL_STATE);
   const [medications, setMedications] = useState<MedicationItem[]>([]);
@@ -66,15 +68,15 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
     setError(null);
 
     if (!form.vetId) {
-      setError("Selecciona el veterinario que atiende");
+      setError(t("visits.form.pickVet"));
       return;
     }
     if (!form.serviceType) {
-      setError("Selecciona el tipo de servicio");
+      setError(t("visits.form.pickServiceType"));
       return;
     }
     if (!form.diagnosis.trim() || !form.treatment.trim()) {
-      setError("Diagnóstico y tratamiento son obligatorios");
+      setError(t("visits.form.diagnosisAndTreatmentRequired"));
       return;
     }
 
@@ -96,7 +98,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
       });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo registrar la atención");
+      setError(err instanceof Error ? err.message : t("visits.form.createError"));
     }
   }
 
@@ -105,13 +107,16 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
       <DialogTrigger asChild>
         <Button>
           <Plus className="size-4" />
-          Nueva atención
+          {t("visits.newVisit")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl overflow-hidden">
         <DialogHeader>
           <DialogTitle>
-            Nueva atención — {pet.name} ({pet.species})
+            {t("visits.newVisitFor", {
+              name: pet.name,
+              species: t(`enums.species.${pet.species}`, { defaultValue: pet.species }),
+            })}
           </DialogTitle>
         </DialogHeader>
 
@@ -119,21 +124,21 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
           <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <Label>Veterinario *</Label>
+                <Label>{t("common.vet")} *</Label>
                 {isVet ? (
                   <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
                     <ShieldCheck className="size-4 shrink-0 text-primary" />
                     <span className="truncate">
-                      {myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : "Cargando…"}
+                      {myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : t("common.loading")}
                     </span>
                     <Badge variant="secondary" className="ml-auto shrink-0 text-[10px]">
-                      Tú
+                      {t("common.you")}
                     </Badge>
                   </div>
                 ) : (
                   <Select value={form.vetId} onValueChange={(v) => update("vetId", v)} disabled={loadingVets}>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Seleccione veterinario" />
+                      <SelectValue placeholder={t("visits.pickVet")} />
                     </SelectTrigger>
                     <SelectContent>
                       {vets?.map((v) => (
@@ -147,15 +152,15 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label>Tipo de servicio *</Label>
+                <Label>{t("visits.serviceType")} *</Label>
                 <Select value={form.serviceType} onValueChange={(v) => update("serviceType", v)}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Seleccione tipo" />
+                    <SelectValue placeholder={t("visits.pickType")} />
                   </SelectTrigger>
                   <SelectContent>
                     {SERVICE_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
-                        {type}
+                        {t(`enums.serviceType.${type}`, { defaultValue: type })}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -165,7 +170,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="diagnosis">Diagnóstico *</Label>
+                <Label htmlFor="diagnosis">{t("visits.diagnosis")} *</Label>
                 <Textarea
                   id="diagnosis"
                   required
@@ -176,7 +181,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="treatment">Tratamiento *</Label>
+                <Label htmlFor="treatment">{t("visits.treatment")} *</Label>
                 <Textarea
                   id="treatment"
                   required
@@ -188,7 +193,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="externalExams">Exámenes externos (opcional)</Label>
+              <Label htmlFor="externalExams">{t("visits.externalExams")}</Label>
               <Textarea
                 id="externalExams"
                 value={form.externalExams}
@@ -201,7 +206,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="weight">Peso actual (kg, opcional)</Label>
+                <Label htmlFor="weight">{t("visits.currentWeightOptional")}</Label>
                 <Input
                   id="weight"
                   type="number"
@@ -212,7 +217,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="consultationFee">Monto de consulta (Bs.) *</Label>
+                <Label htmlFor="consultationFee">{t("visits.consultationFee")} *</Label>
                 <Input
                   id="consultationFee"
                   type="number"
@@ -230,11 +235,11 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createVisitMutation.isPending}>
               {createVisitMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar atención
+              {t("visits.saveVisit")}
             </Button>
           </DialogFooter>
         </form>

@@ -13,7 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCreatePet } from "@/features/pets/usePets";
 import { useOwnerByNationalId } from "@/features/owners/useOwners";
 import { CheckCircle2, Loader2, PlusCircle, Search } from "lucide-react";
+import { SEX_VALUES, SPECIES_VALUES } from "@/lib/pet";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 const INITIAL_STATE = {
   ownerNationalId: "",
@@ -29,6 +31,7 @@ const INITIAL_STATE = {
 };
 
 export function NewPetDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
@@ -54,11 +57,11 @@ export function NewPetDialog() {
     setError(null);
 
     if (!form.sex) {
-      setError("Selecciona el sexo de la mascota");
+      setError(t("pets.form.pickSex"));
       return;
     }
     if (newOwner && (!form.ownerFirstName || !form.ownerPaternalLastName)) {
-      setError("Como es un propietario nuevo, indica su nombre y apellido paterno");
+      setError(t("pets.form.newOwnerNeedsName"));
       return;
     }
 
@@ -79,7 +82,7 @@ export function NewPetDialog() {
       });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo registrar la mascota");
+      setError(err instanceof Error ? err.message : t("pets.form.createError"));
     }
   }
 
@@ -88,26 +91,26 @@ export function NewPetDialog() {
       <DialogTrigger asChild>
         <Button>
           <PlusCircle className="size-4" />
-          Nueva mascota
+          {t("pets.newPet")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Registrar mascota</DialogTitle>
+          <DialogTitle>{t("pets.registerPet")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">
           <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
           <div className="flex flex-col gap-3 rounded-md border p-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="ownerNationalId">CI del propietario *</Label>
+              <Label htmlFor="ownerNationalId">{t("pets.form.ownerNationalId")} *</Label>
               <div className="relative">
                 <Input
                   id="ownerNationalId"
                   required
                   value={form.ownerNationalId}
                   onChange={(e) => update("ownerNationalId", e.target.value)}
-                  placeholder="Ej. 4521367"
+                  placeholder={t("pets.form.nationalIdPlaceholder")}
                 />
                 {searchingOwner && (
                   <Loader2 className="absolute right-2.5 top-2.5 size-4 animate-spin text-muted-foreground" />
@@ -118,8 +121,10 @@ export function NewPetDialog() {
             {existingOwner && (
               <div className="flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
                 <CheckCircle2 className="size-4 shrink-0" />
-                Owner existente: {existingOwner.firstName} {existingOwner.paternalLastName} ·{" "}
-                {existingOwner.phone}
+                {t("pets.form.existingOwner", {
+                  name: `${existingOwner.firstName} ${existingOwner.paternalLastName}`,
+                })}{" "}
+                · {existingOwner.phone}
               </div>
             )}
 
@@ -127,11 +132,11 @@ export function NewPetDialog() {
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Search className="size-3.5" />
-                  No encontrado — se registrará como propietario nuevo
+                  {t("pets.form.ownerNotFound")}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="ownerFirstName">Nombre *</Label>
+                    <Label htmlFor="ownerFirstName">{t("people.firstName")} *</Label>
                     <Input
                       id="ownerFirstName"
                       required={newOwner}
@@ -140,7 +145,7 @@ export function NewPetDialog() {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="ownerPaternalLastName">Apellido paterno *</Label>
+                    <Label htmlFor="ownerPaternalLastName">{t("people.paternalLastName")} *</Label>
                     <Input
                       id="ownerPaternalLastName"
                       required={newOwner}
@@ -149,7 +154,7 @@ export function NewPetDialog() {
                     />
                   </div>
                   <div className="col-span-2 flex flex-col gap-1.5">
-                    <Label htmlFor="ownerPhone">Teléfono</Label>
+                    <Label htmlFor="ownerPhone">{t("common.phone")}</Label>
                     <Input
                       id="ownerPhone"
                       value={form.ownerPhone}
@@ -163,40 +168,45 @@ export function NewPetDialog() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="mascotaNombre">Nombre de la mascota *</Label>
-              <Input id="mascotaNombre" required value={form.name} onChange={(e) => update("name", e.target.value)} />
+              <Label htmlFor="petName">{t("pets.form.petName")} *</Label>
+              <Input id="petName" required value={form.name} onChange={(e) => update("name", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Especie *</Label>
+              <Label>{t("pets.species")} *</Label>
               <Select value={form.species} onValueChange={(v) => update("species", v)}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione" />
+                  <SelectValue placeholder={t("common.select")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Perro">Perro</SelectItem>
-                  <SelectItem value="Gato">Gato</SelectItem>
-                  <SelectItem value="Otro">Otro</SelectItem>
+                  {SPECIES_VALUES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`enums.species.${value}`)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="breed">Raza</Label>
+              <Label htmlFor="breed">{t("pets.breed")}</Label>
               <Input id="breed" value={form.breed} onChange={(e) => update("breed", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Sexo *</Label>
+              <Label>{t("pets.sex")} *</Label>
               <Select value={form.sex} onValueChange={(v) => update("sex", v as "Macho" | "Hembra")}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione" />
+                  <SelectValue placeholder={t("common.select")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Macho">Macho</SelectItem>
-                  <SelectItem value="Hembra">Hembra</SelectItem>
+                  {SEX_VALUES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`enums.sex.${value}`)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="birthDate">Fecha de nacimiento</Label>
+              <Label htmlFor="birthDate">{t("pets.birthDate")}</Label>
               <Input
                 id="birthDate"
                 type="date"
@@ -205,7 +215,7 @@ export function NewPetDialog() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="weight">Peso (kg)</Label>
+              <Label htmlFor="weight">{t("pets.weightKg")}</Label>
               <Input
                 id="weight"
                 type="number"
@@ -222,11 +232,11 @@ export function NewPetDialog() {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createPetMutation.isPending}>
               {createPetMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </form>

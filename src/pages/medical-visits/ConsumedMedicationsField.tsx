@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useMedications } from "@/features/medications/useMedications";
 import { Plus, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export interface MedicationItem {
   medicationId: string;
@@ -16,6 +17,7 @@ interface ConsumedMedicationsFieldProps {
 }
 
 export function ConsumedMedicationsField({ items, onChange }: ConsumedMedicationsFieldProps) {
+  const { t } = useTranslation();
   const { data: medications } = useMedications();
 
   function updateItem(index: number, field: keyof MedicationItem, value: string) {
@@ -35,10 +37,10 @@ export function ConsumedMedicationsField({ items, onChange }: ConsumedMedication
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <Label>Medicamentos consumidos (opcional)</Label>
+        <Label>{t("visits.consumedMedications")}</Label>
         <Button type="button" variant="ghost" size="sm" onClick={addItem}>
           <Plus className="size-3.5" />
-          Agregar
+          {t("common.add")}
         </Button>
       </div>
 
@@ -46,12 +48,12 @@ export function ConsumedMedicationsField({ items, onChange }: ConsumedMedication
         <div key={index} className="flex items-center gap-2">
           <Select value={item.medicationId} onValueChange={(v) => updateItem(index, "medicationId", v)}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Seleccione medicamento" />
+              <SelectValue placeholder={t("visits.pickMedication")} />
             </SelectTrigger>
             <SelectContent>
               {medications?.map((m) => (
                 <SelectItem key={m.id} value={String(m.id)}>
-                  {m.name} (stock: {m.currentStock})
+                  {m.name} ({t("inventory.stockShort", { count: m.currentStock })})
                 </SelectItem>
               ))}
             </SelectContent>
@@ -63,7 +65,14 @@ export function ConsumedMedicationsField({ items, onChange }: ConsumedMedication
             value={item.quantity}
             onChange={(e) => updateItem(index, "quantity", e.target.value)}
           />
-          <Button type="button" variant="ghost" size="icon" className="shrink-0" onClick={() => removeItem(index)}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="shrink-0"
+            aria-label={t("common.remove")}
+            onClick={() => removeItem(index)}
+          >
             <X className="size-4" />
           </Button>
         </div>

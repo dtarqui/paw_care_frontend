@@ -12,10 +12,12 @@ import { Label } from "@/components/ui/label";
 import { useCreateMedication } from "@/features/medications/useMedications";
 import { Loader2, Plus } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 const INITIAL_STATE = { name: "", minimumStock: "", initialStock: "" };
 
 export function NewMedicationDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
@@ -31,12 +33,12 @@ export function NewMedicationDialog() {
     event.preventDefault();
     setError(null);
     if (!form.name.trim()) {
-      setError("El nombre es obligatorio");
+      setError(t("inventory.form.nameRequired"));
       return;
     }
     const minimumStock = Number(form.minimumStock);
     if (Number.isNaN(minimumStock) || minimumStock < 0) {
-      setError("El stock mínimo debe ser 0 o mayor");
+      setError(t("inventory.form.minimumStockRange"));
       return;
     }
     try {
@@ -47,7 +49,7 @@ export function NewMedicationDialog() {
       });
       handleClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo crear el medicamento");
+      setError(err instanceof Error ? err.message : t("inventory.form.createError"));
     }
   }
 
@@ -56,21 +58,21 @@ export function NewMedicationDialog() {
       <DialogTrigger asChild>
         <Button>
           <Plus className="size-4" />
-          Nuevo medicamento
+          {t("inventory.newMedication")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nuevo medicamento</DialogTitle>
+          <DialogTitle>{t("inventory.newMedication")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="name">Nombre *</Label>
+            <Label htmlFor="name">{t("common.name")} *</Label>
             <Input id="name" required value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="minimumStock">Stock mínimo *</Label>
+              <Label htmlFor="minimumStock">{t("inventory.minimumStock")} *</Label>
               <Input
                 id="minimumStock"
                 type="number"
@@ -81,7 +83,7 @@ export function NewMedicationDialog() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="initialStock">Stock inicial</Label>
+              <Label htmlFor="initialStock">{t("inventory.initialStock")}</Label>
               <Input
                 id="initialStock"
                 type="number"
@@ -95,11 +97,11 @@ export function NewMedicationDialog() {
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createMedicationMutation.isPending}>
               {createMedicationMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Crear
+              {t("common.create")}
             </Button>
           </DialogFooter>
         </form>

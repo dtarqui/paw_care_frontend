@@ -13,7 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useUpdatePet } from "@/features/pets/usePets";
 import type { Pet } from "@/features/pets/types";
 import { Loader2, Pencil } from "lucide-react";
+import { SEX_VALUES, SPECIES_VALUES } from "@/lib/pet";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 function toFormState(pet: Pet) {
   return {
@@ -27,6 +29,7 @@ function toFormState(pet: Pet) {
 }
 
 export function EditPetDialog({ pet }: { pet: Pet }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(() => toFormState(pet));
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +50,7 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
     setError(null);
 
     if (!form.name.trim() || !form.species.trim()) {
-      setError("Nombre y especie no pueden quedar vacíos");
+      setError(t("pets.form.nameAndSpeciesRequired"));
       return;
     }
 
@@ -62,7 +65,7 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
       });
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo actualizar la mascota");
+      setError(err instanceof Error ? err.message : t("pets.form.updateError"));
     }
   }
 
@@ -71,62 +74,67 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Pencil className="size-4" />
-          Editar
+          {t("common.edit")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Editar datos de {pet.name}</DialogTitle>
+          <DialogTitle>{t("pets.editTitle", { name: pet.name })}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editNombre">Nombre *</Label>
-              <Input id="editNombre" required value={form.name} onChange={(e) => update("name", e.target.value)} />
+              <Label htmlFor="edit-name">{t("common.name")} *</Label>
+              <Input id="edit-name" required value={form.name} onChange={(e) => update("name", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Especie *</Label>
+              <Label>{t("pets.species")} *</Label>
               <Select value={form.species} onValueChange={(v) => update("species", v)}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione" />
+                  <SelectValue placeholder={t("common.select")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Perro">Perro</SelectItem>
-                  <SelectItem value="Gato">Gato</SelectItem>
-                  <SelectItem value="Otro">Otro</SelectItem>
+                  {SPECIES_VALUES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`enums.species.${value}`)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editRaza">Raza</Label>
-              <Input id="editRaza" value={form.breed} onChange={(e) => update("breed", e.target.value)} />
+              <Label htmlFor="edit-breed">{t("pets.breed")}</Label>
+              <Input id="edit-breed" value={form.breed} onChange={(e) => update("breed", e.target.value)} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Sexo *</Label>
+              <Label>{t("pets.sex")} *</Label>
               <Select value={form.sex} onValueChange={(v) => update("sex", v as "Macho" | "Hembra")}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione" />
+                  <SelectValue placeholder={t("common.select")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Macho">Macho</SelectItem>
-                  <SelectItem value="Hembra">Hembra</SelectItem>
+                  {SEX_VALUES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`enums.sex.${value}`)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editFechaNacimiento">Fecha de nacimiento</Label>
+              <Label htmlFor="edit-birthDate">{t("pets.birthDate")}</Label>
               <Input
-                id="editFechaNacimiento"
+                id="edit-birthDate"
                 type="date"
                 value={form.birthDate}
                 onChange={(e) => update("birthDate", e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editPeso">Peso (kg)</Label>
+              <Label htmlFor="edit-weight">{t("pets.weightKg")}</Label>
               <Input
-                id="editPeso"
+                id="edit-weight"
                 type="number"
                 step="0.1"
                 min="0"
@@ -140,11 +148,11 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updatePetMutation.isPending}>
               {updatePetMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar cambios
+              {t("common.saveChanges")}
             </Button>
           </DialogFooter>
         </form>

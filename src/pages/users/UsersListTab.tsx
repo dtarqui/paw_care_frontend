@@ -16,9 +16,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useAuth } from "@/features/auth/AuthContext";
 import { useChangeUserStatus, useCancelInvitation, usePendingInvitations, useUsers } from "@/features/users/useUsers";
 import type { PendingInvitation, User } from "@/features/users/types";
-import { ROLE_LABEL } from "@/lib/roles";
+import { useFormatters } from "@/lib/useFormatters";
 import { Loader2, Mail, Users, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ChangeRoleDialog } from "./ChangeRoleDialog";
 import { InviteVetDialog } from "./InviteVetDialog";
 import { NewUserDialog } from "./NewUserDialog";
@@ -30,13 +31,9 @@ function isPendingApproval(user: User) {
   return user.selfRegistered && user.status === "INACTIVE";
 }
 
-function formatDate(iso: string) {
-  const [fecha] = iso.split("T");
-  const [yyyy, mm, dd] = fecha.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
-
 export function UsersListTab() {
+  const { t } = useTranslation();
+  const { formatDate } = useFormatters();
   const { user: currentUser } = useAuth();
   const [page, setPage] = useState(1);
   const { data, isLoading, isError } = useUsers(page, PAGE_SIZE);
@@ -72,7 +69,7 @@ export function UsersListTab() {
       {invitations && invitations.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Invitaciones pendientes</CardTitle>
+            <CardTitle className="text-base">{t("users.pendingInvitations")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col divide-y">
@@ -82,13 +79,16 @@ export function UsersListTab() {
                     <Mail className="size-4 shrink-0 text-muted-foreground" />
                     <span className="font-medium">{invitation.name || invitation.email}</span>
                     <span className="text-muted-foreground">
-                      {invitation.name && `(${invitation.email}) · `}invitó {invitation.invitedBy.firstName}{" "}
-                      {invitation.invitedBy.paternalLastName} · vence {formatDate(invitation.expiresAt)}
+                      {invitation.name && `(${invitation.email}) · `}
+                      {t("users.invitedBy", {
+                        name: `${invitation.invitedBy.firstName} ${invitation.invitedBy.paternalLastName}`,
+                      })}{" "}
+                      · {t("users.invitationExpires", { date: formatDate(invitation.expiresAt) })}
                     </span>
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => setInvitationTarget(invitation)}>
                     <X className="size-3.5" />
-                    Cancelar
+                    {t("common.cancel")}
                   </Button>
                 </div>
               ))}
@@ -99,18 +99,18 @@ export function UsersListTab() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Listado</CardTitle>
+          <CardTitle className="text-base">{t("users.listTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading && <TableSkeleton rows={4} />}
 
-          {isError && <ErrorState message="No se pudo cargar el listado de usuarios." />}
+          {isError && <ErrorState message={t("users.loadError")} />}
 
           {!isLoading && !isError && users?.length === 0 && (
             <EmptyState
               icon={Users}
-              title="Sin usuarios registrados todavía"
-              description="Creá cuentas para el personal, o invitá a un veterinario por email."
+              title={t("users.emptyTitle")}
+              description={t("users.emptyDescription")}
               action={<NewUserDialog />}
             />
           )}
@@ -122,9 +122,9 @@ export function UsersListTab() {
                   <MobileCard
                     key={user.id}
                     title={`${user.firstName} ${user.paternalLastName}`}
-                    subtitle={`${user.username} · CI ${user.nationalId}`}
+                    subtitle={`${user.username} · ${t("common.nationalId")} ${user.nationalId}`}
                     badge={<StatusBadge status={isPendingApproval(user) ? "PENDING_APPROVAL" : user.status} />}
-                    rows={[{ label: "Rol", value: ROLE_LABEL[user.role] }]}
+                    rows={[{ label: t("common.role"), value: t(`enums.role.${user.role}`) }]}
                     actions={
                       <>
                         <Button
@@ -133,15 +133,19 @@ export function UsersListTab() {
                           className="flex-1"
                           onClick={() => setStatusTarget(user)}
                         >
-                          {isPendingApproval(user) ? "Aprobar" : user.status === "ACTIVE" ? "Desactivar" : "Activar"}
+                          {isPendingApproval(user)
+                            ? t("users.approve")
+                            : user.status === "ACTIVE"
+                              ? t("users.deactivate")
+                              : t("users.activate")}
                         </Button>
                         {user.id !== currentUser?.id && (
                           <Button variant="outline" size="sm" onClick={() => setRoleTarget(user)}>
-                            Cambiar rol
+                            {t("users.changeRole")}
                           </Button>
                         )}
                         <Button variant="outline" size="sm" onClick={() => setPasswordTarget(user)}>
-                          Restablecer contraseña
+                          {t("users.resetPassword")}
                         </Button>
                       </>
                     }
@@ -153,12 +157,12 @@ export function UsersListTab() {
                 <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Nombre</TableHead>
-                    <TableHead>CI</TableHead>
-                    <TableHead>Usuario</TableHead>
-                    <TableHead>Rol</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead className="text-right">Acciones</TableHead>
+                    <TableHead>{t("common.name")}</TableHead>
+                    <TableHead>{t("common.nationalId")}</TableHead>
+                    <TableHead>{t("common.username")}</TableHead>
+                    <TableHead>{t("common.role")}</TableHead>
+                    <TableHead>{t("common.status")}</TableHead>
+                    <TableHead className="text-right">{t("common.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -169,25 +173,29 @@ export function UsersListTab() {
                       </TableCell>
                       <TableCell>{user.nationalId}</TableCell>
                       <TableCell>{user.username}</TableCell>
-                      <TableCell>{ROLE_LABEL[user.role]}</TableCell>
+                      <TableCell>{t(`enums.role.${user.role}`)}</TableCell>
                       <TableCell>
                         <StatusBadge status={isPendingApproval(user) ? "PENDING_APPROVAL" : user.status} />
                       </TableCell>
                       <TableCell className="text-right space-x-2">
                         {user.id !== currentUser?.id && (
                           <Button variant="outline" size="sm" onClick={() => setRoleTarget(user)}>
-                            Cambiar rol
+                            {t("users.changeRole")}
                           </Button>
                         )}
                         <Button variant="outline" size="sm" onClick={() => setPasswordTarget(user)}>
-                          Restablecer contraseña
+                          {t("users.resetPassword")}
                         </Button>
                         <Button
                           variant={isPendingApproval(user) ? "default" : "outline"}
                           size="sm"
                           onClick={() => setStatusTarget(user)}
                         >
-                          {isPendingApproval(user) ? "Aprobar" : user.status === "ACTIVE" ? "Desactivar" : "Activar"}
+                          {isPendingApproval(user)
+                            ? t("users.approve")
+                            : user.status === "ACTIVE"
+                              ? t("users.deactivate")
+                              : t("users.activate")}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -206,22 +214,23 @@ export function UsersListTab() {
           <DialogHeader>
             <DialogTitle>
               {statusTarget && isPendingApproval(statusTarget)
-                ? "¿Aprobar solicitud?"
+                ? t("users.confirmApproveTitle")
                 : statusTarget?.status === "ACTIVE"
-                  ? "¿Desactivar cuenta?"
-                  : "¿Activar cuenta?"}
+                  ? t("users.confirmDeactivateTitle")
+                  : t("users.confirmActivateTitle")}
             </DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            {statusTarget && isPendingApproval(statusTarget)
-              ? `${statusTarget.firstName} ${statusTarget.paternalLastName} podrá iniciar sesión como Veterinario y aparecerá en los selectores de agendar/atender.`
-              : statusTarget?.status === "ACTIVE"
-                ? `${statusTarget?.firstName} ${statusTarget?.paternalLastName} ya no podrá iniciar sesión, y dejará de aparecer en los selectores de veterinario para agendar o atender.`
-                : `${statusTarget?.firstName} ${statusTarget?.paternalLastName} podrá volver a iniciar sesión.`}
+            {(() => {
+              const name = `${statusTarget?.firstName ?? ""} ${statusTarget?.paternalLastName ?? ""}`.trim();
+              if (statusTarget && isPendingApproval(statusTarget)) return t("users.confirmApproveBody", { name });
+              if (statusTarget?.status === "ACTIVE") return t("users.confirmDeactivateBody", { name });
+              return t("users.confirmActivateBody", { name });
+            })()}
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setStatusTarget(null)}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button
               variant={statusTarget?.status === "ACTIVE" ? "destructive" : "default"}
@@ -229,7 +238,11 @@ export function UsersListTab() {
               disabled={changeStatus.isPending}
             >
               {changeStatus.isPending && <Loader2 className="size-4 animate-spin" />}
-              {statusTarget && isPendingApproval(statusTarget) ? "Aprobar" : statusTarget?.status === "ACTIVE" ? "Desactivar" : "Activar"}
+              {statusTarget && isPendingApproval(statusTarget)
+                ? t("users.approve")
+                : statusTarget?.status === "ACTIVE"
+                  ? t("users.deactivate")
+                  : t("users.activate")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -241,18 +254,18 @@ export function UsersListTab() {
       <Dialog open={!!invitationTarget} onOpenChange={(v) => !v && setInvitationTarget(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>¿Cancelar invitación?</DialogTitle>
+            <DialogTitle>{t("users.confirmCancelInvitationTitle")}</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            El enlace que le enviamos a {invitationTarget?.email} dejará de funcionar.
+            {t("users.confirmCancelInvitationBody", { email: invitationTarget?.email ?? "" })}
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setInvitationTarget(null)}>
-              Volver
+              {t("common.back")}
             </Button>
             <Button variant="destructive" onClick={confirmCancelInvitation} disabled={cancelInvitation.isPending}>
               {cancelInvitation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Cancelar invitación
+              {t("users.cancelInvitation")}
             </Button>
           </DialogFooter>
         </DialogContent>

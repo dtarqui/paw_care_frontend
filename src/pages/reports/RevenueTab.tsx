@@ -10,24 +10,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useRevenueReport } from "@/features/reports/useReports";
 import { SERVICE_TYPES } from "@/lib/service-types";
 import { FileSearch, Wallet } from "lucide-react";
+import { useFormatters } from "@/lib/useFormatters";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-const PAYMENT_METHODS = [
-  { value: "CASH", label: "Efectivo" },
-  { value: "CARD", label: "Tarjeta" },
-  { value: "TRANSFER", label: "Transferencia" },
-  { value: "QR", label: "QR" },
-] as const;
+const PAYMENT_METHODS = ["CASH", "CARD", "TRANSFER", "QR"] as const;
 
 const ALL = "__all__";
 
-function formatDate(iso: string) {
-  const [fecha] = iso.split("T");
-  const [yyyy, mm, dd] = fecha.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
-
 export function RevenueTab() {
+  const { t } = useTranslation();
+  const { formatDate } = useFormatters();
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [serviceType, setServiceType] = useState(ALL);
@@ -45,40 +38,40 @@ export function RevenueTab() {
       <Card>
         <CardContent className="grid grid-cols-2 gap-3 pt-6 sm:grid-cols-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="from">Desde</Label>
+            <Label htmlFor="from">{t("common.from")}</Label>
             <Input id="from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="to">Hasta</Label>
+            <Label htmlFor="to">{t("common.to")}</Label>
             <Input id="to" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label>Tipo de servicio</Label>
+            <Label>{t("visits.serviceType")}</Label>
             <Select value={serviceType} onValueChange={setServiceType}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>Todos</SelectItem>
+                <SelectItem value={ALL}>{t("common.all")}</SelectItem>
                 {SERVICE_TYPES.map((type) => (
                   <SelectItem key={type} value={type}>
-                    {type}
+                    {t(`enums.serviceType.${type}`, { defaultValue: type })}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label>Método de pago</Label>
+            <Label>{t("payments.method")}</Label>
             <Select value={paymentMethod} onValueChange={setPaymentMethod}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={ALL}>Todos</SelectItem>
-                {PAYMENT_METHODS.map((m) => (
-                  <SelectItem key={m.value} value={m.value}>
-                    {m.label}
+                <SelectItem value={ALL}>{t("common.all")}</SelectItem>
+                {PAYMENT_METHODS.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(`enums.status.${value}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -94,7 +87,7 @@ export function RevenueTab() {
               <Wallet className="size-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Cantidad de pagos</p>
+              <p className="text-sm text-muted-foreground">{t("reports.paymentCount")}</p>
               <p className="text-2xl font-semibold">{isLoading ? "…" : (data?.totals.count ?? 0)}</p>
             </div>
           </CardContent>
@@ -105,7 +98,7 @@ export function RevenueTab() {
               <Wallet className="size-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Monto total</p>
+              <p className="text-sm text-muted-foreground">{t("reports.totalAmount")}</p>
               <p className="text-2xl font-semibold">Bs. {(data?.totals.amount ?? 0).toFixed(2)}</p>
             </div>
           </CardContent>
@@ -115,12 +108,12 @@ export function RevenueTab() {
       <Card>
         <CardContent className="pt-6">
           {isLoading && <TableSkeleton rows={4} />}
-          {isError && <ErrorState message="No se pudo cargar el reporte." />}
+          {isError && <ErrorState message={t("reports.loadError")} />}
           {!isLoading && !isError && data?.payments.length === 0 && (
             <EmptyState
               icon={FileSearch}
-              title="No hay pagos que cumplan estos filtros"
-              description="Probá ampliando el rango de fechas, o quitando el filtro de método de pago."
+              title={t("reports.noPayments")}
+              description={t("reports.noPaymentsHint")}
             />
           )}
           {!isLoading && !isError && data && data.payments.length > 0 && (
@@ -133,10 +126,13 @@ export function RevenueTab() {
                     subtitle={payment.owner}
                     badge={<StatusBadge status={payment.method} />}
                     rows={[
-                      { label: "Fecha", value: formatDate(payment.date) },
-                      { label: "Servicio", value: payment.serviceType },
+                      { label: t("common.date"), value: formatDate(payment.date) },
                       {
-                        label: "Monto",
+                        label: t("reports.service"),
+                        value: t(`enums.serviceType.${payment.serviceType}`, { defaultValue: payment.serviceType }),
+                      },
+                      {
+                        label: t("common.amount"),
                         value: <span className="font-medium tabular-nums">Bs. {payment.amount.toFixed(2)}</span>,
                       },
                     ]}
@@ -148,12 +144,12 @@ export function RevenueTab() {
                 <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Fecha</TableHead>
-                    <TableHead>Mascota</TableHead>
-                    <TableHead>Propietario</TableHead>
-                    <TableHead>Tipo de servicio</TableHead>
-                    <TableHead>Método</TableHead>
-                    <TableHead>Monto</TableHead>
+                    <TableHead>{t("common.date")}</TableHead>
+                    <TableHead>{t("common.pet")}</TableHead>
+                    <TableHead>{t("common.owner")}</TableHead>
+                    <TableHead>{t("visits.serviceType")}</TableHead>
+                    <TableHead>{t("payments.method")}</TableHead>
+                    <TableHead>{t("common.amount")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -162,7 +158,7 @@ export function RevenueTab() {
                       <TableCell>{formatDate(payment.date)}</TableCell>
                       <TableCell>{payment.pet}</TableCell>
                       <TableCell>{payment.owner}</TableCell>
-                      <TableCell>{payment.serviceType}</TableCell>
+                      <TableCell>{t(`enums.serviceType.${payment.serviceType}`, { defaultValue: payment.serviceType })}</TableCell>
                       <TableCell>
                         <StatusBadge status={payment.method} />
                       </TableCell>

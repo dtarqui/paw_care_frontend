@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, Check, Info, TriangleAlert } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Piezas de presentación del manual. Cada una hace una sola cosa y no sabe nada
@@ -139,12 +140,14 @@ export function RoleMatrix({
   roles: string[];
   rows: { area: string; access: boolean[] }[];
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="overflow-x-auto rounded-lg border">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b bg-muted/40">
-            <th className="px-3 py-2 text-left font-medium">Módulo</th>
+            <th className="px-3 py-2 text-left font-medium">{t("info.moduleColumn")}</th>
             {roles.map((role) => (
               <th key={role} className="px-3 py-2 text-center font-medium">
                 {role}
@@ -161,14 +164,14 @@ export function RoleMatrix({
                   {has ? (
                     <>
                       <Check className="mx-auto size-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
-                      <span className="sr-only">Sí</span>
+                      <span className="sr-only">{t("info.hasAccess")}</span>
                     </>
                   ) : (
                     <>
                       <span aria-hidden className="text-muted-foreground/40">
                         —
                       </span>
-                      <span className="sr-only">No</span>
+                      <span className="sr-only">{t("info.noAccess")}</span>
                     </>
                   )}
                 </td>
@@ -232,5 +235,27 @@ export function Faq({ items }: { items: { question: string; answer: ReactNode }[
         </details>
       ))}
     </div>
+  );
+}
+
+/**
+ * Énfasis dentro del texto del manual. El contenido vive en los archivos de
+ * traducción, así que no puede traer JSX: marca lo importante con `**negrita**` y
+ * los matices con `*cursiva*`, y esto lo convierte en `<strong>` / `<em>`.
+ */
+export function RichText({ children }: { children: string }) {
+  const parts = children.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith("**") && part.endsWith("**")) {
+          return <strong key={index}>{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith("*") && part.endsWith("*")) {
+          return <em key={index}>{part.slice(1, -1)}</em>;
+        }
+        return <span key={index}>{part}</span>;
+      })}
+    </>
   );
 }

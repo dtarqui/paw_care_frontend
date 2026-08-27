@@ -1,15 +1,28 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
+/** El acento de marca. `value` es el slug que va a `data-color-theme` en `<html>`
+ * y a localStorage; la etiqueta visible sale de `settings.colors.*` en las
+ * traducciones, para que siga al idioma elegido. */
 export const COLOR_THEMES = [
-  { value: "violeta", label: "Violeta", swatch: "oklch(0.541 0.245 292.5)" },
-  { value: "oceano", label: "Océano", swatch: "oklch(0.50 0.19 225)" },
-  { value: "rosa", label: "Rosa", swatch: "oklch(0.54 0.21 330)" },
+  { value: "violet", swatch: "oklch(0.541 0.245 292.5)" },
+  { value: "ocean", swatch: "oklch(0.50 0.19 225)" },
+  { value: "pink", swatch: "oklch(0.54 0.21 330)" },
 ] as const;
 
 export type ColorTheme = (typeof COLOR_THEMES)[number]["value"];
 
 const STORAGE_KEY = "pawcare.color-theme";
-const DEFAULT_COLOR_THEME: ColorTheme = "violeta";
+const DEFAULT_COLOR_THEME: ColorTheme = "violet";
+
+/** Los slugs eran españoles hasta que el código pasó íntegramente a inglés. Un
+ * navegador que ya tenía elegido un acento sigue guardando el valor viejo, así
+ * que se traduce al leerlo en vez de resetearlo al violeta por defecto. El mismo
+ * mapa está en el script sin bloqueo de `index.html`. */
+const LEGACY_VALUES: Record<string, ColorTheme> = {
+  violeta: "violet",
+  oceano: "ocean",
+  rosa: "pink",
+};
 
 interface ColorThemeContextValue {
   colorTheme: ColorTheme;
@@ -19,7 +32,8 @@ interface ColorThemeContextValue {
 const ColorThemeContext = createContext<ColorThemeContextValue | undefined>(undefined);
 
 function readStoredColorTheme(): ColorTheme {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const stored = raw && LEGACY_VALUES[raw] ? LEGACY_VALUES[raw] : raw;
   return (COLOR_THEMES.some((t) => t.value === stored) ? stored : DEFAULT_COLOR_THEME) as ColorTheme;
 }
 

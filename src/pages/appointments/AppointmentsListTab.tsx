@@ -12,8 +12,10 @@ import { useMyVet } from "@/features/vets/useMyVet";
 import { todayISO } from "@/lib/date";
 import { CalendarDays } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
-function morning(): string {
+function tomorrowISO(): string {
   const d = new Date();
   d.setDate(d.getDate() + 1);
   const yyyy = d.getFullYear();
@@ -22,11 +24,12 @@ function morning(): string {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function dayLabel(isoDate: string) {
-  if (isoDate === todayISO()) return "Hoy";
-  if (isoDate === morning()) return "Mañana";
+/** "Hoy" / "Mañana" cuando aplica; si no, el día de la semana en el idioma actual. */
+function dayLabel(isoDate: string, t: TFunction, language: string) {
+  if (isoDate === todayISO()) return t("appointments.today");
+  if (isoDate === tomorrowISO()) return t("appointments.tomorrow");
   const [yyyy, mm, dd] = isoDate.split("-").map(Number);
-  const text = new Intl.DateTimeFormat("es-BO", {
+  const text = new Intl.DateTimeFormat(language.startsWith("en") ? "en-GB" : "es-BO", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -49,6 +52,8 @@ interface AppointmentsListTabProps {
 }
 
 export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) {
+  const { t, i18n } = useTranslation();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const { user } = useAuth();
   const isVet = user?.role === "VET";
   const { myVet } = useMyVet();
@@ -74,16 +79,16 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
   }
 
   if (isError) {
-    return <p className="py-8 text-center text-sm text-destructive">No se pudo cargar la agenda.</p>;
+    return <p className="py-8 text-center text-sm text-destructive">{t("appointments.loadError")}</p>;
   }
 
   return (
     <div className="flex flex-col gap-4">
       {isVet && (
         <div className="flex items-center gap-2 self-start rounded-md border px-3 py-2">
-          <Switch id="solo-mis-citas" checked={onlyMyAppointments} onCheckedChange={setOnlyMyAppointments} />
-          <Label htmlFor="solo-mis-citas" className="cursor-pointer text-sm font-normal">
-            Solo mis citas
+          <Switch id="only-my-appointments" checked={onlyMyAppointments} onCheckedChange={setOnlyMyAppointments} />
+          <Label htmlFor="only-my-appointments" className="cursor-pointer text-sm font-normal">
+            {t("appointments.onlyMine")}
           </Label>
         </div>
       )}
@@ -91,17 +96,17 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
       {groups.length === 0 && (
         <EmptyState
           icon={CalendarDays}
-          title={onlyMyAppointments && isVet ? "No tienes citas asignadas todavía" : "No hay citas registradas todavía"}
-          description="Agendá la primera desde la pestaña «Nueva Cita»."
+          title={onlyMyAppointments && isVet ? t("appointments.emptyMine") : t("appointments.emptyAll")}
+          description={t("appointments.emptyDescription")}
         />
       )}
 
       {groups.map(([day, dayAppointments]) => (
         <Card key={day}>
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-foreground">{dayLabel(day)}</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground">{dayLabel(day, t, language)}</CardTitle>
             <span className="text-xs text-muted-foreground">
-              {dayAppointments.length} {dayAppointments.length === 1 ? "cita" : "citas"}
+              {t("appointments.count", { count: dayAppointments.length })}
             </span>
           </CardHeader>
           <CardContent className="divide-y p-0">
@@ -111,10 +116,16 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
 
                 <div className="min-w-[180px] flex-1">
                   <p className="font-medium">
-                    {appointment.pet.name} <span className="font-normal text-muted-foreground">({appointment.pet.species})</span>
+                    {appointment.pet.name}{" "}
+                    <span className="font-normal text-muted-foreground">
+                      ({t(`enums.species.${appointment.pet.species}`, { defaultValue: appointment.pet.species })})
+                    </span>
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {appointment.vet.firstName} {appointment.vet.paternalLastName} · {appointment.consultationType}
+                    {appointment.vet.firstName} {appointment.vet.paternalLastName} ·{" "}
+                    {t(`enums.serviceType.${appointment.consultationType}`, {
+                      defaultValue: appointment.consultationType,
+                    })}
                   </p>
                 </div>
 
@@ -127,7 +138,7 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
                           un veterinario solo reprograma su propia cita. */}
                       {(!isVet || appointment.vet.id === myVet?.id) && (
                         <Button size="sm" variant="outline" onClick={() => onReschedule(appointment)}>
-                          Reprogramar
+                          {t("appointments.reschedule")}
                         </Button>
                       )}
                       <Button
@@ -136,7 +147,7 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
                         disabled={changeStatusMutation.isPending}
                         onClick={() => changeStatusMutation.mutate({ id: appointment.id, status: "ATTENDED" })}
                       >
-                        Marcar atendida
+                        {t("appointments.markAttended")}
                       </Button>
                       <Button
                         size="sm"
@@ -145,11 +156,11 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
                         disabled={changeStatusMutation.isPending}
                         onClick={() => changeStatusMutation.mutate({ id: appointment.id, status: "CANCELLED" })}
                       >
-                        Cancelar
+                        {t("common.cancel")}
                       </Button>
                     </>
                   ) : (
-                    <span className="text-xs text-muted-foreground">Sin acciones</span>
+                    <span className="text-xs text-muted-foreground">{t("appointments.noActions")}</span>
                   )}
                 </div>
               </div>

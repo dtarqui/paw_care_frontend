@@ -13,8 +13,10 @@ import type { OwnerWithPets } from "@/features/owners/types";
 import { useUpdateOwner } from "@/features/owners/useOwners";
 import { Loader2, Pencil } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     firstName: owner.firstName,
@@ -42,7 +44,7 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
     setError(null);
 
     if (!form.firstName.trim() || !form.paternalLastName.trim()) {
-      setError("Nombre y apellido paterno no pueden quedar vacíos");
+      setError(t("owners.form.nameRequired"));
       return;
     }
 
@@ -58,7 +60,7 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
       });
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "No se pudo actualizar el propietario");
+      setError(err instanceof Error ? err.message : t("owners.form.updateError"));
     }
   }
 
@@ -67,51 +69,51 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Pencil className="size-3.5" />
-          Editar
+          {t("common.edit")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Editar propietario</DialogTitle>
+          <DialogTitle>{t("owners.editTitle")}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label>CI</Label>
+            <Label>{t("common.nationalId")}</Label>
             <Input value={owner.nationalId} disabled className="bg-muted/40" />
-            <p className="text-xs text-muted-foreground">El CI no se puede editar — es la clave usada para buscar al propietario.</p>
+            <p className="text-xs text-muted-foreground">{t("owners.form.nationalIdLocked")}</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editPropNombre">Nombre *</Label>
+              <Label htmlFor="edit-owner-firstName">{t("people.firstName")} *</Label>
               <Input
-                id="editPropNombre"
+                id="edit-owner-firstName"
                 required
                 value={form.firstName}
                 onChange={(e) => setForm((prev) => ({ ...prev, firstName: e.target.value }))}
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editPropApellido">Apellido paterno *</Label>
+              <Label htmlFor="edit-owner-lastName">{t("people.paternalLastName")} *</Label>
               <Input
-                id="editPropApellido"
+                id="edit-owner-lastName"
                 required
                 value={form.paternalLastName}
                 onChange={(e) => setForm((prev) => ({ ...prev, paternalLastName: e.target.value }))}
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editPropTelefono">Teléfono</Label>
+              <Label htmlFor="edit-owner-phone">{t("common.phone")}</Label>
               <Input
-                id="editPropTelefono"
+                id="edit-owner-phone"
                 value={form.phone}
                 onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="editPropDireccion">Dirección</Label>
+              <Label htmlFor="edit-owner-address">{t("common.address")}</Label>
               <Input
-                id="editPropDireccion"
+                id="edit-owner-address"
                 value={form.address}
                 onChange={(e) => setForm((prev) => ({ ...prev, address: e.target.value }))}
               />
@@ -122,11 +124,11 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancelar
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateOwnerMutation.isPending}>
               {updateOwnerMutation.isPending && <Loader2 className="size-4 animate-spin" />}
-              Guardar cambios
+              {t("common.saveChanges")}
             </Button>
           </DialogFooter>
         </form>

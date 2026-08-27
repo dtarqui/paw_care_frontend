@@ -8,7 +8,9 @@ import {
   useMarkReminderSent,
   usePendingReminders,
 } from "@/features/reminders/useReminders";
+import { useFormatters } from "@/lib/useFormatters";
 import { CalendarClock, CheckCheck, MessageCircle, ShieldPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function whatsappNumber(phone: string): string {
   const cleaned = phone.replace(/\D/g, "");
@@ -19,14 +21,9 @@ function whatsappLink(phone: string, message: string): string {
   return `https://wa.me/${whatsappNumber(phone)}?text=${encodeURIComponent(message)}`;
 }
 
-function formatDateTime(iso: string) {
-  if (!iso) return "—";
-  const [date, time] = iso.split("T");
-  const [yyyy, mm, dd] = date.split("-");
-  return `${dd}/${mm}/${yyyy} ${time ? time.slice(0, 5) : ""}`.trim();
-}
-
 export function RemindersPage() {
+  const { t } = useTranslation();
+  const { formatDateTime } = useFormatters();
   const { data: reminders, isLoading, isError } = usePendingReminders();
   const { data: sent, isLoading: loadingSent } = useReminderHistory(5);
   const markSentMutation = useMarkReminderSent();
@@ -34,28 +31,26 @@ export function RemindersPage() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Recordatorios</h1>
-        <p className="text-muted-foreground">
-          Citas en las próximas 24h y controles preventivos a 7 días — envío manual por WhatsApp, sin costo ni integración externa.
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("reminders.title")}</h1>
+        <p className="text-muted-foreground">{t("reminders.subtitle")}</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Pendientes de hoy</CardTitle>
+          <CardTitle className="text-base">{t("reminders.pendingTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading && (
 <TableSkeleton rows={3} />
           )}
 
-          {isError && <p className="py-8 text-center text-sm text-destructive">No se pudo cargar la lista.</p>}
+          {isError && <p className="py-8 text-center text-sm text-destructive">{t("reminders.loadError")}</p>}
 
           {!isLoading && !isError && reminders?.length === 0 && (
             <EmptyState
               icon={MessageCircle}
-              title="No hay recordatorios pendientes"
-              description="Acá aparecen las citas de las próximas 24 horas y los controles preventivos que vencen en 7 días."
+              title={t("reminders.emptyTitle")}
+              description={t("reminders.emptyDescription")}
             />
           )}
 
@@ -79,7 +74,7 @@ export function RemindersPage() {
                         rel="noopener noreferrer"
                       >
                         <MessageCircle className="size-4" />
-                        Enviar por WhatsApp
+                        {t("reminders.sendOnWhatsapp")}
                       </a>
                     </Button>
                     <Button
@@ -88,7 +83,7 @@ export function RemindersPage() {
                       disabled={markSentMutation.isPending}
                       onClick={() => markSentMutation.mutate(reminder.id)}
                     >
-                      Marcar como enviado
+                      {t("reminders.markSent")}
                     </Button>
                   </div>
                 );
@@ -100,7 +95,7 @@ export function RemindersPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Últimos enviados</CardTitle>
+          <CardTitle className="text-base">{t("reminders.latestTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {loadingSent && (
@@ -110,7 +105,7 @@ export function RemindersPage() {
           {!loadingSent && sent?.length === 0 && (
             <div className="flex flex-col items-center gap-2 py-8 text-center text-muted-foreground">
               <CheckCheck className="size-7" />
-              <p>Todavía no se marcó ningún recordatorio como enviado.</p>
+              <p>{t("reminders.historyEmpty")}</p>
             </div>
           )}
 

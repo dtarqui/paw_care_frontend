@@ -17,51 +17,29 @@ import {
   Stethoscope,
   Package,
 } from "lucide-react";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
-/** Lo que el panel de marca cuenta del producto — tres capacidades reales, no relleno. */
+/** Lo que el panel de marca cuenta del producto — tres capacidades reales, no relleno.
+ * El texto vive en `login.highlights.*`; acá solo el ícono y el orden. */
 const HIGHLIGHTS = [
-  {
-    icon: Stethoscope,
-    title: "Historial clínico completo",
-    description: "Cada mascota con sus atenciones, vacunas y evolución de peso en una sola ficha.",
-  },
-  {
-    icon: CalendarClock,
-    title: "Agenda y recordatorios",
-    description: "Citas por veterinario según su horario real, con avisos previos al propietario.",
-  },
-  {
-    icon: Package,
-    title: "Inventario y reportes",
-    description: "Stock de medicamentos con alertas, e ingresos por tipo de servicio.",
-  },
-];
+  { id: "records", icon: Stethoscope },
+  { id: "schedule", icon: CalendarClock },
+  { id: "inventory", icon: Package },
+] as const;
 
 /** Una credencial por rol — las mismas que siembra `prisma/seed.ts`. */
 const DEMO_ACCOUNTS = [
-  {
-    role: "Administrador",
-    username: "admin",
-    password: "admin123",
-    hint: "Acceso completo: reportes de ingresos, inventario, gestión de cuentas y auditoría.",
-  },
-  {
-    role: "Veterinario",
-    username: "veterinario",
-    password: "vet123",
-    hint: "Su agenda y su horario, atención médica, control preventivo y fichas de mascotas.",
-  },
-  {
-    role: "Recepcionista",
-    username: "recepcion",
-    password: "recepcion123",
-    hint: "Propietarios, mascotas, agendar citas, cobros y recordatorios.",
-  },
-];
+  { role: "ADMIN", username: "admin", password: "admin123" },
+  { role: "VET", username: "veterinario", password: "vet123" },
+  { role: "RECEPTIONIST", username: "recepcion", password: "recepcion123" },
+] as const;
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -86,7 +64,7 @@ export function LoginPage() {
       await login(username, password);
       navigate("/app");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo iniciar sesión");
+      setError(err instanceof ApiError ? err.message : t("login.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -128,23 +106,22 @@ export function LoginPage() {
         <div className="relative flex flex-col gap-10">
           <div className="flex flex-col gap-3">
             <h1 className="max-w-md text-4xl font-semibold leading-tight tracking-tight">
-              La clínica entera, en un solo lugar.
+              {t("login.headline")}
             </h1>
             <p className="max-w-md text-primary-foreground/80">
-              Historias clínicas, agenda, cobros e inventario conectados entre sí — sin planillas sueltas ni
-              cuadernos.
+              {t("login.subheadline")}
             </p>
           </div>
 
           <ul className="flex max-w-md flex-col gap-5">
-            {HIGHLIGHTS.map(({ icon: Icon, title, description }) => (
-              <li key={title} className="flex gap-3">
+            {HIGHLIGHTS.map(({ id, icon: Icon }) => (
+              <li key={id} className="flex gap-3">
                 <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-foreground/15">
                   <Icon className="size-4.5" />
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <p className="font-medium">{title}</p>
-                  <p className="text-sm text-primary-foreground/75">{description}</p>
+                  <p className="font-medium">{t(`login.highlights.${id}.title`)}</p>
+                  <p className="text-sm text-primary-foreground/75">{t(`login.highlights.${id}.description`)}</p>
                 </div>
               </li>
             ))}
@@ -152,12 +129,13 @@ export function LoginPage() {
         </div>
 
         <p className="relative text-sm text-primary-foreground/60">
-          Sistema de gestión veterinaria · Bolivia
+          {t("login.footer")}
         </p>
       </aside>
 
       {/* Formulario */}
-      <main className="flex items-center justify-center bg-background px-4 py-10 sm:px-6">
+      <main className="relative flex items-center justify-center bg-background px-4 py-10 sm:px-6">
+        <LanguageToggle className="absolute right-4 top-4" />
         <div className="flex w-full max-w-sm flex-col gap-8">
           {/* Cabecera compacta — reemplaza al panel de marca en móvil/tablet */}
           <div className="flex flex-col items-center gap-2 text-center lg:hidden">
@@ -165,38 +143,38 @@ export function LoginPage() {
               <PawPrint className="size-6 text-primary" />
             </div>
             <span className="text-xl font-semibold tracking-tight">PawCare</span>
-            <p className="text-sm text-muted-foreground">Sistema de gestión veterinaria</p>
+            <p className="text-sm text-muted-foreground">{t("login.tagline")}</p>
           </div>
 
           <div className="flex flex-col gap-1">
-            <h2 className="text-2xl font-semibold tracking-tight">Iniciar sesión</h2>
-            <p className="text-sm text-muted-foreground">Ingresa con la cuenta que te asignó la clínica.</p>
+            <h2 className="text-2xl font-semibold tracking-tight">{t("login.signIn")}</h2>
+            <p className="text-sm text-muted-foreground">{t("login.signInHint")}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1.5">
-                <Label htmlFor="username">Usuario</Label>
+                <Label htmlFor="username">{t("common.username")}</Label>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="button"
                       tabIndex={-1}
-                      aria-label="Ayuda sobre el nombre de usuario"
+                      aria-label={t("login.usernameHelpLabel")}
                       className="text-muted-foreground/70 transition-colors hover:text-foreground"
                     >
                       <HelpCircle className="size-3.5" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    No es tu correo: es el nombre de usuario que te asignó el Administrador de la clínica.
+                    {t("login.usernameHelp")}
                   </TooltipContent>
                 </Tooltip>
               </div>
               <Input
                 id="username"
                 autoComplete="username"
-                placeholder="Ej. veterinario"
+                placeholder={t("login.usernamePlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -206,12 +184,12 @@ export function LoginPage() {
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <Label htmlFor="password">{t("common.password")}</Label>
                 <Link
                   to="/forgot-password"
                   className="text-xs text-muted-foreground transition-colors hover:text-primary hover:underline"
                 >
-                  ¿Olvidaste tu contraseña?
+                  {t("login.forgotPassword")}
                 </Link>
               </div>
               <div className="relative">
@@ -233,20 +211,20 @@ export function LoginPage() {
                       type="button"
                       onClick={() => setShowPassword((v) => !v)}
                       className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                      aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                      aria-label={showPassword ? t("login.hidePassword") : t("login.showPassword")}
                       tabIndex={-1}
                     >
                       {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent>{showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}</TooltipContent>
+                  <TooltipContent>{showPassword ? t("login.hidePassword") : t("login.showPassword")}</TooltipContent>
                 </Tooltip>
               </div>
 
               {capsLockOn && (
                 <p className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
                   <LockKeyhole className="size-3.5 shrink-0" />
-                  Bloq Mayús está activado
+                  {t("login.capsLockOn")}
                 </p>
               )}
             </div>
@@ -263,49 +241,55 @@ export function LoginPage() {
 
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting && <Loader2 className="size-4 animate-spin" />}
-              {isSubmitting ? "Verificando…" : "Iniciar sesión"}
+              {isSubmitting ? t("login.checking") : t("login.signIn")}
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground">
-            ¿Eres veterinario y no tienes cuenta?{" "}
+            {t("login.noAccount")}{" "}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link to="/register" className="font-medium text-primary hover:underline">
-                  Solicita tu acceso
+                  {t("login.requestAccess")}
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
-                Completas tus datos y matrícula; un Administrador aprueba la cuenta antes del primer ingreso.
+                {t("login.requestAccessHelp")}
               </TooltipContent>
             </Tooltip>
           </p>
 
-          <DemoAccounts onPick={useDemoAccount} />
+          <DemoAccounts onPick={useDemoAccount} t={t} />
         </div>
       </main>
     </div>
   );
 }
 
-function DemoAccounts({ onPick }: { onPick: (account: (typeof DEMO_ACCOUNTS)[number]) => void }) {
+function DemoAccounts({
+  onPick,
+  t,
+}: {
+  onPick: (account: (typeof DEMO_ACCOUNTS)[number]) => void;
+  t: TFunction;
+}) {
   return (
     <div className="flex flex-col gap-2 rounded-lg border bg-muted/40 p-3">
       <div className="flex items-center gap-1.5">
-        <p className="text-xs font-medium">Cuentas de demostración</p>
+        <p className="text-xs font-medium">{t("login.demoAccounts")}</p>
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
               tabIndex={-1}
-              aria-label="Qué son las cuentas de demostración"
+              aria-label={t("login.demoAccountsHelpLabel")}
               className="text-muted-foreground/70 transition-colors hover:text-foreground"
             >
               <HelpCircle className="size-3.5" />
             </button>
           </TooltipTrigger>
           <TooltipContent>
-            Datos de prueba, una cuenta por rol. Haz clic en una para llenar el formulario.
+            {t("login.demoAccountsHelp")}
           </TooltipContent>
         </Tooltip>
       </div>
@@ -322,13 +306,13 @@ function DemoAccounts({ onPick }: { onPick: (account: (typeof DEMO_ACCOUNTS)[num
                   "hover:bg-background focus-visible:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 )}
               >
-                <span className="text-xs font-medium">{account.role}</span>
+                <span className="text-xs font-medium">{t(`enums.role.${account.role}`)}</span>
                 <span className="font-mono text-[11px] text-muted-foreground">
                   {account.username} / {account.password}
                 </span>
               </button>
             </TooltipTrigger>
-            <TooltipContent side="left">{account.hint}</TooltipContent>
+            <TooltipContent side="left">{t(`login.demoHints.${account.role}`)}</TooltipContent>
           </Tooltip>
         ))}
       </div>

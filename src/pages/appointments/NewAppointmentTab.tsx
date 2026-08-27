@@ -15,11 +15,13 @@ import { SERVICE_TYPES } from "@/lib/service-types";
 import { cn } from "@/lib/utils";
 import { CalendarCheck2, Loader2, ShieldCheck, Sunrise, Sunset } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
-function formatLongDate(isoDate: string) {
+function formatLongDate(isoDate: string, language: string) {
   const [yyyy, mm, dd] = isoDate.split("-").map(Number);
   const date = new Date(yyyy, mm - 1, dd);
-  const text = new Intl.DateTimeFormat("es-BO", { weekday: "long", day: "numeric", month: "long" }).format(date);
+  const locale = language.startsWith("en") ? "en-GB" : "es-BO";
+  const text = new Intl.DateTimeFormat(locale, { weekday: "long", day: "numeric", month: "long" }).format(date);
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
@@ -36,6 +38,8 @@ interface NewAppointmentTabProps {
 }
 
 export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAppointmentTabProps) {
+  const { t, i18n } = useTranslation();
+  const language = i18n.resolvedLanguage ?? i18n.language;
   const editing = !!appointmentBeingEdited;
   const { user } = useAuth();
   const isVet = user?.role === "VET";
@@ -102,10 +106,18 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         <div className="rounded-md border bg-muted/40 p-3 text-sm">
           <p className="font-mono text-xs text-muted-foreground">{appointmentBeingEdited!.code}</p>
           <p className="font-medium">
-            {appointmentBeingEdited!.pet.name} ({appointmentBeingEdited!.pet.species}) con {appointmentBeingEdited!.vet.firstName}{" "}
-            {appointmentBeingEdited!.vet.paternalLastName} — {appointmentBeingEdited!.consultationType}
+            {t("appointments.reschedulingSummary", {
+              pet: appointmentBeingEdited!.pet.name,
+              species: t(`enums.species.${appointmentBeingEdited!.pet.species}`, {
+                defaultValue: appointmentBeingEdited!.pet.species,
+              }),
+              vet: `${appointmentBeingEdited!.vet.firstName} ${appointmentBeingEdited!.vet.paternalLastName}`,
+              type: t(`enums.serviceType.${appointmentBeingEdited!.consultationType}`, {
+                defaultValue: appointmentBeingEdited!.consultationType,
+              }),
+            })}
           </p>
-          <p className="text-xs text-muted-foreground">Solo se puede cambiar la fecha y la hora al reprogramar.</p>
+          <p className="text-xs text-muted-foreground">{t("appointments.rescheduleHint")}</p>
         </div>
       )}
 
@@ -113,15 +125,16 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         {!editing && (
           <>
             <div className="flex flex-col gap-2">
-              <Label>Mascota</Label>
+              <Label>{t("common.pet")}</Label>
               <Select value={petId} onValueChange={setPetId} disabled={loadingPets}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione mascota" />
+                  <SelectValue placeholder={t("appointments.pickPet")} />
                 </SelectTrigger>
                 <SelectContent>
                   {pets?.map((m) => (
                     <SelectItem key={m.id} value={String(m.id)}>
-                      {m.name} ({m.species}) — {m.owner.firstName} {m.owner.paternalLastName}
+                      {m.name} ({t(`enums.species.${m.species}`, { defaultValue: m.species })}) —{" "}
+                      {m.owner.firstName} {m.owner.paternalLastName}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -129,15 +142,15 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Veterinario</Label>
+              <Label>{t("common.vet")}</Label>
               {isVet ? (
                 <div className="flex h-9 w-full items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
                   <ShieldCheck className="size-4 shrink-0 text-primary" />
                   <span className="truncate">
-                    {myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : "Cargando…"}
+                    {myVet ? `${myVet.firstName} ${myVet.paternalLastName}` : t("common.loading")}
                   </span>
                   <Badge variant="secondary" className="ml-auto shrink-0 text-[10px]">
-                    Tú
+                    {t("common.you")}
                   </Badge>
                 </div>
               ) : (
@@ -150,7 +163,7 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
                   disabled={loadingVets}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Seleccione veterinario" />
+                    <SelectValue placeholder={t("visits.pickVet")} />
                   </SelectTrigger>
                   <SelectContent>
                     {vets?.map((v) => (
@@ -164,15 +177,15 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Tipo de consulta</Label>
+              <Label>{t("appointments.consultationType")}</Label>
               <Select value={consultationType} onValueChange={setConsultationType}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccione tipo" />
+                  <SelectValue placeholder={t("visits.pickType")} />
                 </SelectTrigger>
                 <SelectContent>
                   {SERVICE_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type}
+                      {t(`enums.serviceType.${type}`, { defaultValue: type })}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -182,7 +195,7 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         )}
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="date">Fecha</Label>
+          <Label htmlFor="date">{t("common.date")}</Label>
           <input
             id="date"
             type="date"
@@ -198,10 +211,10 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
       </div>
 
       <div className="flex flex-col gap-3">
-        <Label>Horarios disponibles</Label>
+        <Label>{t("appointments.availableSlots")}</Label>
         {!vetId && (
           <p className="text-sm text-muted-foreground">
-            {isVet ? "Elige una fecha para ver tu disponibilidad." : "Elige un veterinario y una fecha primero."}
+            {isVet ? t("appointments.pickDateHint") : t("appointments.pickVetAndDateHint")}
           </p>
         )}
         {vetId && loadingAvailability && (
@@ -213,20 +226,32 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         )}
         {vetId && !loadingAvailability && (
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
-            <TimeSlotPicker icon={Sunrise} title="Mañana" slots={morning} selectedTime={time} onSelect={setTime} />
-            <TimeSlotPicker icon={Sunset} title="Tarde" slots={afternoon} selectedTime={time} onSelect={setTime} />
+            <TimeSlotPicker
+              icon={Sunrise}
+              title={t("appointments.morning")}
+              slots={morning}
+              selectedTime={time}
+              onSelect={setTime}
+            />
+            <TimeSlotPicker
+              icon={Sunset}
+              title={t("appointments.afternoon")}
+              slots={afternoon}
+              selectedTime={time}
+              onSelect={setTime}
+            />
           </div>
         )}
       </div>
 
       {!editing && (
         <div className="flex flex-col gap-2">
-          <Label htmlFor="reason">Motivo</Label>
+          <Label htmlFor="reason">{t("appointments.reason")}</Label>
           <Textarea
             id="reason"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="Describa brevemente el motivo de la consulta"
+            placeholder={t("appointments.reasonPlaceholder")}
             className="min-h-20"
           />
         </div>
@@ -236,13 +261,15 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
         <div className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
           <CalendarCheck2 className="mt-0.5 size-5 shrink-0 text-primary" />
           <p className="text-sm">
-            {editing ? "Vas a reprogramar" : "Vas a agendar"} <span className="font-medium">{chosenPet.name}</span> con{" "}
-            <span className="font-medium">
-              {chosenVet.firstName} {chosenVet.paternalLastName}
-            </span>{" "}
-            el <span className="font-medium">{formatLongDate(date)}</span> a las{" "}
-            <span className="font-medium">{time}</span>
-            {!editing && ` — ${consultationType}`}.
+            {t(editing ? "appointments.summaryReschedule" : "appointments.summaryBook", {
+              pet: chosenPet.name,
+              vet: `${chosenVet.firstName} ${chosenVet.paternalLastName}`,
+              date: formatLongDate(date, language),
+              time,
+            })}
+            {!editing &&
+              ` — ${t(`enums.serviceType.${consultationType}`, { defaultValue: consultationType })}`}
+            .
           </p>
         </div>
       )}
@@ -250,7 +277,7 @@ export function NewAppointmentTab({ appointmentBeingEdited, onCompleted }: NewAp
       <div className="flex justify-end gap-2">
         <Button type="submit" disabled={!ready || submitting}>
           {submitting && <Loader2 className="size-4 animate-spin" />}
-          {editing ? "Confirmar reprogramación" : "Agendar cita"}
+          {editing ? t("appointments.confirmReschedule") : t("appointments.book")}
         </Button>
       </div>
     </form>

@@ -222,6 +222,31 @@ Barrido de las dos mitades de la convención (`docs/GLOSARIO_EN_ES.md`): que **n
 
 ---
 
+## Correcciones y mejoras (sesión 14 — español e inglés con i18next)
+
+La app pasa a tener **dos idiomas: español (base) e inglés**, a elección de cada persona. Se hizo con `i18next` + `react-i18next` + `i18next-browser-languagedetector`, y obligó a sacar de los componentes hasta el último texto visible.
+
+### Lo que se encontró de paso
+
+- **`Confirmar payment` y `Registrar User`** seguían en espanglish. El barrido de la sesión 13 no los vio: su detector de texto JSX solo miraba lo que venía **después de un `>`**, y estos venían después de una llave (`{spinner}Confirmar payment`). Se corrigió el detector y se rehizo la auditoría — esta vez sí aparecieron.
+- **El eje X del gráfico de peso estaba vacío.** El renombrado de la sesión 13 cambió la propiedad del dato a `label`, pero el `dataKey="etiqueta"` de Recharts vivía dentro de un string y quedó protegido: apuntaba a una propiedad que ya no existe.
+- **Exportar el reporte de ingresos descargaba el de atenciones.** `ClinicalTab` mandaba `"ingresos-por-servicio"` al backend, que solo entiende `revenue-by-service` y caía a su default. Se alinearon los identificadores con el contrato real de la API.
+- **Cobrar por QR no refrescaba la lista de pagos**: invalidaba `["pagos", "pendientes"]`, claves que dejaron de existir en la sesión 7. Ahora invalida `["payments"]`, que por prefijo cubre pendientes e historial.
+
+### Cómo quedó
+
+- [x] **668 claves por idioma** en `src/i18n/locales/es.json` y `en.json`, con el mismo conjunto exacto en los dos. Un script de verificación compara ambos archivos y busca `t("clave")` sin destino.
+- [x] **Selector de idioma en Configuración**, junto a tema y color, y un toggle compacto **ES | EN** en las pantallas públicas (login, invitación, recuperar contraseña): quien recibe una invitación por correo tiene que poder leer el formulario antes de tener cuenta. La elección se guarda en `localStorage` y el `<html lang>` la sigue.
+- [x] **Plurales de verdad**, no `n === 1 ? "mes" : "meses"` escrito a mano: `pets.age.month_one/_other`, `appointments.count_*`, `inventory.lowStockWarning_*`, `imports.importedCount_*`. `calculateAge` dejó de devolver texto armado y ahora devuelve `{ unit, count }` para que el plural lo resuelva i18next.
+- [x] **Fechas por idioma** (`lib/date.ts` + `useFormatters`): en español el `dd/mm/aaaa` de siempre; en inglés el mes abreviado (`04 Mar 2026`), porque `03/04` significa cosas distintas según el país y en una ficha clínica esa ambigüedad no es aceptable. De paso se borraron **13 copias** de `formatDate` repartidas por las pantallas.
+- [x] **El menú y los módulos siguen viniendo del backend**, pero el texto lo pone el frontend (`features/dashboard/labels.ts`): traduce por id de módulo, con variante por rol donde la descripción cambia (la Agenda de un Veterinario es «tus citas»; la de Recepción, «agendar y reprogramar»), y cae al texto en español del servidor si falta la clave.
+- [x] **El manual de `/app/info` pasó a ser contenido, no JSX.** Las 14 secciones viven en `info.*` de los archivos de traducción y la página las recorre; el énfasis se escribe `**así**` y lo resuelve un `RichText` de 15 líneas. La página bajó de 589 a 180 líneas y agregar una sección es escribir texto en dos archivos.
+- [x] **Los slugs del tema de color pasaron a inglés** (`violeta|oceano|rosa` → `violet|ocean|pink`) en el CSS, el contexto y el script sin bloqueo de `index.html`, con un mapa de compatibilidad que traduce el valor viejo al leerlo: a nadie se le resetea el acento que ya tenía elegido.
+
+**Lo que se queda en español a propósito**, y así lo explica el propio manual: los datos que carga la clínica (nombres, razas, diagnósticos), el catálogo `SERVICE_TYPES` guardado en la base, el texto de los recordatorios de WhatsApp (lo lee el cliente, no el personal) y el `details` de la auditoría, que es un registro histórico y no una etiqueta.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

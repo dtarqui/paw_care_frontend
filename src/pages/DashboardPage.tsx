@@ -7,12 +7,14 @@ import { useAppointments } from "@/features/appointments/useAppointments";
 import { useModules } from "@/features/dashboard/useModules";
 import { usePets } from "@/features/pets/usePets";
 import { usePendingPayments } from "@/features/payments/usePayments";
+import { groupTitle, moduleDescription, moduleTitle } from "@/features/dashboard/labels";
 import { todayISO } from "@/lib/date";
-import { ROLE_LABEL } from "@/lib/roles";
 import { ArrowRight, CalendarClock, PawPrint, Wallet } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function DashboardPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { modules, groupedModules, isLoading: loadingModules } = useModules();
 
@@ -34,20 +36,20 @@ export function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Hola, {user?.firstName} 👋</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("dashboard.greeting", { name: user?.firstName ?? "" })}</h1>
         <p className="text-muted-foreground">
-          Sesión iniciada como{" "}
-          <span className="font-medium text-foreground">{user ? ROLE_LABEL[user.role] : ""}</span>
+          {t("dashboard.signedInAs")}{" "}
+          <span className="font-medium text-foreground">{user ? t(`enums.role.${user.role}`) : ""}</span>
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {showPets && (
-          <StatTile label="Mascotas registradas" value={pets?.total ?? 0} icon={PawPrint} isLoading={loadingPets} />
+          <StatTile label={t("dashboard.registeredPets")} value={pets?.total ?? 0} icon={PawPrint} isLoading={loadingPets} />
         )}
         {showAppointments && (
           <StatTile
-            label="Citas de hoy"
+            label={t("dashboard.todayAppointments")}
             value={todayAppointments ?? 0}
             icon={CalendarClock}
             isLoading={loadingAppointments}
@@ -55,7 +57,7 @@ export function DashboardPage() {
         )}
         {showPayments && (
           <StatTile
-            label="Pagos pendientes"
+            label={t("dashboard.pendingPayments")}
             value={pending?.length ?? 0}
             icon={Wallet}
             isLoading={loadingPayments}
@@ -75,7 +77,7 @@ export function DashboardPage() {
       {/* Mismos grupos y mismo orden que el sidebar — los define el backend. */}
       {groupedModules.map(({ group, modules: groupModules }) => (
         <div key={group.id} className="flex flex-col gap-3">
-          <h2 className="text-sm font-medium text-muted-foreground">{group.title}</h2>
+          <h2 className="text-sm font-medium text-muted-foreground">{groupTitle(t, group)}</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {groupModules.map((module) => {
               const Icon = ICON_MAP[module.icon] ?? PawPrint;
@@ -89,8 +91,8 @@ export function DashboardPage() {
                         </div>
                         <ArrowRight className="size-4 -translate-x-1 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                       </div>
-                      <CardTitle className="text-base">{module.title}</CardTitle>
-                      <CardDescription>{module.description}</CardDescription>
+                      <CardTitle className="text-base">{moduleTitle(t, module)}</CardTitle>
+                      <CardDescription>{moduleDescription(t, module, user?.role)}</CardDescription>
                     </CardHeader>
                   </Card>
                 </Link>
