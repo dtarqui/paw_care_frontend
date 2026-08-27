@@ -107,7 +107,7 @@ export function NewUserDialog() {
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">
           <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="firstName">{t("people.firstName")} *</Label>
               <Input id="firstName" required value={form.firstName} onChange={(e) => update("firstName", e.target.value)} />
@@ -159,8 +159,8 @@ export function NewUserDialog() {
           </div>
 
           {isVet && (
-            <div className="grid grid-cols-2 gap-3 rounded-md border bg-muted/40 p-3">
-              <div className="col-span-2 text-xs font-medium text-muted-foreground">
+            <div className="grid grid-cols-1 gap-3 rounded-md border bg-muted/40 p-3 sm:grid-cols-2">
+              <div className="col-span-1 sm:col-span-2 text-xs font-medium text-muted-foreground">
                 {t("users.form.vetSection")}
               </div>
               <div className="flex flex-col gap-1.5">
@@ -185,7 +185,7 @@ export function NewUserDialog() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="username">{t("common.username")} *</Label>
               <Input id="username" required value={form.username} onChange={(e) => update("username", e.target.value)} />

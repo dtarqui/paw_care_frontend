@@ -122,7 +122,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col gap-4">
           <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 py-0.5">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label>{t("common.vet")} *</Label>
                 {isVet ? (
@@ -168,7 +168,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="diagnosis">{t("visits.diagnosis")} *</Label>
                 <Textarea
@@ -204,7 +204,7 @@ export function NewVisitDialog({ pet }: { pet: Pet }) {
 
             <ConsumedMedicationsField items={medications} onChange={setMedications} />
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="weight">{t("visits.currentWeightOptional")}</Label>
                 <Input

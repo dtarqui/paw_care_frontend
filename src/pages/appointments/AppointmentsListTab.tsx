@@ -103,7 +103,7 @@ export function AppointmentsListTab({ onReschedule }: AppointmentsListTabProps) 
 
       {groups.map(([day, dayAppointments]) => (
         <Card key={day}>
-          <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
+          <CardHeader className="flex-row flex-wrap items-center justify-between gap-x-3 gap-y-1 space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-foreground">{dayLabel(day, t, language)}</CardTitle>
             <span className="text-xs text-muted-foreground">
               {t("appointments.count", { count: dayAppointments.length })}

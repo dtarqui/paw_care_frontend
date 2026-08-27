@@ -83,7 +83,7 @@ export function EditOwnerDialog({ owner }: { owner: OwnerWithPets }) {
             <Input value={owner.nationalId} disabled className="bg-muted/40" />
             <p className="text-xs text-muted-foreground">{t("owners.form.nationalIdLocked")}</p>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="edit-owner-firstName">{t("people.firstName")} *</Label>
               <Input

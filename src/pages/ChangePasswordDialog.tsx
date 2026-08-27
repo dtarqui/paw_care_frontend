@@ -53,7 +53,7 @@ export function ChangePasswordDialog() {
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? setOpen(true) : handleClose())}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="w-full sm:w-auto">
           <KeyRound className="size-4" />
           {t("auth.changePassword")}
         </Button>

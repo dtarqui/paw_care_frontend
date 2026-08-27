@@ -6,16 +6,19 @@ import { useTranslation } from "react-i18next";
 import { Sidebar } from "./Sidebar";
 
 /**
- * Solo visible en mobile (md:hidden): el sidebar completo (con el menú de perfil
- * incluido) vive en un Sheet lateral. En escritorio el sidebar ya está siempre
- * visible, así que esta barra no se renderiza.
+ * Visible por debajo de `lg`: el sidebar completo (con el menú de perfil incluido)
+ * vive en un Sheet lateral. De `lg` para arriba el sidebar ya está siempre visible,
+ * así que esta barra no se renderiza.
+ *
+ * El corte es `lg` y no `md` porque en una tablet de 768px el sidebar fijo dejaba
+ * apenas 512px de contenido, y con eso las tablas y los formularios no entran.
  */
 export function MobileHeader({ onOpenSearch }: { onOpenSearch?: () => void }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-background px-4 md:hidden">
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-background px-4 lg:hidden">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" aria-label={t("nav.openMenu")}>

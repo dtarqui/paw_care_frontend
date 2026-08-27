@@ -141,7 +141,7 @@ export function InvitationPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="firstName">{t("people.firstName")} *</Label>
                 <Input
@@ -182,8 +182,8 @@ export function InvitationPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 rounded-md border bg-muted/40 p-3">
-              <div className="col-span-2 text-xs font-medium text-muted-foreground">{t("people.professionalDetails")}</div>
+            <div className="grid grid-cols-1 gap-3 rounded-md border bg-muted/40 p-3 sm:grid-cols-2">
+              <div className="col-span-1 sm:col-span-2 text-xs font-medium text-muted-foreground">{t("people.professionalDetails")}</div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="licenseNumber">{t("people.licenseNumber")} *</Label>
                 <Input
@@ -205,7 +205,7 @@ export function InvitationPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="password">{t("common.password")} *</Label>
                 <div className="relative">

@@ -238,16 +238,16 @@
       "account": {
         "cards": [
           {
-            "title": "Apariencia",
-            "description": "Tema claro, oscuro o el del sistema, y tres colores de acento. Se guarda en tu navegador."
+            "description": "Tema claro, oscuro o el del sistema, y tres colores de acento. Se guarda en tu navegador.",
+            "title": "Apariencia"
           },
           {
-            "title": "Idioma",
-            "description": "Español o inglés. También se guarda en tu navegador, así que cada persona puede tenerlo en el idioma que prefiera aunque compartan la computadora."
+            "description": "Español o inglés. También se guarda en tu navegador, así que cada persona puede tenerlo en el idioma que prefiera aunque compartan la computadora.",
+            "title": "Idioma"
           },
           {
-            "title": "Contraseña",
-            "description": "Cambiarla te pide la actual. Mínimo 6 caracteres."
+            "description": "Cambiarla te pide la actual. Mínimo 6 caracteres.",
+            "title": "Contraseña"
           }
         ],
         "intro": "Lo que puedes cambiar de tu propia sesión, desde Configuración.",
@@ -259,14 +259,14 @@
       "care": {
         "callouts": [
           {
-            "tone": "tip",
+            "body": "El **peso actual** se guarda como el peso vigente de la mascota y agrega un punto al gráfico de evolución de su ficha. Los **medicamentos usados** descuentan stock del inventario automáticamente — no hay que registrar la salida por separado.",
             "title": "Dos campos que hacen más de lo que parece",
-            "body": "El **peso actual** se guarda como el peso vigente de la mascota y agrega un punto al gráfico de evolución de su ficha. Los **medicamentos usados** descuentan stock del inventario automáticamente — no hay que registrar la salida por separado."
+            "tone": "tip"
           },
           {
-            "tone": "warning",
+            "body": "El sistema revisa el stock *antes* de crear la atención. Si un medicamento no alcanza, te avisa y no guarda: así no queda una atención a medias. Carga la entrada en Inventario y vuelve a intentar.",
             "title": "Si falta stock, no se guarda nada",
-            "body": "El sistema revisa el stock *antes* de crear la atención. Si un medicamento no alcanza, te avisa y no guarda: así no queda una atención a medias. Carga la entrada en Inventario y vuelve a intentar."
+            "tone": "warning"
           }
         ],
         "intro": "El registro clínico de lo que se le hizo a la mascota.",
@@ -275,16 +275,16 @@
         ],
         "steps": [
           {
-            "title": "Busca la mascota por el CI de su dueño",
-            "description": "La pantalla arranca con un buscador. Al escribir el CI aparecen todas las mascotas de esa persona y eliges una."
+            "description": "La pantalla arranca con un buscador. Al escribir el CI aparecen todas las mascotas de esa persona y eliges una.",
+            "title": "Busca la mascota por el CI de su dueño"
           },
           {
-            "title": "Revisa su historial",
-            "description": "Debajo se listan las atenciones anteriores, con diagnóstico, tratamiento, peso y monto."
+            "description": "Debajo se listan las atenciones anteriores, con diagnóstico, tratamiento, peso y monto.",
+            "title": "Revisa su historial"
           },
           {
-            "title": "Pulsa «Nueva atención»",
-            "description": "Tipo de servicio, diagnóstico y tratamiento son obligatorios. Exámenes externos, peso actual y los medicamentos usados son opcionales."
+            "description": "Tipo de servicio, diagnóstico y tratamiento son obligatorios. Exámenes externos, peso actual y los medicamentos usados son opcionales.",
+            "title": "Pulsa «Nueva atención»"
           }
         ],
         "title": "Atención médica"
@@ -292,14 +292,14 @@
       "clients": {
         "callouts": [
           {
-            "tone": "info",
+            "body": "Haz clic en cualquier fila del listado para abrirla. Reúne los datos, un gráfico de evolución del peso (aparece recién con dos mediciones o más) y una línea de tiempo con todo lo que le pasó a esa mascota: atenciones, vacunas, citas y hasta las correcciones que alguien hizo a sus datos.",
             "title": "La ficha de la mascota",
-            "body": "Haz clic en cualquier fila del listado para abrirla. Reúne los datos, un gráfico de evolución del peso (aparece recién con dos mediciones o más) y una línea de tiempo con todo lo que le pasó a esa mascota: atenciones, vacunas, citas y hasta las correcciones que alguien hizo a sus datos."
+            "tone": "info"
           },
           {
-            "tone": "warning",
+            "body": "Al eliminar una mascota deja de aparecer en los listados y buscadores, pero su historial se conserva y puedes reactivarla desde su propia ficha. Para verla otra vez, activa «Mostrar inactivas» en el listado. Se hace así a propósito: borrar de verdad significaría perder las atenciones y pagos asociados.",
             "title": "«Eliminar» no borra de verdad",
-            "body": "Al eliminar una mascota deja de aparecer en los listados y buscadores, pero su historial se conserva y puedes reactivarla desde su propia ficha. Para verla otra vez, activa «Mostrar inactivas» en el listado. Se hace así a propósito: borrar de verdad significaría perder las atenciones y pagos asociados."
+            "tone": "warning"
           }
         ],
         "intro": "Los propietarios no se crean por separado: nacen al registrar su primera mascota.",
@@ -308,16 +308,16 @@
         ],
         "steps": [
           {
-            "title": "Ve a Mascotas → «Nueva mascota»",
-            "description": "Lo primero que pide es el CI del propietario."
+            "description": "Lo primero que pide es el CI del propietario.",
+            "title": "Ve a Mascotas → «Nueva mascota»"
           },
           {
-            "title": "Escribe el CI y espera un segundo",
-            "description": "Si esa persona ya está registrada, el sistema la reconoce sola y completa sus datos: no la duplicas. Si es nueva, te pide nombre, apellido y teléfono."
+            "description": "Si esa persona ya está registrada, el sistema la reconoce sola y completa sus datos: no la duplicas. Si es nueva, te pide nombre, apellido y teléfono.",
+            "title": "Escribe el CI y espera un segundo"
           },
           {
-            "title": "Completa los datos de la mascota",
-            "description": "Nombre, especie y sexo son obligatorios. Raza, fecha de nacimiento y peso son opcionales, pero la fecha de nacimiento es la que permite mostrar la edad, y el peso alimenta el gráfico de evolución."
+            "description": "Nombre, especie y sexo son obligatorios. Raza, fecha de nacimiento y peso son opcionales, pero la fecha de nacimiento es la que permite mostrar la edad, y el peso alimenta el gráfico de evolución.",
+            "title": "Completa los datos de la mascota"
           }
         ],
         "title": "Clientes y mascotas"
@@ -325,24 +325,24 @@
       "dayToDay": {
         "flow": [
           {
-            "label": "Cliente",
-            "caption": "Se busca por CI"
+            "caption": "Se busca por CI",
+            "label": "Cliente"
           },
           {
-            "label": "Mascota",
-            "caption": "Se registra o se elige"
+            "caption": "Se registra o se elige",
+            "label": "Mascota"
           },
           {
-            "label": "Cita",
-            "caption": "Se agenda"
+            "caption": "Se agenda",
+            "label": "Cita"
           },
           {
-            "label": "Atención",
-            "caption": "Diagnóstico y tratamiento"
+            "caption": "Diagnóstico y tratamiento",
+            "label": "Atención"
           },
           {
-            "label": "Cobro",
-            "caption": "Queda pendiente y se cobra"
+            "caption": "Queda pendiente y se cobra",
+            "label": "Cobro"
           }
         ],
         "intro": "El camino habitual de un cliente que llega a la clínica, de principio a fin.",
@@ -354,36 +354,36 @@
       "faq": {
         "faq": [
           {
-            "question": "Registré una atención pero no aparece en Pagos",
-            "answer": "Revisa que no la hayas cobrado ya: una vez pagada sale de «Pendientes» y pasa a «Últimos pagos». Si sigue sin aparecer, recarga la pantalla."
+            "answer": "Revisa que no la hayas cobrado ya: una vez pagada sale de «Pendientes» y pasa a «Últimos pagos». Si sigue sin aparecer, recarga la pantalla.",
+            "question": "Registré una atención pero no aparece en Pagos"
           },
           {
-            "question": "No me deja agendar: no hay horarios disponibles",
-            "answer": "Ese veterinario no tiene horario cargado para ese día de la semana. Cárgaselo en Agenda → Horarios. Si eres veterinario, recuerda que solo puedes agendar para ti mismo."
+            "answer": "Ese veterinario no tiene horario cargado para ese día de la semana. Cárgaselo en Agenda → Horarios. Si eres veterinario, recuerda que solo puedes agendar para ti mismo.",
+            "question": "No me deja agendar: no hay horarios disponibles"
           },
           {
-            "question": "¿Por qué no puedo eliminar una mascota o un medicamento?",
-            "answer": "Las mascotas sí se pueden «eliminar», pero es un borrado reversible: se ocultan y se pueden reactivar. Los medicamentos con movimientos registrados no se borran, porque eso rompería el historial de inventario."
+            "answer": "Las mascotas sí se pueden «eliminar», pero es un borrado reversible: se ocultan y se pueden reactivar. Los medicamentos con movimientos registrados no se borran, porque eso rompería el historial de inventario.",
+            "question": "¿Por qué no puedo eliminar una mascota o un medicamento?"
           },
           {
-            "question": "El cobro por QR me da error",
-            "answer": "Es lo esperado por ahora: falta conectar la API del banco de la clínica. Cobra con el QR de tu banco por fuera del sistema y registra el pago acá con el método «QR»."
+            "answer": "Es lo esperado por ahora: falta conectar la API del banco de la clínica. Cobra con el QR de tu banco por fuera del sistema y registra el pago acá con el método «QR».",
+            "question": "El cobro por QR me da error"
           },
           {
-            "question": "Un veterinario no aparece en la lista para agendar",
-            "answer": "Probablemente su cuenta está desactivada o pendiente de aprobación. Revísalo en Usuarios: las listas para agendar y atender solo ofrecen veterinarios activos."
+            "answer": "Probablemente su cuenta está desactivada o pendiente de aprobación. Revísalo en Usuarios: las listas para agendar y atender solo ofrecen veterinarios activos.",
+            "question": "Un veterinario no aparece en la lista para agendar"
           },
           {
-            "question": "¿Puedo usar PawCare en el celular o la tablet?",
-            "answer": "Sí. Todas las pantallas se adaptan, y las tablas se muestran como tarjetas para que se lean sin desplazarse de lado. Además puedes instalarlo como aplicación desde el menú del navegador."
+            "answer": "Sí. Todas las pantallas se adaptan: en celular y tablet los listados se muestran como tarjetas en vez de tablas, así se leen sin desplazarse de lado, y el menú se abre con el botón de las tres rayas. Además puedes instalarlo como aplicación desde el menú del navegador.",
+            "question": "¿Puedo usar PawCare en el celular o la tablet?"
           },
           {
-            "question": "No me llegó el correo de invitación o de recuperar contraseña",
-            "answer": "El envío de correo requiere que la clínica lo tenga configurado. Si no llega, el Administrador puede crear la cuenta directamente, o restablecer la contraseña desde Usuarios y comunicarla en persona."
+            "answer": "El envío de correo requiere que la clínica lo tenga configurado. Si no llega, el Administrador puede crear la cuenta directamente, o restablecer la contraseña desde Usuarios y comunicarla en persona.",
+            "question": "No me llegó el correo de invitación o de recuperar contraseña"
           },
           {
-            "question": "Cambié el idioma pero algunos textos siguen en español",
-            "answer": "Los datos que carga la clínica —nombres de mascotas, razas, diagnósticos, notas— se muestran tal como se escribieron: el sistema traduce su propia interfaz, no el contenido. Los mensajes de WhatsApp también van siempre en español, porque los lee el cliente."
+            "answer": "Los datos que carga la clínica —nombres de mascotas, razas, diagnósticos, notas— se muestran tal como se escribieron: el sistema traduce su propia interfaz, no el contenido. Los mensajes de WhatsApp también van siempre en español, porque los lee el cliente.",
+            "question": "Cambié el idioma pero algunos textos siguen en español"
           }
         ],
         "title": "Preguntas frecuentes"
@@ -391,29 +391,29 @@
       "gettingStarted": {
         "callouts": [
           {
-            "tone": "tip",
+            "body": "Presiona **Ctrl + K** (o **⌘ + K** en Mac), o el botón «Buscar…» arriba del menú. Escribe el nombre de una mascota, o el nombre, apellido o CI de un propietario, y te lleva directo a su ficha. Sirve desde cualquier pantalla y evita tener que adivinar dónde buscar.",
             "title": "El buscador es el atajo más rápido",
-            "body": "Presiona **Ctrl + K** (o **⌘ + K** en Mac), o el botón «Buscar…» arriba del menú. Escribe el nombre de una mascota, o el nombre, apellido o CI de un propietario, y te lleva directo a su ficha. Sirve desde cualquier pantalla y evita tener que adivinar dónde buscar."
+            "tone": "tip"
           },
           {
-            "tone": "warning",
+            "body": "El enlace «¿Olvidaste tu contraseña?» del login envía un correo, así que solo funciona si tu cuenta tiene un email registrado *y* la clínica configuró el envío de correo. Si no, pídele al Administrador que te la restablezca desde Usuarios: te la comunica en persona.",
             "title": "Si olvidaste tu contraseña",
-            "body": "El enlace «¿Olvidaste tu contraseña?» del login envía un correo, así que solo funciona si tu cuenta tiene un email registrado *y* la clínica configuró el envío de correo. Si no, pídele al Administrador que te la restablezca desde Usuarios: te la comunica en persona."
+            "tone": "warning"
           }
         ],
         "intro": "Cómo entrar y ubicarte en el sistema.",
         "steps": [
           {
-            "title": "Inicia sesión con el usuario que te dieron",
-            "description": "No es tu correo: es un nombre de usuario que asigna el Administrador de la clínica. Si te equivocas, el sistema no te dice cuál de los dos campos falló — es a propósito, por seguridad."
+            "description": "No es tu correo: es un nombre de usuario que asigna el Administrador de la clínica. Si te equivocas, el sistema no te dice cuál de los dos campos falló — es a propósito, por seguridad.",
+            "title": "Inicia sesión con el usuario que te dieron"
           },
           {
-            "title": "Revisa el Inicio",
-            "description": "Es la primera pantalla. Arriba muestra las cifras del momento (mascotas registradas, citas de hoy, pagos pendientes) y debajo accesos directos a los módulos que te corresponden."
+            "description": "Es la primera pantalla. Arriba muestra las cifras del momento (mascotas registradas, citas de hoy, pagos pendientes) y debajo accesos directos a los módulos que te corresponden.",
+            "title": "Revisa el Inicio"
           },
           {
-            "title": "Usa el menú de la izquierda",
-            "description": "Está agrupado en cuatro secciones: Clientes, Clínica, Administración y Sistema. Solo ves los módulos de tu rol. En celular el menú se abre con el botón de las tres rayas."
+            "description": "Está agrupado en cuatro secciones: Clientes, Clínica, Administración y Sistema. Solo ves los módulos de tu rol. En celular el menú se abre con el botón de las tres rayas.",
+            "title": "Usa el menú de la izquierda"
           }
         ],
         "title": "Primeros pasos"
@@ -421,24 +421,24 @@
       "inventory": {
         "callouts": [
           {
-            "tone": "info",
+            "body": "Si ya tuvo movimientos (entradas o consumos), el sistema no lo deja borrar: haría desaparecer parte del historial. Solo se pueden eliminar los que nunca se usaron.",
             "title": "Por qué a veces no se puede eliminar un medicamento",
-            "body": "Si ya tuvo movimientos (entradas o consumos), el sistema no lo deja borrar: haría desaparecer parte del historial. Solo se pueden eliminar los que nunca se usaron."
+            "tone": "info"
           }
         ],
         "intro": "El stock de medicamentos, y su alerta cuando algo se está por acabar.",
         "steps": [
           {
-            "title": "Define el stock mínimo de cada medicamento",
-            "description": "Es el umbral de la alerta. Cuando el stock actual queda igual o por debajo, el medicamento aparece marcado como «Bajo stock» y se suma al aviso de arriba."
+            "description": "Es el umbral de la alerta. Cuando el stock actual queda igual o por debajo, el medicamento aparece marcado como «Bajo stock» y se suma al aviso de arriba.",
+            "title": "Define el stock mínimo de cada medicamento"
           },
           {
-            "title": "Registra las entradas cuando llega mercadería",
-            "description": "El botón «Registrar entrada» suma al stock actual y queda como movimiento."
+            "description": "El botón «Registrar entrada» suma al stock actual y queda como movimiento.",
+            "title": "Registra las entradas cuando llega mercadería"
           },
           {
-            "title": "Las salidas se registran solas",
-            "description": "Cada vez que una atención médica consume un medicamento, el stock baja automáticamente."
+            "description": "Cada vez que una atención médica consume un medicamento, el stock baja automáticamente.",
+            "title": "Las salidas se registran solas"
           }
         ],
         "title": "Inventario"
@@ -446,24 +446,24 @@
       "payments": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Genera un QR bancario real, pero para eso hace falta conectar la API del banco de la clínica, y eso aún no está hecho. Hoy el botón muestra un mensaje explicando exactamente eso, en vez de un QR falso que nadie podría pagar. **Para cobrar por QR mientras tanto**, usa el QR de tu banco por fuera del sistema y registra el pago acá eligiendo el método «QR».",
             "title": "El botón «Cobrar con QR» todavía no cobra",
-            "body": "Genera un QR bancario real, pero para eso hace falta conectar la API del banco de la clínica, y eso aún no está hecho. Hoy el botón muestra un mensaje explicando exactamente eso, en vez de un QR falso que nadie podría pagar. **Para cobrar por QR mientras tanto**, usa el QR de tu banco por fuera del sistema y registra el pago acá eligiendo el método «QR»."
+            "tone": "warning"
           }
         ],
         "intro": "Todo lo que se atendió y todavía no se pagó, en una sola lista.",
         "steps": [
           {
-            "title": "Mira el pendiente total",
-            "description": "Arriba de la pantalla: cuánto falta cobrar en total y cuántas atenciones lo componen."
+            "description": "Arriba de la pantalla: cuánto falta cobrar en total y cuántas atenciones lo componen.",
+            "title": "Mira el pendiente total"
           },
           {
-            "title": "Pulsa «Registrar pago» en la fila que corresponda",
-            "description": "Eliges el método (Efectivo, Tarjeta, Transferencia o QR) y confirmas el monto. La atención pasa a pagada y desaparece de pendientes."
+            "description": "Eliges el método (Efectivo, Tarjeta, Transferencia o QR) y confirmas el monto. La atención pasa a pagada y desaparece de pendientes.",
+            "title": "Pulsa «Registrar pago» en la fila que corresponda"
           },
           {
-            "title": "Revisa «Últimos pagos»",
-            "description": "Los cinco cobros más recientes, con su método y fecha."
+            "description": "Los cinco cobros más recientes, con su método y fecha.",
+            "title": "Revisa «Últimos pagos»"
           }
         ],
         "title": "Cobros"
@@ -471,24 +471,24 @@
       "preventive": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Un control sin fecha de próxima dosis se guarda igual, pero **nunca va a aparecer** en «Próximos a vencer» ni va a generar un recordatorio. Cárgala siempre que la sepas.",
             "title": "Sin próxima dosis, no hay aviso",
-            "body": "Un control sin fecha de próxima dosis se guarda igual, pero **nunca va a aparecer** en «Próximos a vencer» ni va a generar un recordatorio. Cárgala siempre que la sepas."
+            "tone": "warning"
           }
         ],
         "intro": "El control preventivo lleva la cuenta de qué se aplicó y cuándo toca la próxima dosis.",
         "steps": [
           {
-            "title": "Panel «Próximos a vencer»",
-            "description": "Lo primero que ves: los controles cuya próxima dosis cae dentro de los próximos 30 días. Los que ya pasaron su fecha llevan una etiqueta «Vencido» en rojo."
+            "description": "Lo primero que ves: los controles cuya próxima dosis cae dentro de los próximos 30 días. Los que ya pasaron su fecha llevan una etiqueta «Vencido» en rojo.",
+            "title": "Panel «Próximos a vencer»"
           },
           {
-            "title": "Busca una mascota por CI del dueño",
-            "description": "Igual que en Atención médica, para ver su historial preventivo completo."
+            "description": "Igual que en Atención médica, para ver su historial preventivo completo.",
+            "title": "Busca una mascota por CI del dueño"
           },
           {
-            "title": "Registra el control",
-            "description": "Elige Vacuna o Desparasitación, la fecha en que se aplicó y —muy recomendable— la fecha de la próxima dosis."
+            "description": "Elige Vacuna o Desparasitación, la fecha en que se aplicó y —muy recomendable— la fecha de la próxima dosis.",
+            "title": "Registra el control"
           }
         ],
         "title": "Vacunas y desparasitación"
@@ -496,24 +496,24 @@
       "reminders": {
         "callouts": [
           {
-            "tone": "info",
+            "body": "El sistema calcula a quién hay que avisar y prepara el mensaje, pero alguien tiene que abrir la pantalla y hacer clic. No manda nada por su cuenta. El mensaje va siempre en español, porque lo lee el cliente de la clínica.",
             "title": "El envío es manual, no automático",
-            "body": "El sistema calcula a quién hay que avisar y prepara el mensaje, pero alguien tiene que abrir la pantalla y hacer clic. No manda nada por su cuenta. El mensaje va siempre en español, porque lo lee el cliente de la clínica."
+            "tone": "info"
           }
         ],
         "intro": "Avisos a los clientes por WhatsApp, para reducir las ausencias.",
         "steps": [
           {
-            "title": "Abre Recordatorios",
-            "description": "El sistema arma solo la lista: las citas de las próximas 24 horas y los controles preventivos que vencen dentro de 7 días."
+            "description": "El sistema arma solo la lista: las citas de las próximas 24 horas y los controles preventivos que vencen dentro de 7 días.",
+            "title": "Abre Recordatorios"
           },
           {
-            "title": "Pulsa «Enviar por WhatsApp»",
-            "description": "Se abre WhatsApp con el número del propietario y el mensaje ya escrito. Puedes editarlo antes de enviarlo."
+            "description": "Se abre WhatsApp con el número del propietario y el mensaje ya escrito. Puedes editarlo antes de enviarlo.",
+            "title": "Pulsa «Enviar por WhatsApp»"
           },
           {
-            "title": "Vuelve y marca «Marcar como enviado»",
-            "description": "Es lo que saca a ese cliente de la lista y evita que le escriban dos veces. Queda registrado en «Últimos enviados»."
+            "description": "Es lo que saca a ese cliente de la lista y evita que le escriban dos veces. Queda registrado en «Últimos enviados».",
+            "title": "Vuelve y marca «Marcar como enviado»"
           }
         ],
         "title": "Recordatorios"
@@ -521,143 +521,59 @@
       "reports": {
         "callouts": [
           {
-            "tone": "tip",
+            "body": "Cada reporte tiene botones para descargarlo en Excel o PDF, con los filtros que tengas puestos. Además, en Configuración hay «Exportar todos mis datos»: un Excel con una hoja por cada tipo de información del sistema.",
             "title": "Todo se puede exportar",
-            "body": "Cada reporte tiene botones para descargarlo en Excel o PDF, con los filtros que tengas puestos. Además, en Configuración hay «Exportar todos mis datos»: un Excel con una hoja por cada tipo de información del sistema."
+            "tone": "tip"
           }
         ],
         "cards": [
           {
-            "title": "Ingresos",
-            "description": "Cada pago cobrado, con filtros por rango de fechas, tipo de servicio y método de pago. Arriba muestra el total y la cantidad de cobros que cumplen esos filtros."
+            "description": "Cada pago cobrado, con filtros por rango de fechas, tipo de servicio y método de pago. Arriba muestra el total y la cantidad de cobros que cumplen esos filtros.",
+            "title": "Ingresos"
           },
           {
-            "title": "Clínicos y administrativos",
-            "description": "Dos vistas: las atenciones de un período, y un gráfico de ingresos agrupados por tipo de servicio, que responde qué servicio deja más."
+            "description": "Dos vistas: las atenciones de un período, y un gráfico de ingresos agrupados por tipo de servicio, que responde qué servicio deja más.",
+            "title": "Clínicos y administrativos"
           }
         ],
         "intro": "Solo Administrador. Dos miradas sobre la misma información.",
         "title": "Reportes"
       },
       "roles": {
+        "areas": {
+          "appointments": "Agenda (citas)",
+          "inventory": "Inventario",
+          "medicalCare": "Atención médica",
+          "owners": "Propietarios",
+          "payments": "Pagos",
+          "pets": "Mascotas",
+          "preventiveCare": "Control preventivo",
+          "reminders": "Recordatorios",
+          "reports": "Reportes",
+          "staff": "Cuentas del personal",
+          "workingHours": "Agenda (horarios)"
+        },
         "callouts": [
           {
-            "tone": "info",
+            "body": "Un **Veterinario solo puede agendar y reprogramar citas para sí mismo**. El Administrador y Recepción pueden hacerlo para cualquier veterinario. Lo mismo con los horarios: un veterinario edita el suyo, no el de sus colegas.",
             "title": "La regla que más sorprende",
-            "body": "Un **Veterinario solo puede agendar y reprogramar citas para sí mismo**. El Administrador y Recepción pueden hacerlo para cualquier veterinario. Lo mismo con los horarios: un veterinario edita el suyo, no el de sus colegas."
+            "tone": "info"
           }
         ],
         "intro": "Hay tres roles. El menú te muestra únicamente los módulos que te corresponden, y el servidor rechaza cualquier pedido de información fuera de tu rol: si llegaras a una pantalla ajena, no verías datos, solo un error.",
-        "matrix": {
-          "roles": [
-            "Administrador",
-            "Veterinario",
-            "Recepción"
-          ],
-          "rows": [
-            {
-              "area": "Propietarios",
-              "access": [
-                true,
-                false,
-                true
-              ]
-            },
-            {
-              "area": "Mascotas",
-              "access": [
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "area": "Agenda (citas)",
-              "access": [
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "area": "Agenda (horarios)",
-              "access": [
-                true,
-                true,
-                false
-              ]
-            },
-            {
-              "area": "Atención médica",
-              "access": [
-                true,
-                true,
-                false
-              ]
-            },
-            {
-              "area": "Control preventivo",
-              "access": [
-                true,
-                true,
-                false
-              ]
-            },
-            {
-              "area": "Recordatorios",
-              "access": [
-                true,
-                false,
-                true
-              ]
-            },
-            {
-              "area": "Pagos",
-              "access": [
-                true,
-                false,
-                true
-              ]
-            },
-            {
-              "area": "Inventario",
-              "access": [
-                true,
-                false,
-                false
-              ]
-            },
-            {
-              "area": "Reportes",
-              "access": [
-                true,
-                false,
-                false
-              ]
-            },
-            {
-              "area": "Cuentas del personal",
-              "access": [
-                true,
-                false,
-                false
-              ]
-            }
-          ]
-        },
         "title": "Qué hace cada rol"
       },
       "schedule": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Casi siempre es porque **ese veterinario no tiene horario cargado para ese día** de la semana. Ve a la pestaña «Horarios», actívale el turno que corresponda y vuelve a intentar. Un veterinario sin horario ese día simplemente no tiene turnos que ofrecer.",
             "title": "Si no aparece ningún horario disponible",
-            "body": "Casi siempre es porque **ese veterinario no tiene horario cargado para ese día** de la semana. Ve a la pestaña «Horarios», actívale el turno que corresponda y vuelve a intentar. Un veterinario sin horario ese día simplemente no tiene turnos que ofrecer."
+            "tone": "warning"
           },
           {
-            "tone": "info",
+            "body": "No cambia la mascota ni el veterinario: para eso, cancela y agenda una nueva. Y una cita cancelada ya no se puede reprogramar. Tampoco se puede poner dos citas al mismo veterinario a la misma hora — el sistema lo bloquea.",
             "title": "Reprogramar solo mueve fecha y hora",
-            "body": "No cambia la mascota ni el veterinario: para eso, cancela y agenda una nueva. Y una cita cancelada ya no se puede reprogramar. Tampoco se puede poner dos citas al mismo veterinario a la misma hora — el sistema lo bloquea."
+            "tone": "info"
           }
         ],
         "intro": "Citas y horarios viven en la misma pantalla, porque el horario de cada veterinario es lo que determina qué turnos quedan libres.",
@@ -668,29 +584,29 @@
           },
           "to": [
             {
-              "label": "Atendida",
               "description": "La mascota vino y fue atendida",
+              "label": "Atendida",
               "tone": "good"
             },
             {
-              "label": "Cancelada",
               "description": "No se realizó; el turno vuelve a quedar libre",
+              "label": "Cancelada",
               "tone": "muted"
             }
           ]
         },
         "steps": [
           {
-            "title": "Pestaña «Nueva Cita»",
-            "description": "Elige mascota, veterinario, tipo de consulta y fecha. Los horarios disponibles aparecen agrupados en Mañana y Tarde; los ocupados salen deshabilitados."
+            "description": "Elige mascota, veterinario, tipo de consulta y fecha. Los horarios disponibles aparecen agrupados en Mañana y Tarde; los ocupados salen deshabilitados.",
+            "title": "Pestaña «Nueva Cita»"
           },
           {
-            "title": "Pestaña «Lista de Citas»",
-            "description": "La agenda agrupada por día. Desde cada cita puedes reprogramarla, marcarla como atendida o cancelarla."
+            "description": "La agenda agrupada por día. Desde cada cita puedes reprogramarla, marcarla como atendida o cancelarla.",
+            "title": "Pestaña «Lista de Citas»"
           },
           {
-            "title": "Pestaña «Horarios»",
-            "description": "La grilla semanal de atención de cada veterinario, con hasta dos turnos por día (mañana y tarde). Recepción no ve esta pestaña."
+            "description": "La grilla semanal de atención de cada veterinario, con hasta dos turnos por día (mañana y tarde). Recepción no ve esta pestaña.",
+            "title": "Pestaña «Horarios»"
           }
         ],
         "title": "Agenda"
@@ -698,27 +614,27 @@
       "staff": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Las cuentas no se eliminan, se desactivan: quien está desactivado no puede iniciar sesión y desaparece de las listas para agendar o atender, pero su historial queda intacto. Se reactiva cuando haga falta.",
             "title": "Desactivar en vez de borrar",
-            "body": "Las cuentas no se eliminan, se desactivan: quien está desactivado no puede iniciar sesión y desaparece de las listas para agendar o atender, pero su historial queda intacto. Se reactiva cuando haga falta."
+            "tone": "warning"
           }
         ],
         "cards": [
           {
-            "title": "Crear una cuenta",
-            "description": "«Nuevo usuario» pide los datos y el rol. Si eliges Veterinario, aparecen dos campos más: matrícula y especialidad."
+            "description": "«Nuevo usuario» pide los datos y el rol. Si eliges Veterinario, aparecen dos campos más: matrícula y especialidad.",
+            "title": "Crear una cuenta"
           },
           {
-            "title": "Invitar a un veterinario",
-            "description": "«Invitar veterinario» le manda un correo con un enlace para que complete sus datos. La cuenta queda activa apenas la acepta."
+            "description": "«Invitar veterinario» le manda un correo con un enlace para que complete sus datos. La cuenta queda activa apenas la acepta.",
+            "title": "Invitar a un veterinario"
           },
           {
-            "title": "Aprobar una solicitud",
-            "description": "Un veterinario puede pedir acceso solo, desde el enlace del login. Aparece como «Pendiente de aprobación» y no puede entrar hasta que pulses «Aprobar»."
+            "description": "Un veterinario puede pedir acceso solo, desde el enlace del login. Aparece como «Pendiente de aprobación» y no puede entrar hasta que pulses «Aprobar».",
+            "title": "Aprobar una solicitud"
           },
           {
-            "title": "Auditoría",
-            "description": "La segunda pestaña registra quién activó, desactivó, cambió de rol, restableció contraseñas o invitó a alguien, y cuándo."
+            "description": "La segunda pestaña registra quién activó, desactivó, cambió de rol, restableció contraseñas o invitó a alguien, y cuándo.",
+            "title": "Auditoría"
           }
         ],
         "intro": "Solo Administrador. Quién puede entrar al sistema y con qué permisos.",

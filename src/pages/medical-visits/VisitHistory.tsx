@@ -19,7 +19,7 @@ export function VisitHistory({ pet }: { pet: Pet }) {
 
   return (
     <Card>
-      <CardHeader className="flex-row items-start justify-between space-y-0">
+      <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-2">
           <div>
             <CardTitle className="text-base">

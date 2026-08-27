@@ -58,20 +58,24 @@ export function SettingsPage() {
           <CardDescription>{t("settings.account.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4">
-            <Avatar className="size-14">
-              <AvatarFallback className="bg-primary text-lg text-primary-foreground">{initials}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <span className="text-base font-medium">
-                {user?.firstName} {user?.paternalLastName}
-              </span>
-              <span className="text-sm text-muted-foreground">@{user?.username}</span>
-              <span className="text-sm text-muted-foreground">
-                {user ? t(`enums.role.${user.role}`) : ""}
-              </span>
+          {/* En celular el botón no cabe al lado del nombre: se va abajo, a ancho
+              completo, en vez de quedar cortado contra el borde de la tarjeta. */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex min-w-0 items-center gap-4">
+              <Avatar className="size-14 shrink-0">
+                <AvatarFallback className="bg-primary text-lg text-primary-foreground">{initials}</AvatarFallback>
+              </Avatar>
+              <div className="flex min-w-0 flex-col">
+                <span className="truncate text-base font-medium">
+                  {user?.firstName} {user?.paternalLastName}
+                </span>
+                <span className="truncate text-sm text-muted-foreground">@{user?.username}</span>
+                <span className="text-sm text-muted-foreground">
+                  {user ? t(`enums.role.${user.role}`) : ""}
+                </span>
+              </div>
             </div>
-            <div className="ml-auto">
+            <div className="sm:ml-auto">
               <ChangePasswordDialog />
             </div>
           </div>

@@ -28,7 +28,12 @@ interface MobileCardProps {
  * Las tablas de esta app llegan a 12 columnas (Pagos) y 11 (Reportes clínicos): en un
  * celular eso es scroll horizontal y tres columnas visibles. Como PawCare es una PWA
  * instalable pensada para el mostrador, cada listado muestra `<MobileCard>` por debajo
- * de `md` y la `<Table>` de ahí para arriba.
+ * de `lg` y la `<Table>` de ahí para arriba.
+ *
+ * El corte es `lg` (1024px) y no `md`: en una tablet de 768px la tabla de Usuarios se
+ * cortaba con las columnas Estado y Acciones fuera de la pantalla, y en Pagos quedaban
+ * fuera el monto y el botón de cobrar. Nada avisaba de que había scroll horizontal
+ * adentro de la tarjeta, así que la pantalla se veía simplemente incompleta.
  *
  * La tarjeta prioriza: título → estado → datos → acciones. Lo que en la tabla es una
  * columna secundaria acá va como par etiqueta/valor, y lo prescindible simplemente no
@@ -83,11 +88,18 @@ export function MobileCard({ title, subtitle, badge, rows, actions, onClick, cla
 }
 
 /** Contenedor de las tarjetas: visible solo por debajo de `md`. */
+/**
+ * La lista de tarjetas. En celular va en una columna; entre `md` y `lg` —tablets en
+ * vertical, donde ya no hay sidebar— van dos por fila, porque una sola tarjeta a
+ * 768px de ancho deja la etiqueta y el valor separados por medio metro de vacío.
+ */
 export function MobileCardList({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("flex flex-col gap-2 md:hidden", className)}>{children}</div>;
+  return (
+    <div className={cn("grid grid-cols-1 gap-2 md:grid-cols-2 lg:hidden", className)}>{children}</div>
+  );
 }
 
-/** Contraparte: la tabla, visible solo de `md` para arriba. */
+/** Contraparte: la tabla, visible solo de `lg` para arriba. */
 export function DesktopTable({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("hidden md:block", className)}>{children}</div>;
+  return <div className={cn("hidden min-w-0 lg:block", className)}>{children}</div>;
 }

@@ -74,7 +74,7 @@ export function PetDetailPage() {
           )}
 
           <Card>
-            <CardHeader className="flex-row items-start justify-between space-y-0">
+            <CardHeader className="flex-col items-stretch gap-4 space-y-0 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <PawPrint className="size-6" />
@@ -88,7 +88,7 @@ export function PetDetailPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <EditPetDialog pet={pet} />
                 <Button
                   variant={pet.status === "ACTIVE" ? "destructive" : "outline"}

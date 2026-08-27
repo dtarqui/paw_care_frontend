@@ -9,14 +9,14 @@ export function AppShell() {
   const { open, setOpen } = useGlobalSearchShortcut();
 
   return (
-    <div className="flex h-svh flex-col md:flex-row">
-      <aside className="hidden w-64 shrink-0 border-r bg-sidebar md:flex md:flex-col">
+    <div className="flex h-svh flex-col lg:flex-row">
+      <aside className="hidden w-64 shrink-0 border-r bg-sidebar lg:flex lg:flex-col">
         <Sidebar onOpenSearch={() => setOpen(true)} />
       </aside>
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <MobileHeader onOpenSearch={() => setOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="mx-auto w-full max-w-6xl">
             <Outlet />
           </div>

@@ -36,7 +36,7 @@ export function UsersPage() {
 
       {showAudit ? (
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList>
+          <TabsList className="max-w-full overflow-x-auto">
             <TabsTrigger value="list">{t("users.tabs.accounts")}</TabsTrigger>
             <TabsTrigger value="audit">{t("users.tabs.audit")}</TabsTrigger>
           </TabsList>

@@ -37,12 +37,12 @@ export function PetsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{t("pets.title")}</h1>
           <p className="text-muted-foreground">{t("pets.subtitle")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {user?.role === "ADMIN" && <ImportClientsDialog />}
           <NewPetDialog />
         </div>
@@ -51,12 +51,12 @@ export function PetsPage() {
       <Card>
         <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">{t("pets.listTitle")}</CardTitle>
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="relative">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+            <div className="relative w-full sm:w-56">
               <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t("pets.searchPlaceholder")}
-                className="w-56 pl-8"
+                className="w-full pl-8"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

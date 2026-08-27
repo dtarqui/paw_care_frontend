@@ -112,7 +112,7 @@ export function SchedulesTab() {
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
+        <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">{t("common.vet")}</CardTitle>
           {isVet ? (
             <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/40 px-3 text-sm">
@@ -128,7 +128,7 @@ export function SchedulesTab() {
               onValueChange={(v) => setSelectedVetId(Number(v))}
               disabled={loadingVets}
             >
-              <SelectTrigger className="w-64">
+              <SelectTrigger className="w-full sm:w-72">
                 <SelectValue placeholder={t("schedules.pickVet")} />
               </SelectTrigger>
               <SelectContent>
@@ -162,32 +162,46 @@ export function SchedulesTab() {
             ) : (
               <div className="flex flex-col divide-y">
                 {DAYS.map((day) => (
-                  <div key={day} className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
-                    <span className="w-24 shrink-0 text-sm font-medium">{t(`schedules.days.${day}`)}</span>
-                    <div className="flex flex-1 flex-wrap gap-4">
+                  <div key={day} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:gap-3">
+                    <span className="text-sm font-medium sm:w-24 sm:shrink-0">{t(`schedules.days.${day}`)}</span>
+                    <div className="flex flex-1 flex-wrap gap-x-4 gap-y-2">
                       {(["morningShift", "afternoonShift"] as const).map((shiftKey) => {
                         const shift = week[day][shiftKey];
                         return (
-                          <div key={shiftKey} className="flex items-center gap-2">
-                            <Switch
-                              checked={shift.enabled}
-                              onCheckedChange={(enabled) => updateShift(day, shiftKey, { enabled })}
-                            />
-                            <Input
-                              type="time"
-                              className="w-28"
-                              value={shift.start}
-                              disabled={!shift.enabled}
-                              onChange={(e) => updateShift(day, shiftKey, { start: e.target.value })}
-                            />
-                            <span className="text-muted-foreground">–</span>
-                            <Input
-                              type="time"
-                              className="w-28"
-                              value={shift.end}
-                              disabled={!shift.enabled}
-                              onChange={(e) => updateShift(day, shiftKey, { end: e.target.value })}
-                            />
+                          <div
+                            key={shiftKey}
+                            className="flex w-full flex-col gap-1.5 sm:w-auto sm:flex-row sm:items-center sm:gap-2"
+                          >
+                            {/* El nombre del turno solo hace falta en celular, donde los dos
+                                se apilan; va arriba y no al lado porque los campos de hora
+                                necesitan el ancho completo para no cortar los minutos. */}
+                            <span className="text-xs font-medium text-muted-foreground sm:hidden">
+                              {t(shiftKey === "morningShift" ? "appointments.morning" : "appointments.afternoon")}
+                            </span>
+                            <div className="flex items-center gap-1.5 sm:gap-2">
+                              <Switch
+                                checked={shift.enabled}
+                                onCheckedChange={(enabled) => updateShift(day, shiftKey, { enabled })}
+                                aria-label={`${t(`schedules.days.${day}`)} · ${t(
+                                  shiftKey === "morningShift" ? "appointments.morning" : "appointments.afternoon"
+                                )}`}
+                              />
+                              <Input
+                                type="time"
+                                className="min-w-0 flex-1 sm:w-36 sm:flex-none"
+                                value={shift.start}
+                                disabled={!shift.enabled}
+                                onChange={(e) => updateShift(day, shiftKey, { start: e.target.value })}
+                              />
+                              <span className="hidden text-muted-foreground sm:inline">–</span>
+                              <Input
+                                type="time"
+                                className="min-w-0 flex-1 sm:w-36 sm:flex-none"
+                                value={shift.end}
+                                disabled={!shift.enabled}
+                                onChange={(e) => updateShift(day, shiftKey, { end: e.target.value })}
+                              />
+                            </div>
                           </div>
                         );
                       })}

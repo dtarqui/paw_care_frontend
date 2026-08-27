@@ -44,11 +44,11 @@ export function OwnersPage() {
       <Card>
         <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">{t("owners.listTitle")}</CardTitle>
-          <div className="relative">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder={t("owners.searchPlaceholder")}
-              className="w-64 pl-8"
+              className="w-full pl-8"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />

@@ -134,7 +134,7 @@ export function NewPetDialog() {
                   <Search className="size-3.5" />
                   {t("pets.form.ownerNotFound")}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="ownerFirstName">{t("people.firstName")} *</Label>
                     <Input
@@ -153,7 +153,7 @@ export function NewPetDialog() {
                       onChange={(e) => update("ownerPaternalLastName", e.target.value)}
                     />
                   </div>
-                  <div className="col-span-2 flex flex-col gap-1.5">
+                  <div className="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                     <Label htmlFor="ownerPhone">{t("common.phone")}</Label>
                     <Input
                       id="ownerPhone"
@@ -166,7 +166,7 @@ export function NewPetDialog() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="petName">{t("pets.form.petName")} *</Label>
               <Input id="petName" required value={form.name} onChange={(e) => update("name", e.target.value)} />

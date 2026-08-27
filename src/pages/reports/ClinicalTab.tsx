@@ -13,14 +13,32 @@ import { reportsApi } from "@/features/reports/api";
 import { useVisitsReport, useRevenueByServiceTypeReport } from "@/features/reports/useReports";
 import { FileSearch, FileDown, FileSpreadsheet, Loader2 } from "lucide-react";
 import { useFormatters } from "@/lib/useFormatters";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type ReportType = "visits" | "revenue-by-service";
 
+/** El eje del gráfico necesita un ancho en píxeles, no una clase de Tailwind, así
+ * que el corte de pantalla chica se consulta acá en vez de en el CSS. */
+function useIsNarrow() {
+  const [narrow, setNarrow] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 639px)");
+    const sync = (e: MediaQueryListEvent) => setNarrow(e.matches);
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  return narrow;
+}
+
 export function ClinicalTab() {
   const { t } = useTranslation();
+  const isNarrow = useIsNarrow();
   const { formatDate } = useFormatters();
   const [type, setType] = useState<ReportType>("revenue-by-service");
   const [from, setFrom] = useState("");
@@ -30,6 +48,13 @@ export function ClinicalTab() {
   const filters = { from: from || undefined, to: to || undefined };
   const visitsReport = useVisitsReport(filters, type === "visits");
   const incomeReport = useRevenueByServiceTypeReport(filters, type === "revenue-by-service");
+
+  /** Recharts pinta lo que hay en el dato: si se le pasa `serviceType` crudo, el eje
+   * se queda en español aunque la interfaz esté en inglés. */
+  const incomeChartData = (incomeReport.data ?? []).map((group) => ({
+    ...group,
+    label: t(`enums.serviceType.${group.serviceType}`, { defaultValue: group.serviceType }),
+  }));
 
   async function download(format: "excel" | "pdf") {
     setDownloading(format);
@@ -95,10 +120,17 @@ export function ClinicalTab() {
             )}
             {!incomeReport.isLoading && incomeReport.data && incomeReport.data.length > 0 && (
               <ResponsiveContainer width="100%" height={Math.max(220, incomeReport.data.length * 48)}>
-                <BarChart data={incomeReport.data} layout="vertical" margin={{ left: 8, right: 24 }}>
+                <BarChart data={incomeChartData} layout="vertical" margin={{ left: 8, right: 24 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" />
                   <XAxis type="number" tickFormatter={(v) => `Bs.${v}`} stroke="var(--muted-foreground)" fontSize={12} />
-                  <YAxis type="category" dataKey="serviceType" width={150} stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis
+                    type="category"
+                    dataKey="label"
+                    // En un celular 150px de eje se comen la mitad del ancho útil.
+                    width={isNarrow ? 96 : 150}
+                    stroke="var(--muted-foreground)"
+                    fontSize={12}
+                  />
                   <Tooltip
                     formatter={(value) => [`Bs. ${Number(value).toFixed(2)}`, t("common.amount")]}
                     contentStyle={{
@@ -115,7 +147,7 @@ export function ClinicalTab() {
             )}
 
             {!incomeReport.isLoading && incomeReport.data && incomeReport.data.length > 0 && (
-              <div className="mt-6 overflow-x-auto">
+              <div className="mt-6 min-w-0 overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>

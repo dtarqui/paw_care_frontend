@@ -16,7 +16,7 @@ export function PreventiveHistory({ pet }: { pet: Pet }) {
 
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0">
+      <CardHeader className="flex-col items-stretch gap-3 space-y-0 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <CardTitle className="text-base">
             {pet.name}{" "}

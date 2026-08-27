@@ -83,7 +83,7 @@ export function EditPetDialog({ pet }: { pet: Pet }) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="edit-name">{t("common.name")} *</Label>
               <Input id="edit-name" required value={form.name} onChange={(e) => update("name", e.target.value)} />

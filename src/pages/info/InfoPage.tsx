@@ -16,6 +16,7 @@ import {
   Wallet,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Callout, Faq, FlowDiagram, RichText, RoleMatrix, Section, StateFlow, Steps } from "./InfoBlocks";
 
@@ -44,6 +45,30 @@ const SECTIONS: { id: string; icon: LucideIcon }[] = [
   { id: "faq", icon: HelpCircle },
 ];
 
+/**
+ * Quién puede entrar a qué. Vive acá y no en los archivos de traducción por dos
+ * razones: son permisos del sistema (espejo de `dashboard.service.ts`), no prosa; y
+ * porque al pasar por i18next los booleanos volvían como texto, con lo cual `"false"`
+ * resultaba verdadero y la matriz afirmaba que todos los roles pueden todo.
+ *
+ * El orden de `access` sigue al de `ROLE_COLUMNS`.
+ */
+const ROLE_COLUMNS = ["ADMIN", "VET", "RECEPTIONIST"] as const;
+
+const ROLE_MATRIX: { area: string; access: boolean[] }[] = [
+  { area: "owners", access: [true, false, true] },
+  { area: "pets", access: [true, true, true] },
+  { area: "appointments", access: [true, true, true] },
+  { area: "workingHours", access: [true, true, false] },
+  { area: "medicalCare", access: [true, true, false] },
+  { area: "preventiveCare", access: [true, true, false] },
+  { area: "reminders", access: [true, false, true] },
+  { area: "payments", access: [true, false, true] },
+  { area: "inventory", access: [true, false, false] },
+  { area: "reports", access: [true, false, false] },
+  { area: "staff", access: [true, false, false] },
+];
+
 /** Los íconos del recorrido Cliente → Mascota → Cita → Atención → Cobro. */
 const FLOW_ICONS: LucideIcon[] = [User, PawPrint, CalendarDays, Stethoscope, Wallet];
 
@@ -52,8 +77,27 @@ interface TextItem {
   description: string;
 }
 
+/** De `lg` para arriba el índice es una columna fija siempre visible; por debajo es
+ * un desplegable que arranca cerrado — si no, sus 14 entradas ocupan la primera
+ * pantalla entera del celular antes de que se lea una sola línea del manual. */
+function useTocOpenByDefault() {
+  const [open, setOpen] = useState(() =>
+    typeof window === "undefined" ? true : window.matchMedia("(min-width: 1024px)").matches
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    const sync = (e: MediaQueryList | MediaQueryListEvent) => setOpen(e.matches);
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  return [open, setOpen] as const;
+}
+
 export function InfoPage() {
   const { t } = useTranslation();
+  const [tocOpen, setTocOpen] = useTocOpenByDefault();
 
   /** Listas del manual (pasos, tarjetas, preguntas). Devuelve [] si una sección no
    * define ese bloque, así cada `<Section>` renderiza solo lo que tiene. */
@@ -78,7 +122,7 @@ export function InfoPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* Índice: fijo al costado en pantallas grandes, plegado arriba en el resto */}
         <nav className="lg:sticky lg:top-6 lg:w-56 lg:shrink-0" aria-label={t("info.tocLabel")}>
-          <details className="rounded-lg border" open>
+          <details className="rounded-lg border" open={tocOpen} onToggle={(e) => setTocOpen(e.currentTarget.open)}>
             <summary className="cursor-pointer px-3 py-2 text-sm font-medium lg:hidden">
               {t("info.tocSummary")}
             </summary>
@@ -119,8 +163,11 @@ export function InfoPage() {
 
                   {id === "roles" && (
                     <RoleMatrix
-                      roles={list<string>("info.sections.roles.matrix.roles")}
-                      rows={list<{ area: string; access: boolean[] }>("info.sections.roles.matrix.rows")}
+                      roles={ROLE_COLUMNS.map((role) => t(`enums.role.${role}`))}
+                      rows={ROLE_MATRIX.map((row) => ({
+                        ...row,
+                        area: t(`info.sections.roles.areas.${row.area}`),
+                      }))}
                     />
                   )}
 

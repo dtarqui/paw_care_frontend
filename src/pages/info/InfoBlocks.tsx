@@ -34,7 +34,7 @@ export function Section({
           {intro && <p className="text-muted-foreground">{intro}</p>}
         </div>
       </div>
-      <div className="flex flex-col gap-4 sm:pl-12">{children}</div>
+      <div className="flex min-w-0 flex-col gap-4 sm:pl-12">{children}</div>
     </section>
   );
 }
@@ -132,7 +132,14 @@ export function FlowDiagram({ steps }: { steps: { icon: LucideIcon; label: strin
   );
 }
 
-/** Matriz de qué puede hacer cada rol. */
+/**
+ * Matriz de qué puede hacer cada rol.
+ *
+ * En celular no se dibuja como tabla: cuatro columnas en 320px dejan el nombre del
+ * módulo en un hilo y los encabezados se pisan entre sí. Ahí va como lista —un
+ * módulo por fila con los roles que sí tienen acceso— que es como se lee igual, en
+ * voz alta: "Pagos: Administrador y Recepción".
+ */
 export function RoleMatrix({
   roles,
   rows,
@@ -143,44 +150,75 @@ export function RoleMatrix({
   const { t } = useTranslation();
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b bg-muted/40">
-            <th className="px-3 py-2 text-left font-medium">{t("info.moduleColumn")}</th>
-            {roles.map((role) => (
-              <th key={role} className="px-3 py-2 text-center font-medium">
-                {role}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.area} className="border-b last:border-b-0">
-              <td className="px-3 py-2">{row.area}</td>
-              {row.access.map((has, i) => (
-                <td key={`${row.area}-${i}`} className="px-3 py-2 text-center">
-                  {has ? (
-                    <>
-                      <Check className="mx-auto size-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
-                      <span className="sr-only">{t("info.hasAccess")}</span>
-                    </>
-                  ) : (
-                    <>
-                      <span aria-hidden className="text-muted-foreground/40">
-                        —
-                      </span>
-                      <span className="sr-only">{t("info.noAccess")}</span>
-                    </>
-                  )}
-                </td>
+    <>
+      <ul className="flex flex-col gap-2 sm:hidden">
+        {rows.map((row) => {
+          const allowed = roles.filter((_, i) => row.access[i]);
+          return (
+            <li key={row.area} className="rounded-lg border p-3">
+              <p className="font-medium">{row.area}</p>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {allowed.length === 0 ? (
+                  <span className="text-sm text-muted-foreground">—</span>
+                ) : (
+                  allowed.map((role) => (
+                    <span
+                      key={role}
+                      className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
+                    >
+                      {role}
+                    </span>
+                  ))
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="hidden min-w-0 overflow-x-auto rounded-lg border sm:block">
+        {/* `table-fixed`: con el ancho automático la tabla reclamaba un mínimo mayor
+            que la pantalla y hacía scrollear la página de lado. Fijando el reparto,
+            las columnas de rol se quedan angostas —solo llevan un tilde— y el nombre
+            del módulo usa el resto. */}
+        <table className="w-full table-fixed text-sm">
+          <thead>
+            <tr className="border-b bg-muted/40">
+              <th className="px-3 py-2 text-left font-medium">{t("info.moduleColumn")}</th>
+              {roles.map((role) => (
+                <th key={role} className="w-28 px-3 py-2 text-center font-medium">
+                  {role}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.area} className="border-b last:border-b-0">
+                <td className="px-3 py-2">{row.area}</td>
+                {row.access.map((has, i) => (
+                  <td key={`${row.area}-${i}`} className="px-3 py-2 text-center">
+                    {has ? (
+                      <>
+                        <Check className="mx-auto size-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
+                        <span className="sr-only">{t("info.hasAccess")}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span aria-hidden className="text-muted-foreground/40">
+                          —
+                        </span>
+                        <span className="sr-only">{t("info.noAccess")}</span>
+                      </>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 

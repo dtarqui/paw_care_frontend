@@ -49,7 +49,7 @@ export function AppointmentsPage() {
       </div>
 
       <Tabs value={tab} onValueChange={handleTabChange}>
-        <TabsList>
+        <TabsList className="max-w-full overflow-x-auto">
           <TabsTrigger value="list">{t("appointments.tabs.list")}</TabsTrigger>
           <TabsTrigger value="new">
             {appointmentBeingEdited ? t("appointments.tabs.reschedule") : t("appointments.tabs.new")}

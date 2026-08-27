@@ -14,7 +14,7 @@ export function ReportsPage() {
       </div>
 
       <Tabs defaultValue="revenue">
-        <TabsList>
+        <TabsList className="max-w-full overflow-x-auto">
           <TabsTrigger value="revenue">{t("reports.tabs.revenue")}</TabsTrigger>
           <TabsTrigger value="clinical">{t("reports.tabs.clinical")}</TabsTrigger>
         </TabsList>

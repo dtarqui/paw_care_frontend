@@ -238,16 +238,16 @@
       "account": {
         "cards": [
           {
-            "title": "Appearance",
-            "description": "Light, dark or the system theme, plus three accent colours. It's saved in your browser."
+            "description": "Light, dark or the system theme, plus three accent colours. It's saved in your browser.",
+            "title": "Appearance"
           },
           {
-            "title": "Language",
-            "description": "Spanish or English. It's also saved in your browser, so each person can have it in the language they prefer even when sharing a computer."
+            "description": "Spanish or English. It's also saved in your browser, so each person can have it in the language they prefer even when sharing a computer.",
+            "title": "Language"
           },
           {
-            "title": "Password",
-            "description": "Changing it asks for your current one. At least 6 characters."
+            "description": "Changing it asks for your current one. At least 6 characters.",
+            "title": "Password"
           }
         ],
         "intro": "What you can change about your own session, from Settings.",
@@ -259,14 +259,14 @@
       "care": {
         "callouts": [
           {
-            "tone": "tip",
+            "body": "The **current weight** is saved as the pet's current weight and adds a point to the trend chart on its record. The **medications used** are deducted from inventory stock automatically — there's no separate movement to record.",
             "title": "Two fields that do more than they look",
-            "body": "The **current weight** is saved as the pet's current weight and adds a point to the trend chart on its record. The **medications used** are deducted from inventory stock automatically — there's no separate movement to record."
+            "tone": "tip"
           },
           {
-            "tone": "warning",
+            "body": "The system checks stock *before* creating the visit. If a medication isn't enough, it tells you and doesn't save: that way you're never left with a half-recorded visit. Add the stock under Inventory and try again.",
             "title": "If stock runs short, nothing is saved",
-            "body": "The system checks stock *before* creating the visit. If a medication isn't enough, it tells you and doesn't save: that way you're never left with a half-recorded visit. Add the stock under Inventory and try again."
+            "tone": "warning"
           }
         ],
         "intro": "The clinical record of what was done to the pet.",
@@ -275,16 +275,16 @@
         ],
         "steps": [
           {
-            "title": "Look the pet up by its owner's national ID",
-            "description": "The screen starts with a search box. Typing the national ID brings up all of that person's pets and you pick one."
+            "description": "The screen starts with a search box. Typing the national ID brings up all of that person's pets and you pick one.",
+            "title": "Look the pet up by its owner's national ID"
           },
           {
-            "title": "Review its history",
-            "description": "Below, previous visits are listed with diagnosis, treatment, weight and amount."
+            "description": "Below, previous visits are listed with diagnosis, treatment, weight and amount.",
+            "title": "Review its history"
           },
           {
-            "title": "Press “New visit”",
-            "description": "Service type, diagnosis and treatment are required. External tests, current weight and the medications used are optional."
+            "description": "Service type, diagnosis and treatment are required. External tests, current weight and the medications used are optional.",
+            "title": "Press “New visit”"
           }
         ],
         "title": "Medical care"
@@ -292,14 +292,14 @@
       "clients": {
         "callouts": [
           {
-            "tone": "info",
+            "body": "Click any row in the list to open it. It brings together the details, a weight trend chart (it only appears with two or more measurements) and a timeline of everything that happened to that pet: visits, vaccines, appointments and even the corrections someone made to its details.",
             "title": "The pet's record",
-            "body": "Click any row in the list to open it. It brings together the details, a weight trend chart (it only appears with two or more measurements) and a timeline of everything that happened to that pet: visits, vaccines, appointments and even the corrections someone made to its details."
+            "tone": "info"
           },
           {
-            "tone": "warning",
+            "body": "Deleting a pet takes it out of the lists and search, but its history is kept and you can reactivate it from its own record. To see it again, switch on “Show inactive” in the list. This is deliberate: really deleting it would mean losing the visits and payments attached to it.",
             "title": "“Delete” doesn't really delete",
-            "body": "Deleting a pet takes it out of the lists and search, but its history is kept and you can reactivate it from its own record. To see it again, switch on “Show inactive” in the list. This is deliberate: really deleting it would mean losing the visits and payments attached to it."
+            "tone": "warning"
           }
         ],
         "intro": "Owners aren't created on their own: they come into being when you register their first pet.",
@@ -308,16 +308,16 @@
         ],
         "steps": [
           {
-            "title": "Go to Pets → “New pet”",
-            "description": "The first thing it asks for is the owner's national ID."
+            "description": "The first thing it asks for is the owner's national ID.",
+            "title": "Go to Pets → “New pet”"
           },
           {
-            "title": "Type the national ID and wait a second",
-            "description": "If that person is already registered, the system recognises them and fills in their details: no duplicate. If they're new, it asks for their name, surname and phone."
+            "description": "If that person is already registered, the system recognises them and fills in their details: no duplicate. If they're new, it asks for their name, surname and phone.",
+            "title": "Type the national ID and wait a second"
           },
           {
-            "title": "Fill in the pet's details",
-            "description": "Name, species and sex are required. Breed, date of birth and weight are optional, but the date of birth is what lets the age show, and the weight feeds the trend chart."
+            "description": "Name, species and sex are required. Breed, date of birth and weight are optional, but the date of birth is what lets the age show, and the weight feeds the trend chart.",
+            "title": "Fill in the pet's details"
           }
         ],
         "title": "Clients and pets"
@@ -325,24 +325,24 @@
       "dayToDay": {
         "flow": [
           {
-            "label": "Client",
-            "caption": "Looked up by national ID"
+            "caption": "Looked up by national ID",
+            "label": "Client"
           },
           {
-            "label": "Pet",
-            "caption": "Registered or picked"
+            "caption": "Registered or picked",
+            "label": "Pet"
           },
           {
-            "label": "Appointment",
-            "caption": "Booked"
+            "caption": "Booked",
+            "label": "Appointment"
           },
           {
-            "label": "Visit",
-            "caption": "Diagnosis and treatment"
+            "caption": "Diagnosis and treatment",
+            "label": "Visit"
           },
           {
-            "label": "Payment",
-            "caption": "Falls due and gets paid"
+            "caption": "Falls due and gets paid",
+            "label": "Payment"
           }
         ],
         "intro": "The usual path of a client who walks in, from start to finish.",
@@ -354,36 +354,36 @@
       "faq": {
         "faq": [
           {
-            "question": "I recorded a visit but it isn't showing under Payments",
-            "answer": "Check you haven't already taken payment: once paid it leaves “Awaiting payment” and moves to “Latest payments”. If it still doesn't show, reload the screen."
+            "answer": "Check you haven't already taken payment: once paid it leaves “Awaiting payment” and moves to “Latest payments”. If it still doesn't show, reload the screen.",
+            "question": "I recorded a visit but it isn't showing under Payments"
           },
           {
-            "question": "It won't let me book: there are no slots available",
-            "answer": "That vet has no working hours set for that day of the week. Set them under Schedule → Working hours. If you're a vet, remember you can only book for yourself."
+            "answer": "That vet has no working hours set for that day of the week. Set them under Schedule → Working hours. If you're a vet, remember you can only book for yourself.",
+            "question": "It won't let me book: there are no slots available"
           },
           {
-            "question": "Why can't I delete a pet or a medication?",
-            "answer": "Pets can be “deleted”, but it's reversible: they're hidden and can be reactivated. Medications with recorded movements aren't deleted, because that would break the inventory history."
+            "answer": "Pets can be “deleted”, but it's reversible: they're hidden and can be reactivated. Medications with recorded movements aren't deleted, because that would break the inventory history.",
+            "question": "Why can't I delete a pet or a medication?"
           },
           {
-            "question": "Charging by QR gives me an error",
-            "answer": "That's expected for now: the clinic's bank API isn't connected yet. Charge with your bank's own QR outside the system and record the payment here with the “QR” method."
+            "answer": "That's expected for now: the clinic's bank API isn't connected yet. Charge with your bank's own QR outside the system and record the payment here with the “QR” method.",
+            "question": "Charging by QR gives me an error"
           },
           {
-            "question": "A vet isn't in the list when I try to book",
-            "answer": "Their account is probably deactivated or pending approval. Check under Users: the lists for booking and seeing pets only offer active vets."
+            "answer": "Their account is probably deactivated or pending approval. Check under Users: the lists for booking and seeing pets only offer active vets.",
+            "question": "A vet isn't in the list when I try to book"
           },
           {
-            "question": "Can I use PawCare on a phone or tablet?",
-            "answer": "Yes. Every screen adapts, and tables show as cards so they read without scrolling sideways. You can also install it as an app from the browser menu."
+            "answer": "Yes. Every screen adapts: on phones and tablets the listings show as cards instead of tables, so they read without scrolling sideways, and the menu opens with the three-line button. You can also install it as an app from the browser menu.",
+            "question": "Can I use PawCare on a phone or tablet?"
           },
           {
-            "question": "The invitation or password recovery email never arrived",
-            "answer": "Sending email requires the clinic to have set it up. If it doesn't arrive, the Administrator can create the account directly, or reset the password from Users and pass it on in person."
+            "answer": "Sending email requires the clinic to have set it up. If it doesn't arrive, the Administrator can create the account directly, or reset the password from Users and pass it on in person.",
+            "question": "The invitation or password recovery email never arrived"
           },
           {
-            "question": "I switched the language but some text is still in Spanish",
-            "answer": "The data the clinic enters — pet names, breeds, diagnoses, notes — is shown exactly as it was typed: the system translates its own interface, not the content. WhatsApp messages are also always in Spanish, because the client is the one reading them."
+            "answer": "The data the clinic enters — pet names, breeds, diagnoses, notes — is shown exactly as it was typed: the system translates its own interface, not the content. WhatsApp messages are also always in Spanish, because the client is the one reading them.",
+            "question": "I switched the language but some text is still in Spanish"
           }
         ],
         "title": "Frequently asked questions"
@@ -391,29 +391,29 @@
       "gettingStarted": {
         "callouts": [
           {
-            "tone": "tip",
+            "body": "Press **Ctrl + K** (or **⌘ + K** on a Mac), or the “Search…” button above the menu. Type a pet's name, or an owner's name, surname or national ID, and it takes you straight to their record. It works from any screen and saves you guessing where to look.",
             "title": "Search is the fastest shortcut",
-            "body": "Press **Ctrl + K** (or **⌘ + K** on a Mac), or the “Search…” button above the menu. Type a pet's name, or an owner's name, surname or national ID, and it takes you straight to their record. It works from any screen and saves you guessing where to look."
+            "tone": "tip"
           },
           {
-            "tone": "warning",
+            "body": "The “Forgot your password?” link on the sign-in screen sends an email, so it only works if your account has an email on file *and* the clinic has set up email sending. If not, ask the Administrator to reset it from Users: they'll pass it on to you in person.",
             "title": "If you forgot your password",
-            "body": "The “Forgot your password?” link on the sign-in screen sends an email, so it only works if your account has an email on file *and* the clinic has set up email sending. If not, ask the Administrator to reset it from Users: they'll pass it on to you in person."
+            "tone": "warning"
           }
         ],
         "intro": "How to sign in and find your way around.",
         "steps": [
           {
-            "title": "Sign in with the username you were given",
-            "description": "It isn't your email: it's a username the clinic's Administrator assigns. If you get it wrong, the system won't tell you which of the two fields failed — that's deliberate, for security."
+            "description": "It isn't your email: it's a username the clinic's Administrator assigns. If you get it wrong, the system won't tell you which of the two fields failed — that's deliberate, for security.",
+            "title": "Sign in with the username you were given"
           },
           {
-            "title": "Check the Home screen",
-            "description": "It's the first screen. At the top it shows the current numbers (registered pets, today's appointments, outstanding payments) and below it, shortcuts to the modules your role can use."
+            "description": "It's the first screen. At the top it shows the current numbers (registered pets, today's appointments, outstanding payments) and below it, shortcuts to the modules your role can use.",
+            "title": "Check the Home screen"
           },
           {
-            "title": "Use the menu on the left",
-            "description": "It's grouped into four sections: Clients, Clinic, Administration and System. You only see the modules for your role. On a phone the menu opens with the three-line button."
+            "description": "It's grouped into four sections: Clients, Clinic, Administration and System. You only see the modules for your role. On a phone the menu opens with the three-line button.",
+            "title": "Use the menu on the left"
           }
         ],
         "title": "Getting started"
@@ -421,24 +421,24 @@
       "inventory": {
         "callouts": [
           {
-            "tone": "info",
+            "body": "If it already has movements (stock added or used), the system won't let it be deleted: it would make part of the history disappear. Only the ones never used can be deleted.",
             "title": "Why a medication sometimes can't be deleted",
-            "body": "If it already has movements (stock added or used), the system won't let it be deleted: it would make part of the history disappear. Only the ones never used can be deleted."
+            "tone": "info"
           }
         ],
         "intro": "Medication stock, and its alert when something is about to run out.",
         "steps": [
           {
-            "title": "Set a minimum stock for each medication",
-            "description": "That's the alert threshold. When current stock drops to it or below, the medication is flagged “Low stock” and is added to the warning at the top."
+            "description": "That's the alert threshold. When current stock drops to it or below, the medication is flagged “Low stock” and is added to the warning at the top.",
+            "title": "Set a minimum stock for each medication"
           },
           {
-            "title": "Add stock when a delivery arrives",
-            "description": "The “Add stock” button adds to the current stock and is kept as a movement."
+            "description": "The “Add stock” button adds to the current stock and is kept as a movement.",
+            "title": "Add stock when a delivery arrives"
           },
           {
-            "title": "Stock going out records itself",
-            "description": "Every time a visit uses a medication, the stock goes down automatically."
+            "description": "Every time a visit uses a medication, the stock goes down automatically.",
+            "title": "Stock going out records itself"
           }
         ],
         "title": "Inventory"
@@ -446,24 +446,24 @@
       "payments": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "It generates a real bank QR, but that needs the clinic's bank API connected, and that isn't done yet. Today the button shows a message explaining exactly that, instead of a fake QR nobody could pay. **To charge by QR in the meantime**, use your bank's own QR outside the system and record the payment here choosing the “QR” method.",
             "title": "The “Charge by QR” button doesn't charge yet",
-            "body": "It generates a real bank QR, but that needs the clinic's bank API connected, and that isn't done yet. Today the button shows a message explaining exactly that, instead of a fake QR nobody could pay. **To charge by QR in the meantime**, use your bank's own QR outside the system and record the payment here choosing the “QR” method."
+            "tone": "warning"
           }
         ],
         "intro": "Everything that's been seen and not yet paid, in a single list.",
         "steps": [
           {
-            "title": "Look at the outstanding total",
-            "description": "At the top of the screen: how much is left to collect in total, and how many visits make it up."
+            "description": "At the top of the screen: how much is left to collect in total, and how many visits make it up.",
+            "title": "Look at the outstanding total"
           },
           {
-            "title": "Press “Take payment” on the right row",
-            "description": "You pick the method (Cash, Card, Transfer or QR) and confirm the amount. The visit becomes paid and drops off the outstanding list."
+            "description": "You pick the method (Cash, Card, Transfer or QR) and confirm the amount. The visit becomes paid and drops off the outstanding list.",
+            "title": "Press “Take payment” on the right row"
           },
           {
-            "title": "Check “Latest payments”",
-            "description": "The five most recent payments, with their method and date."
+            "description": "The five most recent payments, with their method and date.",
+            "title": "Check “Latest payments”"
           }
         ],
         "title": "Payments"
@@ -471,24 +471,24 @@
       "preventive": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Care with no next-dose date still saves, but it will **never show up** under “Due in the next 30 days”, and it won't generate a reminder. Fill it in whenever you know it.",
             "title": "No next dose, no reminder",
-            "body": "Care with no next-dose date still saves, but it will **never show up** under “Due in the next 30 days”, and it won't generate a reminder. Fill it in whenever you know it."
+            "tone": "warning"
           }
         ],
         "intro": "Preventive care keeps track of what was given and when the next dose is due.",
         "steps": [
           {
-            "title": "The “Due in the next 30 days” panel",
-            "description": "The first thing you see: the care whose next dose falls within the next 30 days. Anything past its date carries an “Overdue” tag in red."
+            "description": "The first thing you see: the care whose next dose falls within the next 30 days. Anything past its date carries an “Overdue” tag in red.",
+            "title": "The “Due in the next 30 days” panel"
           },
           {
-            "title": "Look a pet up by its owner's national ID",
-            "description": "Same as under Medical care, to see its full preventive history."
+            "description": "Same as under Medical care, to see its full preventive history.",
+            "title": "Look a pet up by its owner's national ID"
           },
           {
-            "title": "Record the care",
-            "description": "Pick Vaccine or Deworming, the date it was given and — strongly recommended — the date of the next dose."
+            "description": "Pick Vaccine or Deworming, the date it was given and — strongly recommended — the date of the next dose.",
+            "title": "Record the care"
           }
         ],
         "title": "Vaccines and deworming"
@@ -496,24 +496,24 @@
       "reminders": {
         "callouts": [
           {
-            "tone": "info",
+            "body": "The system works out who needs a nudge and drafts the message, but someone has to open the screen and click. It never sends anything on its own. The message is always in Spanish, because the clinic's client is the one reading it.",
             "title": "Sending is manual, not automatic",
-            "body": "The system works out who needs a nudge and drafts the message, but someone has to open the screen and click. It never sends anything on its own. The message is always in Spanish, because the clinic's client is the one reading it."
+            "tone": "info"
           }
         ],
         "intro": "Nudges to clients over WhatsApp, to cut down on no-shows.",
         "steps": [
           {
-            "title": "Open Reminders",
-            "description": "The system builds the list on its own: appointments in the next 24 hours and preventive care due within 7 days."
+            "description": "The system builds the list on its own: appointments in the next 24 hours and preventive care due within 7 days.",
+            "title": "Open Reminders"
           },
           {
-            "title": "Press “Send on WhatsApp”",
-            "description": "WhatsApp opens with the owner's number and the message already written. You can edit it before sending."
+            "description": "WhatsApp opens with the owner's number and the message already written. You can edit it before sending.",
+            "title": "Press “Send on WhatsApp”"
           },
           {
-            "title": "Come back and press “Mark as sent”",
-            "description": "That's what takes the client off the list and stops them being messaged twice. It's recorded under “Recently sent”."
+            "description": "That's what takes the client off the list and stops them being messaged twice. It's recorded under “Recently sent”.",
+            "title": "Come back and press “Mark as sent”"
           }
         ],
         "title": "Reminders"
@@ -521,143 +521,59 @@
       "reports": {
         "callouts": [
           {
-            "tone": "tip",
+            "body": "Each report has buttons to download it as Excel or PDF, with whatever filters you have set. On top of that, Settings has “Export all my data”: an Excel file with one sheet per kind of information in the system.",
             "title": "Everything can be exported",
-            "body": "Each report has buttons to download it as Excel or PDF, with whatever filters you have set. On top of that, Settings has “Export all my data”: an Excel file with one sheet per kind of information in the system."
+            "tone": "tip"
           }
         ],
         "cards": [
           {
-            "title": "Revenue",
-            "description": "Every payment taken, with filters by date range, service type and payment method. At the top it shows the total and how many payments match those filters."
+            "description": "Every payment taken, with filters by date range, service type and payment method. At the top it shows the total and how many payments match those filters.",
+            "title": "Revenue"
           },
           {
-            "title": "Clinical and administrative",
-            "description": "Two views: the visits over a period, and a chart of revenue grouped by service type, which answers which service brings in the most."
+            "description": "Two views: the visits over a period, and a chart of revenue grouped by service type, which answers which service brings in the most.",
+            "title": "Clinical and administrative"
           }
         ],
         "intro": "Administrator only. Two views of the same information.",
         "title": "Reports"
       },
       "roles": {
+        "areas": {
+          "appointments": "Schedule (appointments)",
+          "inventory": "Inventory",
+          "medicalCare": "Medical care",
+          "owners": "Owners",
+          "payments": "Payments",
+          "pets": "Pets",
+          "preventiveCare": "Preventive care",
+          "reminders": "Reminders",
+          "reports": "Reports",
+          "staff": "Staff accounts",
+          "workingHours": "Schedule (working hours)"
+        },
         "callouts": [
           {
-            "tone": "info",
+            "body": "A **Vet can only book and reschedule appointments for themselves**. The Administrator and Reception can do it for any vet. Same with working hours: a vet edits their own, not their colleagues'.",
             "title": "The rule that surprises people most",
-            "body": "A **Vet can only book and reschedule appointments for themselves**. The Administrator and Reception can do it for any vet. Same with working hours: a vet edits their own, not their colleagues'."
+            "tone": "info"
           }
         ],
         "intro": "There are three roles. The menu only shows you the modules for your role, and the server turns down any request for data outside it: if you reached someone else's screen, you'd see no data, only an error.",
-        "matrix": {
-          "roles": [
-            "Administrator",
-            "Vet",
-            "Reception"
-          ],
-          "rows": [
-            {
-              "area": "Owners",
-              "access": [
-                true,
-                false,
-                true
-              ]
-            },
-            {
-              "area": "Pets",
-              "access": [
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "area": "Schedule (appointments)",
-              "access": [
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "area": "Schedule (working hours)",
-              "access": [
-                true,
-                true,
-                false
-              ]
-            },
-            {
-              "area": "Medical care",
-              "access": [
-                true,
-                true,
-                false
-              ]
-            },
-            {
-              "area": "Preventive care",
-              "access": [
-                true,
-                true,
-                false
-              ]
-            },
-            {
-              "area": "Reminders",
-              "access": [
-                true,
-                false,
-                true
-              ]
-            },
-            {
-              "area": "Payments",
-              "access": [
-                true,
-                false,
-                true
-              ]
-            },
-            {
-              "area": "Inventory",
-              "access": [
-                true,
-                false,
-                false
-              ]
-            },
-            {
-              "area": "Reports",
-              "access": [
-                true,
-                false,
-                false
-              ]
-            },
-            {
-              "area": "Staff accounts",
-              "access": [
-                true,
-                false,
-                false
-              ]
-            }
-          ]
-        },
         "title": "What each role does"
       },
       "schedule": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Almost always it's because **that vet has no working hours set for that day** of the week. Go to the “Working hours” tab, switch on the right shift and try again. A vet with no hours that day simply has no slots to offer.",
             "title": "If no slots are available",
-            "body": "Almost always it's because **that vet has no working hours set for that day** of the week. Go to the “Working hours” tab, switch on the right shift and try again. A vet with no hours that day simply has no slots to offer."
+            "tone": "warning"
           },
           {
-            "tone": "info",
+            "body": "It doesn't change the pet or the vet: for that, cancel and book a new one. And a cancelled appointment can't be rescheduled. You also can't put two appointments with the same vet at the same time — the system blocks it.",
             "title": "Rescheduling only moves the date and time",
-            "body": "It doesn't change the pet or the vet: for that, cancel and book a new one. And a cancelled appointment can't be rescheduled. You also can't put two appointments with the same vet at the same time — the system blocks it."
+            "tone": "info"
           }
         ],
         "intro": "Appointments and working hours live on the same screen, because each vet's hours are what decide which slots are free.",
@@ -668,29 +584,29 @@
           },
           "to": [
             {
-              "label": "Attended",
               "description": "The pet came in and was seen",
+              "label": "Attended",
               "tone": "good"
             },
             {
-              "label": "Cancelled",
               "description": "It didn't happen; the slot is free again",
+              "label": "Cancelled",
               "tone": "muted"
             }
           ]
         },
         "steps": [
           {
-            "title": "The “New Appointment” tab",
-            "description": "Pick the pet, the vet, the consultation type and the date. Available slots appear grouped into Morning and Afternoon; booked ones are disabled."
+            "description": "Pick the pet, the vet, the consultation type and the date. Available slots appear grouped into Morning and Afternoon; booked ones are disabled.",
+            "title": "The “New Appointment” tab"
           },
           {
-            "title": "The “Appointments” tab",
-            "description": "The schedule grouped by day. From each appointment you can reschedule it, mark it attended or cancel it."
+            "description": "The schedule grouped by day. From each appointment you can reschedule it, mark it attended or cancel it.",
+            "title": "The “Appointments” tab"
           },
           {
-            "title": "The “Working hours” tab",
-            "description": "Each vet's weekly grid, with up to two shifts a day (morning and afternoon). Reception doesn't see this tab."
+            "description": "Each vet's weekly grid, with up to two shifts a day (morning and afternoon). Reception doesn't see this tab.",
+            "title": "The “Working hours” tab"
           }
         ],
         "title": "Schedule"
@@ -698,27 +614,27 @@
       "staff": {
         "callouts": [
           {
-            "tone": "warning",
+            "body": "Accounts aren't deleted, they're deactivated: someone deactivated can't sign in and drops off the lists for booking or seeing pets, but their history stays intact. Reactivate them whenever it's needed.",
             "title": "Deactivate instead of deleting",
-            "body": "Accounts aren't deleted, they're deactivated: someone deactivated can't sign in and drops off the lists for booking or seeing pets, but their history stays intact. Reactivate them whenever it's needed."
+            "tone": "warning"
           }
         ],
         "cards": [
           {
-            "title": "Create an account",
-            "description": "“New user” asks for the details and the role. If you pick Vet, two more fields appear: license number and specialty."
+            "description": "“New user” asks for the details and the role. If you pick Vet, two more fields appear: license number and specialty.",
+            "title": "Create an account"
           },
           {
-            "title": "Invite a vet",
-            "description": "“Invite a vet” emails them a link to fill in their own details. The account is active as soon as they accept."
+            "description": "“Invite a vet” emails them a link to fill in their own details. The account is active as soon as they accept.",
+            "title": "Invite a vet"
           },
           {
-            "title": "Approve a request",
-            "description": "A vet can request access themselves, from the link on the sign-in screen. They show up as “Pending approval” and can't get in until you press “Approve”."
+            "description": "A vet can request access themselves, from the link on the sign-in screen. They show up as “Pending approval” and can't get in until you press “Approve”.",
+            "title": "Approve a request"
           },
           {
-            "title": "Audit log",
-            "description": "The second tab records who activated, deactivated, changed a role, reset a password or invited someone, and when."
+            "description": "The second tab records who activated, deactivated, changed a role, reset a password or invited someone, and when.",
+            "title": "Audit log"
           }
         ],
         "intro": "Administrator only. Who can get into the system, and with what permissions.",

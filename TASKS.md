@@ -247,6 +247,39 @@ La app pasa a tener **dos idiomas: español (base) e inglés**, a elección de c
 
 ---
 
+## Correcciones y mejoras (sesión 15 — responsive medido, de 320px a 1440px)
+
+Revisión completa del frontend en pantallas reales. Se armó un script con Playwright que carga las 17 rutas a **320, 375, 430, 768, 1024 y 1440px**, saca captura y mide el desborde horizontal de la página junto con el elemento que lo provoca (ignorando lo que ya recorta un contenedor con scroll propio). También abre los diálogos y las vistas detrás de pestañas, que no salen en una captura de página.
+
+### El peor caso no era el celular: era la tablet
+
+- [x] **El corte tarjetas/tabla pasó de `md` (768px) a `lg` (1024px).** Medido: a 768px la tabla de Usuarios dejaba **Estado y Acciones fuera de la pantalla** y la de Pagos perdía el monto y el botón «Registrar pago». La `<Table>` de shadcn scrollea por dentro, así que no había desborde de página que delatara nada — la pantalla simplemente se veía incompleta.
+- [x] **El shell cambia en `lg` también**: por debajo, el sidebar va en el panel lateral desplegable. Un sidebar fijo de 256px sobre 768px dejaba 512px de contenido, y con eso no entran ni las tablas ni los formularios.
+- [x] **`MobileCardList` pasó a ser grilla**: entre `md` y `lg` —tablet en vertical, ya sin sidebar— van dos tarjetas por fila, en vez de una sola estirada con la etiqueta y el valor separados por medio ancho de pantalla.
+
+### Formularios y cabeceras
+
+- [x] **19 grillas `grid-cols-2` sin punto de corte** ponían dos campos por fila también en un teléfono de 360px. Ahora son `grid-cols-1 sm:grid-cols-2` — y los hijos `col-span-2` pasaron a `col-span-1 sm:col-span-2`, porque en una grilla de una columna generaban una segunda columna fantasma.
+- [x] **Cabeceras de pantalla y de tarjeta apiladas en celular**: título + botones en una fila fija dejaba el subtítulo de Mascotas partido en tres líneas y, en Configuración, el botón «Cambiar contraseña» **cortado contra el borde de la tarjeta**.
+- [x] **Buscadores y selectores de ancho fijo** (`w-56`, `w-64`) ahora ocupan todo el ancho en celular y recuperan su medida de `sm` para arriba.
+- [x] **Las pestañas pueden scrollear** dentro de su ancho: tres pestañas no entran en un teléfono angosto.
+
+### La grilla semanal de horarios
+
+- [x] Cada turno ocupa su propia fila en celular, con su nombre (**Mañana** / **Tarde**) arriba de los campos: apilados sin etiqueta no había forma de saber cuál era cuál.
+- [x] **Los campos de hora cortaban el «AM/PM» también en escritorio** — `w-28` no alcanza para un `<input type="time">` de 12 horas con su ícono. Pasaron a `w-36`.
+
+### Dos bugs encontrados de paso
+
+- **La matriz de permisos del manual afirmaba que todos los roles pueden todo.** Al mover el manual a los archivos de traducción (sesión 14), react-i18next devolvía los booleanos como texto, y `"false"` es verdadero. Los permisos volvieron al código (`ROLE_MATRIX` en `InfoPage.tsx`), que es donde corresponde: son un hecho del sistema, espejo de `dashboard.service.ts`, no prosa traducible. En las traducciones quedaron solo las etiquetas de área.
+- **El gráfico de ingresos por servicio mostraba las categorías sin traducir**: Recharts pinta el dato crudo, así que el eje seguía en español con la interfaz en inglés. Ahora se traduce antes de pasárselo, y el eje se angosta en celular (150px de eje se comían la mitad del ancho útil).
+
+Además, la matriz de permisos **deja de ser tabla en celular**: cuatro columnas en 320px encimaban los encabezados. Ahí va como lista, un módulo por fila con los roles que sí tienen acceso.
+
+**Resultado:** cero desborde horizontal en las 17 rutas × 6 anchos, más los diálogos y las vistas con pestañas, con `tsc`, `oxlint` y `vite build` en verde.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).
