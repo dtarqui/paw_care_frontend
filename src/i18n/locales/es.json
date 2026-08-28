@@ -429,6 +429,11 @@
             "body": "Si ya tuvo movimientos (entradas o consumos), el sistema no lo deja borrar: haría desaparecer parte del historial. Solo se pueden eliminar los que nunca se usaron.",
             "title": "Por qué a veces no se puede eliminar un medicamento",
             "tone": "info"
+          },
+          {
+            "body": "Si un lote vence, sus unidades **dejan de estar disponibles** aunque sigan en el estante: no se pueden usar en una atención y no cuentan para el stock mínimo. Vas a ver un aviso en rojo con el lote y cuántas unidades quedan — retíralas. Al usar un medicamento el sistema descuenta **siempre del lote que vence antes**, para que nada se venza esperando su turno.",
+            "title": "Lo vencido deja de contar como stock",
+            "tone": "warning"
           }
         ],
         "intro": "El stock de medicamentos, y su alerta cuando algo se está por acabar.",
@@ -438,7 +443,7 @@
             "title": "Define el stock mínimo de cada medicamento"
           },
           {
-            "description": "El botón «Registrar entrada» suma al stock actual y queda como movimiento.",
+            "description": "El botón «Registrar entrada» pide la cantidad y, opcionalmente, el número de lote y la fecha de vencimiento. Cada entrada queda como un lote propio: sin fecha, el sistema no puede avisarte cuando ese lote esté por vencer.",
             "title": "Registra las entradas cuando llega mercadería"
           },
           {
@@ -679,6 +684,11 @@
     "tocSummary": "Índice"
   },
   "inventory": {
+    "availableStock": "Disponible",
+    "batchNumber": "Número de lote",
+    "batchNumberPlaceholder": "Ej. AMX-2451",
+    "batches": "Lotes",
+    "batchesOf": "Lotes de {{name}}",
     "belowMinimum": "Bajo el mínimo",
     "catalogueCount": "Medicamentos en catálogo",
     "confirmDeleteBody": "Se eliminará «{{name}}» del catálogo. Si ya tiene movimientos de inventario registrados (entradas o consumos en atenciones), no se podrá eliminar.",
@@ -689,7 +699,16 @@
     "emptyDescription": "Carga el catálogo para poder descontar stock al registrar atenciones.",
     "emptyTitle": "Sin medicamentos registrados todavía",
     "enoughStock": "Suficiente",
+    "expired": "Vencido",
+    "expiredAlert": "{{name}}: lote vencido.",
+    "expiredAlertDetail": "Quedan {{count}} unidades del lote {{batch}}, vencido el {{date}}. Retíralas del estante: el sistema ya no las cuenta como disponibles.",
+    "expiresOn": "Vence el",
+    "expiresOnDate": "Vence el {{date}}",
+    "expiringCount": "Por vencer o vencidos",
+    "expiringSoon_one": "{{count}} lote vence pronto:",
+    "expiringSoon_other": "{{count}} lotes vencen pronto:",
     "form": {
+      "batchHint": "Sin fecha de vencimiento no hay aviso posible: cárgala si la caja la trae.",
       "createError": "No se pudo crear el medicamento",
       "minimumStockRange": "El stock mínimo debe ser 0 o mayor",
       "nameRequired": "El nombre es obligatorio",
@@ -704,14 +723,24 @@
     "lowStockWarning_other": "{{count}} medicamentos con stock bajo:",
     "medication": "Medicamento",
     "medications": "Medicamentos",
+    "minimumShort": "mín. {{count}}",
     "minimumStock": "Stock mínimo",
     "newMedication": "Nuevo medicamento",
+    "nextExpiry": "Próximo vencimiento",
+    "noBatchNumber": "Sin número de lote",
+    "noBatches": "Este medicamento todavía no tiene lotes registrados.",
+    "noExpiry": "Sin fecha de vencimiento",
+    "plusExpired_one": "+{{count}} vencida",
+    "plusExpired_other": "+{{count}} vencidas",
     "quantityToAdd": "Cantidad a ingresar",
+    "receivedOnDate": "ingresó el {{date}}",
     "registerStockIn": "Registrar entrada",
     "registerStockInFor": "Registrar entrada — {{name}}",
     "stockShort": "stock: {{count}}",
     "subtitle": "Catálogo y stock de medicamentos",
-    "title": "Inventario"
+    "title": "Inventario",
+    "unitsCount_one": "{{count}} unidad",
+    "unitsCount_other": "{{count}} unidades"
   },
   "invitation": {
     "createdBody": "Ya puedes iniciar sesión con tu usuario y contraseña.",

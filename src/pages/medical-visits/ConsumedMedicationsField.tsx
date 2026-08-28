@@ -53,7 +53,7 @@ export function ConsumedMedicationsField({ items, onChange }: ConsumedMedication
             <SelectContent>
               {medications?.map((m) => (
                 <SelectItem key={m.id} value={String(m.id)}>
-                  {m.name} ({t("inventory.stockShort", { count: m.currentStock })})
+                  {m.name} ({t("inventory.stockShort", { count: m.availableStock })})
                 </SelectItem>
               ))}
             </SelectContent>

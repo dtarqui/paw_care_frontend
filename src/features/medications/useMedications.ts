@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "i18next";
 import { toast } from "sonner";
 import { medicationsApi } from "./api";
-import type { NewMedicationInput, UpdateMedicationInput } from "./types";
+import type { NewMedicationInput, StockEntryInput, UpdateMedicationInput } from "./types";
 
 export function useMedications() {
   return useQuery({
@@ -18,11 +18,27 @@ export function useLowStockMedications() {
   });
 }
 
+/** Lotes de un medicamento, para el detalle. */
+export function useMedicationBatches(medicationId: number | undefined) {
+  return useQuery({
+    queryKey: ["medications", medicationId, "batches"],
+    queryFn: async () => (await medicationsApi.batches(medicationId!)).batches,
+    enabled: !!medicationId,
+  });
+}
+
+export function useExpiringBatches(days = 60) {
+  return useQuery({
+    queryKey: ["medications", "expiring", days],
+    queryFn: async () => (await medicationsApi.expiring(days)).batches,
+  });
+}
+
 export function useRegisterStockIn() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ medicationId, quantity }: { medicationId: number; quantity: number }) =>
-      medicationsApi.registerStockIn(medicationId, quantity),
+    mutationFn: ({ medicationId, ...entry }: StockEntryInput & { medicationId: number }) =>
+      medicationsApi.registerStockIn(medicationId, entry),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medications"] });
       toast.success(t("toasts.stockAdded"));

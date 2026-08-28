@@ -429,6 +429,11 @@
             "body": "If it already has movements (stock added or used), the system won't let it be deleted: it would make part of the history disappear. Only the ones never used can be deleted.",
             "title": "Why a medication sometimes can't be deleted",
             "tone": "info"
+          },
+          {
+            "body": "When a batch expires its units **stop being available** even if they are still on the shelf: they cannot be used in a visit and do not count towards the minimum stock. You will see a red alert with the batch and how many units are left — take them off the shelf. When a medication is used the system always draws from **the batch expiring soonest**, so nothing expires waiting its turn.",
+            "title": "Expired stock stops counting",
+            "tone": "warning"
           }
         ],
         "intro": "Medication stock, and its alert when something is about to run out.",
@@ -438,7 +443,7 @@
             "title": "Set a minimum stock for each medication"
           },
           {
-            "description": "The “Add stock” button adds to the current stock and is kept as a movement.",
+            "description": "The «Record entry» button asks for the quantity and, optionally, the batch number and expiry date. Each entry becomes its own batch: with no date, the system cannot warn you when that batch is about to expire.",
             "title": "Add stock when a delivery arrives"
           },
           {
@@ -679,6 +684,11 @@
     "tocSummary": "Contents"
   },
   "inventory": {
+    "availableStock": "Available",
+    "batchNumber": "Batch number",
+    "batchNumberPlaceholder": "e.g. AMX-2451",
+    "batches": "Batches",
+    "batchesOf": "Batches of {{name}}",
     "belowMinimum": "Below the minimum",
     "catalogueCount": "Medications in the catalogue",
     "confirmDeleteBody": "“{{name}}” will be removed from the catalogue. If it already has inventory movements (stock added, or used in a visit), it can't be deleted.",
@@ -689,7 +699,16 @@
     "emptyDescription": "Load the catalogue so stock can be deducted when you record a visit.",
     "emptyTitle": "No medications registered yet",
     "enoughStock": "In stock",
+    "expired": "Expired",
+    "expiredAlert": "{{name}}: expired batch.",
+    "expiredAlertDetail": "{{count}} units left from batch {{batch}}, expired on {{date}}. Take them off the shelf: the system no longer counts them as available.",
+    "expiresOn": "Expires on",
+    "expiresOnDate": "Expires on {{date}}",
+    "expiringCount": "Expiring or expired",
+    "expiringSoon_one": "{{count}} batch expires soon:",
+    "expiringSoon_other": "{{count}} batches expire soon:",
     "form": {
+      "batchHint": "Without an expiry date no alert is possible: enter it if the box has one.",
       "createError": "Couldn't create the medication",
       "minimumStockRange": "The minimum stock must be 0 or greater",
       "nameRequired": "The name is required",
@@ -704,14 +723,24 @@
     "lowStockWarning_other": "{{count}} medications are low on stock:",
     "medication": "Medication",
     "medications": "Medications",
+    "minimumShort": "min. {{count}}",
     "minimumStock": "Minimum stock",
     "newMedication": "New medication",
+    "nextExpiry": "Next expiry",
+    "noBatchNumber": "No batch number",
+    "noBatches": "This medication has no batches recorded yet.",
+    "noExpiry": "No expiry date",
+    "plusExpired_one": "+{{count}} expired",
+    "plusExpired_other": "+{{count}} expired",
     "quantityToAdd": "Quantity to add",
+    "receivedOnDate": "received on {{date}}",
     "registerStockIn": "Add stock",
     "registerStockInFor": "Add stock — {{name}}",
     "stockShort": "stock: {{count}}",
     "subtitle": "Medication catalogue and stock",
-    "title": "Inventory"
+    "title": "Inventory",
+    "unitsCount_one": "{{count}} unit",
+    "unitsCount_other": "{{count}} units"
   },
   "invitation": {
     "createdBody": "You can now sign in with your username and password.",
