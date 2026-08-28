@@ -487,6 +487,11 @@
             "body": "Un control sin fecha de próxima dosis se guarda igual, pero **nunca va a aparecer** en «Próximos a vencer» ni va a generar un recordatorio. Cárgala siempre que la sepas.",
             "title": "Sin próxima dosis, no hay aviso",
             "tone": "warning"
+          },
+          {
+            "body": "El carnet sale con **casillas vacías** para la vacuna con su lote y para la firma y el sello del veterinario. No es un olvido: es lo que hace que otra clínica le crea al papel, y el lote se acredita pegando la etiqueta del frasco en su casilla. También trae renglones libres para seguir usándolo después de imprimirlo. **Para viajar fuera del país el carnet no alcanza**: hace falta además el certificado zoosanitario del SENASAG.",
+            "title": "El carnet se completa a mano, y eso es a propósito",
+            "tone": "info"
           }
         ],
         "intro": "El control preventivo lleva la cuenta de qué se aplicó y cuándo toca la próxima dosis.",
@@ -504,7 +509,7 @@
             "title": "Registra el control"
           },
           {
-            "description": "El botón «Descargar carnet» arma un PDF con los datos de la mascota, su dueño y todas las dosis en orden, con las vencidas marcadas en rojo. Es el papel que el dueño se lleva; el mismo botón está en la ficha de la mascota.",
+            "description": "El botón «Descargar carnet» arma el carnet en PDF: los datos de la mascota y su dueño, y dos registros —vacunación y desparasitación— con las dosis en orden y las vencidas en rojo. El mismo botón está en la ficha de la mascota.",
             "title": "Descarga el carnet"
           }
         ],

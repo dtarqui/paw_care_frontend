@@ -487,6 +487,11 @@
             "body": "Care with no next-dose date still saves, but it will **never show up** under “Due in the next 30 days”, and it won't generate a reminder. Fill it in whenever you know it.",
             "title": "No next dose, no reminder",
             "tone": "warning"
+          },
+          {
+            "body": "The card prints with **empty boxes** for the vaccine and its batch, and for the vet's signature and stamp. That is not an oversight: it is what makes another clinic trust the paper, and the batch is evidenced by sticking the vial's label in its box. It also carries ruled blank rows so it stays usable after printing. **The card is not enough to travel abroad**: SENASAG's zoosanitary certificate is also required.",
+            "title": "The card is finished by hand, and that is on purpose",
+            "tone": "info"
           }
         ],
         "intro": "Preventive care keeps track of what was given and when the next dose is due.",
@@ -504,7 +509,7 @@
             "title": "Record the care"
           },
           {
-            "description": "The “Download card” button builds a PDF with the pet's details, its owner and every dose in order, with overdue ones marked in red. It's the paper the owner takes home; the same button is on the pet's file.",
+            "description": "The “Download card” button builds the card as a PDF: the pet's and owner's details, and two records — vaccination and deworming — with the doses in order and overdue ones in red. The same button is on the pet's file.",
             "title": "Download the card"
           }
         ],
