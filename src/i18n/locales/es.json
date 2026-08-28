@@ -206,7 +206,8 @@
       "VisitRequired": "La atención a cobrar es obligatoria",
       "WrongCurrentPasswordError": "La contraseña actual no es correcta"
     },
-    "downloadFailed": "No se pudo descargar el archivo"
+    "downloadFailed": "No se pudo descargar el archivo",
+    "moduleForbidden": "No tienes acceso a esa sección"
   },
   "forgot": {
     "backToLogin": "Volver a inicio de sesión",

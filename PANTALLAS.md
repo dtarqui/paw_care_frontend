@@ -35,6 +35,8 @@ Un grupo sin módulos para ese rol no se dibuja (un Veterinario, por ejemplo, no
 | **Administración** | Pagos, Inventario, Reportes | — | Pagos |
 | **Sistema** | Usuarios, Información, Configuración | Información, Configuración | Información, Configuración |
 
+**El mapa de arriba no es solo el sidebar: es el permiso** (sesión 19). `components/ModuleRoute.tsx` bloquea cualquier `/app/*` que no esté entre los módulos del rol, aunque se escriba la URL a mano, y redirige al tablero con un aviso. Decide con el mismo `GET /api/dashboard/modules` que arma el sidebar — cambiar quién ve qué sigue siendo editar `backend/src/services/dashboard.service.ts` y nada más. El guarda de verdad es el backend (`requireRole`), fijado por `backend/src/routes/roleGuards.routes.test.ts`.
+
 *(Dashboard va siempre arriba, fuera de los grupos.)*
 
 **Dos pantallas agrupan más de una funcionalidad en pestañas:**

@@ -331,6 +331,19 @@ Además, la matriz de permisos **deja de ser tabla en celular**: cuatro columnas
 
 ---
 
+## Correcciones y mejoras (sesión 19 — permisos por rol en el frontend)
+
+Reporte: "entré como admin, después como veterinario, y pude entrar a la pantalla de admin y hacer acciones de admin". Reproducido, y eran **dos** problemas distintos.
+
+- [x] **Fuga de datos entre sesiones.** La caché de TanStack vive en memoria y no sabe que cambió la persona; cerrar sesión navega con react-router, así que no se recarga nada ni se descarta nada. Reproducido sin una sola recarga: el veterinario entraba y veía el **sidebar del administrador** (módulos servidos de la caché anterior, sin volver a pedirlos) y, al entrar a Usuarios, **el listado completo de cuentas del admin** — nombre, CI y rol de cada persona del equipo — sin que el backend enviara nada. `AuthContext` ahora hace `queryClient.clear()` al entrar **y** al salir.
+- [x] **Ocultar no es impedir.** No había ningún guarda por rol en las rutas: escribir `/app/users` renderizaba la pantalla de Usuarios entera, con sus pestañas y los botones «Nuevo usuario» e «Invitar veterinario». Las llamadas fallaban con 403 —el backend siempre estuvo bien— pero ofrecerle acciones de administrador a quien no lo es no se sostiene. `components/ModuleRoute.tsx` lo impide, decidiendo con el **mismo `GET /api/dashboard/modules`** que arma el sidebar, no con una tabla de roles en la UI.
+- [x] Al bloquear, redirige al tablero con un aviso («No tienes acceso a esa sección») en vez de dejar una pantalla vacía sin explicación.
+- [x] Las rutas viejas `/app/schedules` y `/app/audit-log` quedaron **fuera** del guarda: solo redirigen, y el permiso se evalúa sobre el destino.
+
+**Verificado ruta por ruta, con los tres roles y escribiendo las URLs a mano**: el administrador entra a las 14; el veterinario entra a mascotas (incluida la ficha `/app/pets/31`), agenda, atención médica, control preventivo, información y configuración, y rebota a `/app` en propietarios, pagos, recordatorios, reportes, inventario y usuarios; la recepcionista rebota en atención médica, control preventivo, reportes, inventario y usuarios. Y la fuga de caché, repetida tal cual antes y después del arreglo.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

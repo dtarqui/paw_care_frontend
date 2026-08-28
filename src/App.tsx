@@ -1,4 +1,5 @@
 import { AppShell } from "@/components/layout/AppShell";
+import { ModuleRoute } from "@/components/ModuleRoute";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AuthProvider } from "@/features/auth/AuthContext";
 import { MedicalVisitsPage } from "@/pages/medical-visits/MedicalVisitsPage";
@@ -34,25 +35,31 @@ export function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/app" element={<AppShell />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="owners" element={<OwnersPage />} />
-            <Route path="pets" element={<PetsPage />} />
-            <Route path="pets/:id" element={<PetDetailPage />} />
-            <Route path="medical-visits" element={<MedicalVisitsPage />} />
-            <Route path="appointments" element={<AppointmentsPage />} />
-            <Route path="preventive-controls" element={<PreventiveControlsPage />} />
-            <Route path="payments" element={<PaymentsPage />} />
-            <Route path="reminders" element={<RemindersPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="inventory" element={<InventoryPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="info" element={<InfoPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-
             {/* Horarios y Auditoría se fusionaron como pestañas de Agenda y Usuarios;
-                se mantienen las rutas viejas redirigiendo para no romper enlaces. */}
+                se mantienen las rutas viejas redirigiendo para no romper enlaces. Van
+                fuera del guarda de módulos para que el permiso se evalúe sobre el
+                destino y no sobre el atajo. */}
             <Route path="schedules" element={<Navigate to="/app/appointments" replace />} />
             <Route path="audit-log" element={<Navigate to="/app/users" replace />} />
+
+            {/* El resto pasa por el mapa de módulos del rol: el sidebar oculta lo que
+                no corresponde, esto lo impide aunque se escriba la URL a mano. */}
+            <Route element={<ModuleRoute />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="owners" element={<OwnersPage />} />
+              <Route path="pets" element={<PetsPage />} />
+              <Route path="pets/:id" element={<PetDetailPage />} />
+              <Route path="medical-visits" element={<MedicalVisitsPage />} />
+              <Route path="appointments" element={<AppointmentsPage />} />
+              <Route path="preventive-controls" element={<PreventiveControlsPage />} />
+              <Route path="payments" element={<PaymentsPage />} />
+              <Route path="reminders" element={<RemindersPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="inventory" element={<InventoryPage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="info" element={<InfoPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+            </Route>
           </Route>
         </Route>
 

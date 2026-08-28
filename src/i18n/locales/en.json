@@ -206,7 +206,8 @@
       "VisitRequired": "The visit to charge is required",
       "WrongCurrentPasswordError": "The current password isn't correct"
     },
-    "downloadFailed": "The file couldn't be downloaded"
+    "downloadFailed": "The file couldn't be downloaded",
+    "moduleForbidden": "You don't have access to that section"
   },
   "forgot": {
     "backToLogin": "Back to sign in",
