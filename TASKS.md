@@ -291,6 +291,23 @@ Además, la matriz de permisos **deja de ser tabla en celular**: cuatro columnas
 
 ---
 
+## Correcciones y mejoras (sesión 17 — comprobante de pago con confirmación animada)
+
+`docs/MEJORAS_PRODUCTO.md` 1.2. El diálogo de cobro tenía una sola cara —el formulario— y al confirmar se cerraba dejando un toast que se desvanecía.
+
+- [x] **El diálogo cambia de cara al cobrar**: pasa a ser el comprobante emitido, con el monto grande, el número (`R-2026-000042`) y el detalle. Se queda abierto a propósito — cerrarlo de golpe se lleva el número y la posibilidad de entregárselo al cliente. El toast de éxito se eliminó: avisar dos veces lo mismo es ruido.
+- [x] **Animación de confirmación** (`receipt-*` en `index.css`): el círculo entra con un rebote corto, el tilde **se dibuja solo** con `stroke-dashoffset`, un halo se expande detrás y el detalle sube escalonado en el orden en que importa — monto, número, resto. Es el único momento animado de la app: cerrar un cobro es un acto con consecuencia y verlo confirmarse da una certeza que un cartel de texto no da.
+- [x] **Todo se apaga con `prefers-reduced-motion`**: quien pidió no ver movimiento ve el estado final de inmediato, no una versión degradada.
+- [x] **Dos formas de entregarlo**: PDF y WhatsApp con el mensaje ya escrito. Si el propietario no tiene teléfono cargado, el botón de WhatsApp no se muestra en vez de ofrecer algo que va a fallar.
+- [x] **Botón «Recibo» en cada fila de «Últimos pagos»** — el reclamo llega días después, no en el mostrador.
+- [x] **`lib/whatsapp.ts` compartido**: el armado del enlace `wa.me` estaba dentro de Recordatorios; ahora lo usan las dos pantallas.
+
+**Mejora que apareció al probarlo:** el campo de monto arrancaba vacío con el importe solo como *placeholder*, obligando a teclear una cifra que el sistema ya conoce. Ahora viene pre-llenado con el monto de la atención, editable para un ajuste puntual.
+
+**Corregido antes de dar por terminado:** en el diálogo de 384px los tres botones (Cerrar · WhatsApp · Descargar) no entraban y «Descargar recibo» salía cortado. Las dos acciones de entrega van ahora en su propia fila a igual peso, y «Cerrar» debajo. Verificado a 1440, 375 y 320px.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

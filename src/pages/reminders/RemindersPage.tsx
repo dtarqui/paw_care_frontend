@@ -8,18 +8,10 @@ import {
   useMarkReminderSent,
   usePendingReminders,
 } from "@/features/reminders/useReminders";
+import { whatsappLink } from "@/lib/whatsapp";
 import { useFormatters } from "@/lib/useFormatters";
 import { CalendarClock, CheckCheck, MessageCircle, ShieldPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-function whatsappNumber(phone: string): string {
-  const cleaned = phone.replace(/\D/g, "");
-  return cleaned.startsWith("591") ? cleaned : `591${cleaned}`;
-}
-
-function whatsappLink(phone: string, message: string): string {
-  return `https://wa.me/${whatsappNumber(phone)}?text=${encodeURIComponent(message)}`;
-}
 
 export function RemindersPage() {
   const { t } = useTranslation();

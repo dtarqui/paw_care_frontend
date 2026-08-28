@@ -446,6 +446,11 @@
       "payments": {
         "callouts": [
           {
+            "body": "Cada cobro recibe un número propio (**R-2026-000042**) que no cambia nunca. Queda impreso en el PDF y guardado en el sistema, así que semanas después puedes volver a emitirlo desde «Últimos pagos» con el botón **Recibo** de cada fila. El comprobante es interno de la clínica: **no reemplaza una factura fiscal**.",
+            "title": "El número de comprobante es la respuesta a «no me cobraron eso»",
+            "tone": "tip"
+          },
+          {
             "body": "Genera un QR bancario real, pero para eso hace falta conectar la API del banco de la clínica, y eso aún no está hecho. Hoy el botón muestra un mensaje explicando exactamente eso, en vez de un QR falso que nadie podría pagar. **Para cobrar por QR mientras tanto**, usa el QR de tu banco por fuera del sistema y registra el pago acá eligiendo el método «QR».",
             "title": "El botón «Cobrar con QR» todavía no cobra",
             "tone": "warning"
@@ -460,6 +465,10 @@
           {
             "description": "Eliges el método (Efectivo, Tarjeta, Transferencia o QR) y confirmas el monto. La atención pasa a pagada y desaparece de pendientes.",
             "title": "Pulsa «Registrar pago» en la fila que corresponda"
+          },
+          {
+            "description": "Apenas se confirma el cobro, la pantalla muestra el comprobante con su número. Desde ahí lo descargas en PDF o se lo mandas al cliente por WhatsApp con el detalle ya escrito.",
+            "title": "Entrégale el comprobante"
           },
           {
             "description": "Los cinco cobros más recientes, con su método y fecha.",
@@ -910,6 +919,16 @@
       "generating": "Generando QR con el banco...",
       "imageAlt": "Código QR de pago",
       "waiting": "Esperando confirmación del banco..."
+    },
+    "receipt": {
+      "concept": "Concepto",
+      "dialogTitle": "Cobro registrado",
+      "download": "Descargar recibo",
+      "downloadError": "No se pudo descargar el comprobante",
+      "sendWhatsapp": "Enviar por WhatsApp",
+      "short": "Recibo",
+      "title": "Cobro registrado",
+      "whatsappMessage": "Hola {{owner}}, recibimos tu pago de Bs. {{amount}} por {{service}} de {{pet}} en PawCare. Tu comprobante es el {{number}}. ¡Gracias!"
     },
     "registerPayment": "Registrar pago",
     "subtitle": "Atenciones pendientes de cobro",

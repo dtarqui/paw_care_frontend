@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRegisterPayment } from "@/features/payments/usePayments";
-import type { PaymentMethod, PendingPayment } from "@/features/payments/types";
+import type { PaymentMethod, PaymentReceipt, PendingPayment } from "@/features/payments/types";
+import { PaymentReceiptView } from "./PaymentReceiptView";
 import { Loader2 } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 /** El orden en que se ofrecen los métodos. La etiqueta visible sale de
@@ -28,8 +29,21 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
   const { t } = useTranslation();
   const registerPaymentMutation = useRegisterPayment();
   const [method, setMethod] = useState<PaymentMethod | "">("");
+  /** Arranca con el monto de la atención: en la enorme mayoría de los cobros es
+   * exactamente ese, y tenerlo como simple placeholder obligaba a teclear una cifra
+   * que el sistema ya sabe. Sigue siendo editable para un ajuste puntual. */
   const [amount, setAmount] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  /** Con el cobro hecho el diálogo cambia de cara: deja de ser un formulario y pasa
+   * a ser el comprobante. Se queda abierto a propósito — cerrarlo de golpe se lleva
+   * el número de comprobante y la posibilidad de entregárselo al cliente. */
+  const [receipt, setReceipt] = useState<PaymentReceipt | null>(null);
+
+  // El diálogo se monta con la atención ya elegida, así que el efecto solo corre
+  // cuando se pasa de una atención a otra.
+  useEffect(() => {
+    if (pendingPayment && !receipt) setAmount(String(pendingPayment.amount));
+  }, [pendingPayment, receipt]);
 
   if (!pendingPayment) return null;
 
@@ -46,8 +60,12 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
       return;
     }
     try {
-      await registerPaymentMutation.mutateAsync({ visitId: pendingPayment!.visitId, method, amount: amountNumber });
-      handleClose();
+      const { payment } = await registerPaymentMutation.mutateAsync({
+        visitId: pendingPayment!.visitId,
+        method,
+        amount: amountNumber,
+      });
+      setReceipt(payment);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("payments.form.error"));
     }
@@ -57,6 +75,7 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
     setMethod("");
     setAmount("");
     setError(null);
+    setReceipt(null);
     onClose();
   }
 
@@ -64,9 +83,14 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
     <Dialog open={!!pendingPayment} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("payments.registerPayment")}</DialogTitle>
+          <DialogTitle>
+            {receipt ? t("payments.receipt.dialogTitle") : t("payments.registerPayment")}
+          </DialogTitle>
         </DialogHeader>
 
+        {receipt ? (
+          <PaymentReceiptView receipt={receipt} onClose={handleClose} />
+        ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="rounded-md border bg-muted/40 p-3 text-sm">
             <p className="font-medium">{pendingPayment.pet.name}</p>
@@ -116,6 +140,7 @@ export function RegisterPaymentDialog({ pendingPayment, onClose }: RegisterPayme
             </Button>
           </DialogFooter>
         </form>
+        )}
       </DialogContent>
     </Dialog>
   );

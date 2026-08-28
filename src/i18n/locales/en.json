@@ -446,6 +446,11 @@
       "payments": {
         "callouts": [
           {
+            "body": "Every payment gets its own number (**R-2026-000042**) that never changes. It's printed on the PDF and stored in the system, so weeks later you can re-issue it from “Latest payments” with the **Receipt** button on each row. The receipt is internal to the clinic: **it does not replace a tax invoice**.",
+            "title": "The receipt number is the answer to “you never charged me for that”",
+            "tone": "tip"
+          },
+          {
             "body": "It generates a real bank QR, but that needs the clinic's bank API connected, and that isn't done yet. Today the button shows a message explaining exactly that, instead of a fake QR nobody could pay. **To charge by QR in the meantime**, use your bank's own QR outside the system and record the payment here choosing the “QR” method.",
             "title": "The “Charge by QR” button doesn't charge yet",
             "tone": "warning"
@@ -460,6 +465,10 @@
           {
             "description": "You pick the method (Cash, Card, Transfer or QR) and confirm the amount. The visit becomes paid and drops off the outstanding list.",
             "title": "Press “Take payment” on the right row"
+          },
+          {
+            "description": "As soon as the payment goes through, the screen shows the receipt with its number. From there you can download it as a PDF or send it to the client on WhatsApp with the details already written.",
+            "title": "Hand over the receipt"
           },
           {
             "description": "The five most recent payments, with their method and date.",
@@ -910,6 +919,16 @@
       "generating": "Generating the QR with the bank...",
       "imageAlt": "Payment QR code",
       "waiting": "Waiting for the bank to confirm..."
+    },
+    "receipt": {
+      "concept": "For",
+      "dialogTitle": "Payment recorded",
+      "download": "Download receipt",
+      "downloadError": "The receipt couldn't be downloaded",
+      "sendWhatsapp": "Send on WhatsApp",
+      "short": "Receipt",
+      "title": "Payment recorded",
+      "whatsappMessage": "Hi {{owner}}, we've received your payment of Bs. {{amount}} for {{pet}}'s {{service}} at PawCare. Your receipt number is {{number}}. Thank you!"
     },
     "registerPayment": "Take payment",
     "subtitle": "Visits waiting to be paid",

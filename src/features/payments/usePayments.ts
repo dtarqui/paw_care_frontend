@@ -24,7 +24,8 @@ export function useRegisterPayment() {
       paymentsApi.register(visitId, method, amount),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
-      toast.success("Pago registrado correctamente");
+      // Sin toast: el diálogo pasa a mostrar el comprobante, que confirma mucho mejor
+      // que un aviso que se desvanece — y avisar dos veces lo mismo es ruido.
     },
     onError: (error: Error) => toast.error(error.message),
   });

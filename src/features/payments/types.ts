@@ -19,6 +19,20 @@ export interface PaymentHistoryEntry {
   date: string;
 }
 
+/** El comprobante que devuelve el alta de un pago y alimenta la pantalla de éxito. */
+export interface PaymentReceipt {
+  id: number;
+  /** Número visible, ej. `R-2026-000042`. Es un identificador: no cambia con el idioma. */
+  receiptNumber: string;
+  date: string;
+  method: PaymentMethod;
+  amount: number;
+  pet: { id: number; name: string; species: string };
+  owner: { id: number; firstName: string; paternalLastName: string; nationalId: string; phone?: string };
+  visit: { id: number; serviceType: string; diagnosis: string; date: string };
+  vet: { firstName: string; paternalLastName: string };
+}
+
 export type QrChargeStatus = "PENDING" | "CONFIRMED" | "EXPIRED" | "ERROR";
 
 export interface QrCharge {

@@ -185,3 +185,69 @@
     @apply font-sans;
     }
 }
+/* ---------------------------------------------------------------------------
+   Confirmación de cobro.
+
+   El único momento de la app donde una animación gana algo: cerrar un cobro es un
+   acto con consecuencia —plata que cambió de manos— y verlo confirmarse da la
+   certeza que un cartelito de texto no da. Son tres piezas encadenadas: el círculo
+   entra, el tilde se dibuja solo, y el detalle sube detrás.
+
+   Todo se apaga con `prefers-reduced-motion`: quien pidió no ver movimiento ve el
+   estado final de inmediato, no una versión degradada.
+--------------------------------------------------------------------------- */
+@keyframes receipt-badge-in {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes receipt-check-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes receipt-halo {
+  0% { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+@keyframes receipt-rise {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@utility receipt-badge {
+  animation: receipt-badge-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@utility receipt-halo {
+  animation: receipt-halo 900ms ease-out 220ms both;
+}
+
+@utility receipt-check {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: receipt-check-draw 320ms ease-out 260ms both;
+}
+
+/* El detalle entra escalonado detrás del tilde: se lee en el orden en que importa
+   —monto, número de comprobante, resto— en vez de aparecer todo de golpe. */
+@utility receipt-rise-* {
+  animation: receipt-rise 320ms ease-out both;
+  animation-delay: calc(--value(integer) * 70ms + 380ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-badge,
+  .receipt-halo,
+  .receipt-check,
+  [class*="receipt-rise-"] {
+    animation: none;
+  }
+  .receipt-check {
+    stroke-dashoffset: 0;
+  }
+  .receipt-halo {
+    display: none;
+  }
+}

@@ -6,17 +6,46 @@ import { TableSkeleton } from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { paymentsApi } from "@/features/payments/api";
 import { usePaymentHistory, usePendingPayments } from "@/features/payments/usePayments";
-import type { PendingPayment } from "@/features/payments/types";
-import { History, Receipt, Wallet } from "lucide-react";
+import type { PaymentHistoryEntry, PendingPayment } from "@/features/payments/types";
+import { Download, History, Loader2, Receipt, Wallet } from "lucide-react";
 import { useFormatters } from "@/lib/useFormatters";
 import { useState } from "react";
+import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { QrChargeDialog } from "./QrChargeDialog";
 import { RegisterPaymentDialog } from "./RegisterPaymentDialog";
 
 function formatAmount(amount: number) {
   return `Bs. ${amount.toFixed(2)}`;
+}
+
+/** Descarga el comprobante de un pago ya registrado. Existe en el historial porque
+ * el reclamo ("no me cobraron eso") llega días después, no en el mostrador. */
+function ReceiptButton({ payment, className }: { payment: PaymentHistoryEntry; className?: string }) {
+  const { t } = useTranslation();
+  const [downloading, setDownloading] = useState(false);
+
+  async function download() {
+    setDownloading(true);
+    try {
+      // El número se deriva del id igual que en el backend, así el nombre de
+      // respaldo del archivo coincide con el del comprobante.
+      await paymentsApi.downloadReceipt({ id: payment.id, receiptNumber: `R-${payment.id}` });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("payments.receipt.downloadError"));
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  return (
+    <Button size="sm" variant="outline" className={className} disabled={downloading} onClick={download}>
+      {downloading ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
+      {t("payments.receipt.short")}
+    </Button>
+  );
 }
 
 export function PaymentsPage() {
@@ -166,6 +195,7 @@ export function PaymentsPage() {
                       },
                       { label: t("common.date"), value: formatDate(payment.date) },
                     ]}
+                    actions={<ReceiptButton payment={payment} className="flex-1" />}
                   />
                 ))}
               </MobileCardList>
@@ -179,6 +209,7 @@ export function PaymentsPage() {
                       <TableHead className="text-right">{t("common.amount")}</TableHead>
                       <TableHead>{t("payments.method")}</TableHead>
                       <TableHead>{t("common.date")}</TableHead>
+                      <TableHead className="text-right">{t("common.actions")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -193,6 +224,9 @@ export function PaymentsPage() {
                           <StatusBadge status={payment.method} />
                         </TableCell>
                         <TableCell>{formatDate(payment.date)}</TableCell>
+                        <TableCell className="text-right">
+                          <ReceiptButton payment={payment} />
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
