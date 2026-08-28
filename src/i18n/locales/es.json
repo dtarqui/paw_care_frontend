@@ -489,7 +489,7 @@
             "tone": "warning"
           },
           {
-            "body": "El carnet sale con **casillas vacías** para la vacuna con su lote y para la firma y el sello del veterinario. No es un olvido: es lo que hace que otra clínica le crea al papel, y el lote se acredita pegando la etiqueta del frasco en su casilla. También trae renglones libres para seguir usándolo después de imprimirlo. **Para viajar fuera del país el carnet no alcanza**: hace falta además el certificado zoosanitario del SENASAG.",
+            "body": "Si al registrar el control cargaste **qué vacuna aplicaste y el lote del frasco**, salen impresos en el carnet. Si no, esa casilla queda en blanco para completarla a mano — igual que las dosis viejas, cargadas antes de que el sistema guardara ese dato. La casilla de la **firma y el sello** queda siempre vacía: esa es a mano y es lo que hace que otra clínica le crea al papel. El carnet también trae renglones libres para seguir usándolo después de imprimirlo. **Para viajar fuera del país no alcanza**: hace falta además el certificado zoosanitario del SENASAG, y ahí te van a pedir justamente la marca y el lote de la antirrábica.",
             "title": "El carnet se completa a mano, y eso es a propósito",
             "tone": "info"
           }
@@ -505,7 +505,7 @@
             "title": "Busca una mascota por CI del dueño"
           },
           {
-            "description": "Elige Vacuna o Desparasitación, la fecha en que se aplicó y —muy recomendable— la fecha de la próxima dosis.",
+            "description": "Elige Vacuna o Desparasitación, la fecha en que se aplicó y —muy recomendable— la fecha de la próxima dosis. Si anotás qué vacuna fue y el lote del frasco, quedan guardados y salen impresos en el carnet.",
             "title": "Registra el control"
           },
           {
@@ -1019,13 +1019,20 @@
   "preventive": {
     "appliedOn": "Aplicada: {{date}}",
     "appliedOnLabel": "Fecha de aplicación",
+    "batch": "Lote {{batch}}",
     "card": {
       "download": "Descargar carnet",
       "downloadError": "No se pudo descargar el carnet"
     },
     "form": {
+      "batchLabel": "Lote del frasco",
+      "batchPlaceholder": "Ej. A-2451",
       "createError": "No se pudo registrar el control",
-      "pickType": "Selecciona el tipo de control"
+      "pickType": "Selecciona el tipo de control",
+      "productLabel": "Producto aplicado",
+      "productPlaceholder": "Nombre del desparasitante",
+      "vaccineLabel": "Vacuna aplicada",
+      "vaccinePlaceholder": "Ej. Antirrábica"
     },
     "historyEmpty": "Sin controles preventivos registrados todavía.",
     "historySubtitle": "Historial de vacunación y desparasitación",

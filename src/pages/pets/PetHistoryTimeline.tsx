@@ -70,8 +70,15 @@ function EventRow({ event, t, formatDate, formatDateTime }: EventRowProps) {
     return (
       <Row
         icon={<Syringe className="size-4" />}
-        title={t(`enums.controlType.${control.type}`)}
-        details={t("preventive.nextDoseOn", { date: formatDate(control.nextDoseOn) })}
+        title={
+          control.productName
+            ? `${t(`enums.controlType.${control.type}`)} · ${control.productName}`
+            : t(`enums.controlType.${control.type}`)
+        }
+        details={
+          t("preventive.nextDoseOn", { date: formatDate(control.nextDoseOn) }) +
+          (control.batchNumber ? ` · ${t("preventive.batch", { batch: control.batchNumber })}` : "")
+        }
         meta={t("preventive.appliedOn", { date: formatDate(control.appliedOn) })}
         badge={
           control.overdue ? (

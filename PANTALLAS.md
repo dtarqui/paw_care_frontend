@@ -259,7 +259,8 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 - **Restricción de negocio:** un Veterinario solo puede agendar citas para sí mismo; Administrador y Recepcionista pueden agendar para cualquier veterinario. Validado en frontend (campo bloqueado) y en backend (403 si se fuerza otro `veterinarioId`).
 
 ### P08 — Control Preventivo (Patrón A + panel adicional)
-- Se accede desde la ficha de una mascota (formulario de alta: tipo, fecha de aplicación, próxima dosis) y también como pantalla propia con un **panel de "Próximos a vencer"** (todas las mascotas, ordenado por fecha) para uso diario del veterinario.
+- Se accede desde la ficha de una mascota (formulario de alta: tipo, vacuna/producto aplicado, lote del frasco, fecha de aplicación, próxima dosis) y también como pantalla propia con un **panel de "Próximos a vencer"** (todas las mascotas, ordenado por fecha) para uso diario del veterinario.
+- **Vacuna y lote** (sesión 18) son opcionales: el campo de la vacuna sugiere las comunes en Bolivia con un `datalist` (`lib/vaccine-types.ts`) pero acepta cualquier texto, y el lote es el dato que el SENASAG pide para el certificado de viaje. Se ven en el historial y en la línea de tiempo de la ficha, y salen impresos en el carnet cuando están cargados.
 - Los controles vencidos se marcan con un badge distintivo en ambas vistas.
 - Botón **"Descargar carnet"** en la cabecera del historial (`components/VaccinationCardButton.tsx`, sesión 18): baja el carnet de vacunación y desparasitación en PDF, en el tamaño de hoja configurado en P14. El mismo botón está en la ficha de la mascota (P15).
 

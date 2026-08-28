@@ -14,12 +14,15 @@ import { useCreatePreventiveControl } from "@/features/preventive-controls/usePr
 import type { PreventiveControlType } from "@/features/preventive-controls/types";
 import type { Pet } from "@/features/pets/types";
 import { todayISO } from "@/lib/date";
+import { VACCINE_SUGGESTIONS } from "@/lib/vaccine-types";
 import { Loader2, Plus } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 const INITIAL_STATE = {
   type: "" as PreventiveControlType | "",
+  productName: "",
+  batchNumber: "",
   appliedOn: todayISO(),
   nextDoseOn: "",
 };
@@ -30,6 +33,7 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
   const [form, setForm] = useState(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
   const createControlMutation = useCreatePreventiveControl();
+  const isVaccine = form.type !== "DEWORMING";
 
   function update<K extends keyof typeof INITIAL_STATE>(field: K, value: (typeof INITIAL_STATE)[K]) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -54,6 +58,8 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
       await createControlMutation.mutateAsync({
         petId: pet.id,
         type: form.type,
+        productName: form.productName || undefined,
+        batchNumber: form.batchNumber || undefined,
         appliedOn: form.appliedOn,
         nextDoseOn: form.nextDoseOn || undefined,
       });
@@ -93,6 +99,45 @@ export function NewControlDialog({ pet }: { pet: Pet }) {
                 <SelectItem value="DEWORMING">{t("enums.controlType.DEWORMING")}</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Qué se aplicó y de qué frasco. Opcionales a propósito: en una campaña
+              masiva no siempre se anota el lote, y exigirlo llevaría a inventarlo o a
+              no cargar el control. El lote es lo que el SENASAG pide para el
+              certificado de viaje, así que vale la pena pedirlo aunque no se exija. */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="productName">
+                {isVaccine ? t("preventive.form.vaccineLabel") : t("preventive.form.productLabel")}
+              </Label>
+              <Input
+                id="productName"
+                list={isVaccine ? "vaccine-suggestions" : undefined}
+                maxLength={80}
+                placeholder={
+                  isVaccine ? t("preventive.form.vaccinePlaceholder") : t("preventive.form.productPlaceholder")
+                }
+                value={form.productName}
+                onChange={(e) => update("productName", e.target.value)}
+              />
+              {isVaccine && (
+                <datalist id="vaccine-suggestions">
+                  {VACCINE_SUGGESTIONS.map((vaccine) => (
+                    <option key={vaccine} value={vaccine} />
+                  ))}
+                </datalist>
+              )}
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="batchNumber">{t("preventive.form.batchLabel")}</Label>
+              <Input
+                id="batchNumber"
+                maxLength={40}
+                placeholder={t("preventive.form.batchPlaceholder")}
+                value={form.batchNumber}
+                onChange={(e) => update("batchNumber", e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

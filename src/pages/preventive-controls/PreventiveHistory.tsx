@@ -51,11 +51,17 @@ export function PreventiveHistory({ pet }: { pet: Pet }) {
             {controls.map((control) => (
               <div key={control.id} className="flex items-center gap-3 py-3">
                 <Syringe className="size-4 shrink-0 text-muted-foreground" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{t(`enums.controlType.${control.type}`)}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium">
+                    {t(`enums.controlType.${control.type}`)}
+                    {control.productName && (
+                      <span className="font-normal text-muted-foreground"> · {control.productName}</span>
+                    )}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {t("preventive.appliedOn", { date: formatDate(control.appliedOn) })} ·{" "}
                     {t("preventive.nextDoseOn", { date: formatDate(control.nextDoseOn) })}
+                    {control.batchNumber && ` · ${t("preventive.batch", { batch: control.batchNumber })}`}
                   </p>
                 </div>
                 {control.overdue && (

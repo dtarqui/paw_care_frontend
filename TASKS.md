@@ -320,6 +320,13 @@ Además, la matriz de permisos **deja de ser tabla en celular**: cuatro columnas
 
 - [x] **La fila de «Últimos pagos» usa el número de comprobante real** (`receiptNumber`, que ahora viene en el historial) en vez de armar `R-55` a mano para nombrar el archivo. Con el header `Content-Disposition` ya expuesto por el backend, el nombre correcto y traducido llega igual — pero el respaldo tampoco puede mentir.
 
+### Qué vacuna y qué lote (MEJORAS_PRODUCTO 1.7)
+
+- [x] **Dos campos más en el diálogo de alta**, con la etiqueta según el tipo elegido: «Vacuna aplicada» o «Producto aplicado», más «Lote del frasco». Opcionales — pedirlos como obligatorios llevaría a inventar un lote.
+- [x] **`lib/vaccine-types.ts` sugiere las vacunas comunes en Bolivia** (antirrábica, quíntuple, séxtuple, KC, triple felina, leucemia felina) con un `<datalist>`, no con un select cerrado: una clínica usa la marca que consiguió ese mes, y una lista fija llevaría a elegir "la más parecida", que es peor dato que el tecleado a mano. Para desparasitantes no hay sugerencias — ahí serían adivinanzas.
+- [x] **Se ven donde ya se miraba la dosis**: en el historial preventivo (`Vacuna · Antirrábica`, y el lote junto a las fechas) y en la línea de tiempo de la ficha de la mascota.
+- [x] Verificado en el navegador de punta a punta: alta desde la UI → el control queda con producto y lote → el carnet descargado los imprime, y la dosis vieja (anterior a la migración) sale con la casilla en blanco. Diálogo a 375px sin desborde.
+
 **Verificado en el navegador**: elegir «Rollo térmico» hace que la descarga siguiente pida `?paper=ticket-80mm` sin recargar; volver a «Media carta» deja `half-letter` guardado. La tarjeta de Impresión y las dos pantallas con el botón nuevo, sin desborde horizontal a 1280, 768, 375 y 320px.
 
 ---

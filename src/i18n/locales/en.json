@@ -489,7 +489,7 @@
             "tone": "warning"
           },
           {
-            "body": "The card prints with **empty boxes** for the vaccine and its batch, and for the vet's signature and stamp. That is not an oversight: it is what makes another clinic trust the paper, and the batch is evidenced by sticking the vial's label in its box. It also carries ruled blank rows so it stays usable after printing. **The card is not enough to travel abroad**: SENASAG's zoosanitary certificate is also required.",
+            "body": "If you recorded **which vaccine you gave and the vial's batch**, they are printed on the card. If you didn't, that box is left blank to fill in by hand — as are older doses, recorded before the system stored it. The **signature and stamp** box is always left empty: that one is done by hand and is what makes another clinic trust the paper. The card also carries ruled blank rows so it stays usable after printing. **It is not enough to travel abroad**: SENASAG's zoosanitary certificate is also required, and that is exactly where the rabies vaccine's brand and batch get asked for.",
             "title": "The card is finished by hand, and that is on purpose",
             "tone": "info"
           }
@@ -1019,13 +1019,20 @@
   "preventive": {
     "appliedOn": "Given: {{date}}",
     "appliedOnLabel": "Date given",
+    "batch": "Batch {{batch}}",
     "card": {
       "download": "Download card",
       "downloadError": "The card could not be downloaded"
     },
     "form": {
+      "batchLabel": "Vial batch",
+      "batchPlaceholder": "e.g. A-2451",
       "createError": "Couldn't record the preventive care",
-      "pickType": "Pick the type of care"
+      "pickType": "Pick the type of care",
+      "productLabel": "Product given",
+      "productPlaceholder": "Dewormer name",
+      "vaccineLabel": "Vaccine given",
+      "vaccinePlaceholder": "e.g. Rabies"
     },
     "historyEmpty": "No preventive care recorded yet.",
     "historySubtitle": "Vaccination and deworming history",
