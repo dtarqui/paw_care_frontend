@@ -248,6 +248,10 @@
           {
             "description": "Cambiarla te pide la actual. Mínimo 6 caracteres.",
             "title": "Contraseña"
+          },
+          {
+            "description": "El tamaño de hoja de los comprobantes y los carnets: **media carta** (lo habitual), carta, A4, o rollo térmico de 80 mm si imprimes en una impresora de tickets. Se guarda en este dispositivo, que es donde está enchufada la impresora.",
+            "title": "Impresión"
           }
         ],
         "intro": "Lo que puedes cambiar de tu propia sesión, desde Configuración.",
@@ -498,6 +502,10 @@
           {
             "description": "Elige Vacuna o Desparasitación, la fecha en que se aplicó y —muy recomendable— la fecha de la próxima dosis.",
             "title": "Registra el control"
+          },
+          {
+            "description": "El botón «Descargar carnet» arma un PDF con los datos de la mascota, su dueño y todas las dosis en orden, con las vencidas marcadas en rojo. Es el papel que el dueño se lleva; el mismo botón está en la ficha de la mascota.",
+            "title": "Descarga el carnet"
           }
         ],
         "title": "Vacunas y desparasitación"
@@ -1006,6 +1014,10 @@
   "preventive": {
     "appliedOn": "Aplicada: {{date}}",
     "appliedOnLabel": "Fecha de aplicación",
+    "card": {
+      "download": "Descargar carnet",
+      "downloadError": "No se pudo descargar el carnet"
+    },
     "form": {
       "createError": "No se pudo registrar el control",
       "pickType": "Selecciona el tipo de control"
@@ -1132,6 +1144,17 @@
     },
     "exportError": "No se pudo exportar",
     "exportSuccess": "Datos exportados correctamente",
+    "paperSizes": {
+      "a4": "A4",
+      "half-letter": "Media carta",
+      "letter": "Carta",
+      "ticket-80mm": "Rollo térmico"
+    },
+    "printing": {
+      "description": "Tamaño de hoja de los comprobantes y carnets que se imprimen en este dispositivo.",
+      "paperSize": "Tamaño de hoja",
+      "title": "Impresión"
+    },
     "subtitle": "Preferencias de la aplicación y datos de tu cuenta",
     "themes": {
       "dark": "Oscuro",

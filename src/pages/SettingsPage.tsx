@@ -5,9 +5,10 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/features/auth/AuthContext";
 import { COLOR_THEMES, useColorTheme } from "@/features/color-theme/ColorThemeContext";
 import { exportsApi } from "@/features/exports/api";
+import { PAPER_SIZES, usePaperSize } from "@/features/print/paperSize";
 import { LANGUAGES } from "@/i18n";
 import { cn } from "@/lib/utils";
-import { Check, Download, Languages, Laptop, Loader2, Moon, Sun } from "lucide-react";
+import { Check, Download, Languages, Laptop, Loader2, Moon, Printer, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,6 +29,7 @@ export function SettingsPage() {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
   const { colorTheme, setColorTheme } = useColorTheme();
+  const { paperSize, setPaperSize } = usePaperSize();
   const [exporting, setExporting] = useState(false);
 
   const initials = user ? `${user.firstName[0]}${user.paternalLastName[0]}` : "?";
@@ -153,6 +155,34 @@ export function SettingsPage() {
                 );
               })}
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{t("settings.printing.title")}</CardTitle>
+          <CardDescription>{t("settings.printing.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Label className="mb-3 block">{t("settings.printing.paperSize")}</Label>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:max-w-2xl">
+            {PAPER_SIZES.map((option) => {
+              const isActive = paperSize === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setPaperSize(option.value)}
+                  className={cn(OPTION_CLASS, isActive ? "border-primary bg-primary/5 text-primary" : "hover:bg-accent")}
+                >
+                  <Printer className="size-5" />
+                  <span className="text-center leading-tight">{t(`settings.paperSizes.${option.value}`)}</span>
+                  {/* Las medidas son números, no texto traducible: van igual en los dos idiomas. */}
+                  <span className="text-xs font-normal text-muted-foreground tabular-nums">{option.hint}</span>
+                </button>
+              );
+            })}
           </div>
         </CardContent>
       </Card>

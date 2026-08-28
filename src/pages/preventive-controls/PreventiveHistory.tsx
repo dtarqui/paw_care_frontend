@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/TableSkeleton";
+import { VaccinationCardButton } from "@/components/VaccinationCardButton";
 import { usePreventiveHistory } from "@/features/preventive-controls/usePreventiveControls";
 import type { Pet } from "@/features/pets/types";
 import { cn } from "@/lib/utils";
@@ -26,7 +27,10 @@ export function PreventiveHistory({ pet }: { pet: Pet }) {
           </CardTitle>
           <p className="text-sm text-muted-foreground">{t("preventive.historySubtitle")}</p>
         </div>
-        <NewControlDialog pet={pet} />
+        <div className="flex flex-wrap gap-2">
+          <VaccinationCardButton pet={pet} />
+          <NewControlDialog pet={pet} />
+        </div>
       </CardHeader>
       <CardContent>
         {isLoading && (

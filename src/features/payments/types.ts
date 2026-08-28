@@ -11,6 +11,8 @@ export interface PendingPayment {
 
 export interface PaymentHistoryEntry {
   id: number;
+  /** El mismo número que lleva impreso el comprobante, ej. `R-2026-000042`. */
+  receiptNumber: string;
   visitId: number;
   pet: { id: number; name: string };
   owner: { id: number; firstName: string; paternalLastName: string };

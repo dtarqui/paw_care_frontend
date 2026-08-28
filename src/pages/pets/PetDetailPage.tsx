@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Separator } from "@/components/ui/separator";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { VaccinationCardButton } from "@/components/VaccinationCardButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { PetHistoryEvent } from "@/features/pets/types";
 import { useChangePetStatus, usePetHistory, usePet } from "@/features/pets/usePets";
@@ -89,6 +90,7 @@ export function PetDetailPage() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
+                <VaccinationCardButton pet={pet} />
                 <EditPetDialog pet={pet} />
                 <Button
                   variant={pet.status === "ACTIVE" ? "destructive" : "outline"}

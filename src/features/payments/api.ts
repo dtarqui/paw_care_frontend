@@ -1,3 +1,4 @@
+import { paperQuery } from "@/features/print/paperSize";
 import { apiClient } from "@/lib/api-client";
 import type { PaymentHistoryEntry, PaymentMethod, PaymentReceipt, PendingPayment, QrCharge } from "./types";
 
@@ -9,10 +10,11 @@ export const paymentsApi = {
   register: (visitId: number, method: PaymentMethod, amount: number) =>
     apiClient.post<{ payment: PaymentReceipt }>("/api/payments", { visitId, method, amount }),
 
-  /** El PDF del comprobante. El backend decide el nombre del archivo, ya traducido;
-   * lo de acá es solo el respaldo por si ese header no llegara. */
+  /** El PDF del comprobante, en el tamaño de papel configurado en este dispositivo.
+   * El backend decide el nombre del archivo, ya traducido; lo de acá es solo el
+   * respaldo por si ese header no llegara. */
   downloadReceipt: (payment: { id: number; receiptNumber: string }) =>
-    apiClient.download(`/api/payments/${payment.id}/receipt`, `${payment.receiptNumber}.pdf`),
+    apiClient.download(`/api/payments/${payment.id}/receipt${paperQuery()}`, `${payment.receiptNumber}.pdf`),
 
   generateQrCharge: (visitId: number) => apiClient.post<{ charge: QrCharge }>("/api/payments/qr", { visitId }),
 

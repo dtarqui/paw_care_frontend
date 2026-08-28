@@ -32,7 +32,7 @@ function ReceiptButton({ payment, className }: { payment: PaymentHistoryEntry; c
     try {
       // El número se deriva del id igual que en el backend, así el nombre de
       // respaldo del archivo coincide con el del comprobante.
-      await paymentsApi.downloadReceipt({ id: payment.id, receiptNumber: `R-${payment.id}` });
+      await paymentsApi.downloadReceipt(payment);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("payments.receipt.downloadError"));
     } finally {

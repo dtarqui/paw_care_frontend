@@ -308,6 +308,22 @@ Además, la matriz de permisos **deja de ser tabla en celular**: cuatro columnas
 
 ---
 
+## Correcciones y mejoras (sesión 18 — carnet de vacunación y tamaño de hoja configurable)
+
+`docs/MEJORAS_PRODUCTO.md` 1.3. El historial preventivo solo se veía en pantalla, y el papel es justamente lo que el dueño pide en el mostrador.
+
+- [x] **`components/VaccinationCardButton.tsx`**, en la ficha de la mascota **y** en Control Preventivo. Está en los dos lugares a propósito: el dueño lo pide en el mostrador y ahí no hay tiempo de recordar en qué pantalla estaba.
+- [x] **`features/print/paperSize.ts`**: media carta, carta, A4 o rollo térmico de 80 mm, elegible en Configuración → Impresión. Se guarda **por dispositivo** (localStorage), no por usuario — la impresora está enchufada a una computadora concreta, así que el mostrador con la de tickets y la oficina con la de hojas necesitan valores distintos aunque entre la misma persona.
+- [x] **El tamaño se lee al momento de descargar**, no al montar la pantalla: cambiarlo en Configuración afecta la siguiente descarga sin recargar nada. Aplica al carnet y al comprobante de pago por igual.
+- [x] **Las medidas (14 × 21.6 cm, 80 mm) van en el código, no en las traducciones**: son números, iguales en los dos idiomas; traducirlas sería inventar dos fuentes de verdad para el mismo dato.
+- [x] Manual `/app/info` actualizado en la misma tanda —un paso nuevo en «Vacunas y desparasitación» y una tarjeta «Impresión» en «Tu cuenta»—, y las claves nuevas en los dos idiomas (714 en cada archivo, sin diferencias).
+
+- [x] **La fila de «Últimos pagos» usa el número de comprobante real** (`receiptNumber`, que ahora viene en el historial) en vez de armar `R-55` a mano para nombrar el archivo. Con el header `Content-Disposition` ya expuesto por el backend, el nombre correcto y traducido llega igual — pero el respaldo tampoco puede mentir.
+
+**Verificado en el navegador**: elegir «Rollo térmico» hace que la descarga siguiente pida `?paper=ticket-80mm` sin recargar; volver a «Media carta» deja `half-letter` guardado. La tarjeta de Impresión y las dos pantallas con el botón nuevo, sin desborde horizontal a 1280, 768, 375 y 320px.
+
+---
+
 ## Tarea 00 — Setup del frontend
 
 **Depende de:** nada (puede correr en paralelo a `backend/TASKS.md` Tarea 00).

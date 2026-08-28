@@ -261,6 +261,7 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 ### P08 — Control Preventivo (Patrón A + panel adicional)
 - Se accede desde la ficha de una mascota (formulario de alta: tipo, fecha de aplicación, próxima dosis) y también como pantalla propia con un **panel de "Próximos a vencer"** (todas las mascotas, ordenado por fecha) para uso diario del veterinario.
 - Los controles vencidos se marcan con un badge distintivo en ambas vistas.
+- Botón **"Descargar carnet"** en la cabecera del historial (`components/VaccinationCardButton.tsx`, sesión 18): baja el carnet de vacunación y desparasitación en PDF, en el tamaño de hoja configurado en P14. El mismo botón está en la ficha de la mascota (P15).
 
 ### P09 — Reporte de Ingresos (Patrón D)
 - Filtros: rango de fechas, tipo de servicio.
@@ -286,13 +287,15 @@ Usado por: Citas (único módulo con layout propio). La "Lista" es una **agenda 
 
 ### P14 (opcional) — Configuración
 - Agrupa dos utilidades administrativas que no ameritan pantalla propia: panel de tasa de entregabilidad de notificaciones (HU11-B) y botón "Exportar todos mis datos" (HU15) con indicador de progreso.
-- También vive acá (todos los roles): cambiar tema claro/oscuro/sistema + acento de color, cambiar la propia contraseña (`CambiarPasswordDialog.tsx`, pide la contraseña actual).
+- También vive acá (todos los roles): cambiar tema claro/oscuro/sistema + acento de color, cambiar la propia contraseña (`ChangePasswordDialog.tsx`, pide la contraseña actual).
+- **Impresión** (sesión 18, todos los roles): tamaño de hoja de los documentos que se entregan en mano —comprobante de pago y carnet de vacunación— entre media carta (por defecto), carta, A4 y rollo térmico de 80 mm. Se guarda por dispositivo, no por usuario: la impresora está enchufada a una computadora concreta.
 
 ### P15 — Ficha de Mascota (Patrón B, detalle)
 - Datos completos de la mascota (especie, raza, color, sexo, fecha de nacimiento, peso, propietario) + botón Editar (abre un formulario, cada cambio queda registrado en `CambioMascota` y aparece en la línea de tiempo).
 - Gráfico de evolución de peso (Recharts) — se muestra solo con 2 o más mediciones registradas (una `AtencionMedica` con peso capturado).
 - Línea de tiempo unificada: atenciones médicas, controles preventivos, citas y ediciones manuales, cada una con su propio ícono/badge, ordenadas por fecha.
 - Botón "Eliminar mascota" / "Reactivar" (borrado lógico, reversible) con modal de confirmación — es la única forma de eliminar una mascota, no existe desde el listado (P04).
+- Botón **"Descargar carnet"** junto a Editar (sesión 18), el mismo de P08 — es lo que el dueño pide en el mostrador, y ahí no hay tiempo de recordar en qué pantalla estaba.
 
 ### P16 — Horarios de Veterinario (Patrón A, grilla semanal)
 - Grilla semanal (Lunes a Sábado) con hasta 2 turnos por día (mañana/tarde), cada uno con hora de inicio y fin.

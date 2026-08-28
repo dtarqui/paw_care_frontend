@@ -248,6 +248,10 @@
           {
             "description": "Changing it asks for your current one. At least 6 characters.",
             "title": "Password"
+          },
+          {
+            "description": "The paper size for receipts and vaccination cards: **half letter** (the usual choice), letter, A4, or an 80 mm thermal roll if you print on a ticket printer. It is saved on this device — the one the printer is plugged into.",
+            "title": "Printing"
           }
         ],
         "intro": "What you can change about your own session, from Settings.",
@@ -498,6 +502,10 @@
           {
             "description": "Pick Vaccine or Deworming, the date it was given and — strongly recommended — the date of the next dose.",
             "title": "Record the care"
+          },
+          {
+            "description": "The “Download card” button builds a PDF with the pet's details, its owner and every dose in order, with overdue ones marked in red. It's the paper the owner takes home; the same button is on the pet's file.",
+            "title": "Download the card"
           }
         ],
         "title": "Vaccines and deworming"
@@ -1006,6 +1014,10 @@
   "preventive": {
     "appliedOn": "Given: {{date}}",
     "appliedOnLabel": "Date given",
+    "card": {
+      "download": "Download card",
+      "downloadError": "The card could not be downloaded"
+    },
     "form": {
       "createError": "Couldn't record the preventive care",
       "pickType": "Pick the type of care"
@@ -1132,6 +1144,17 @@
     },
     "exportError": "Couldn't export the data",
     "exportSuccess": "Data exported successfully",
+    "paperSizes": {
+      "a4": "A4",
+      "half-letter": "Half letter",
+      "letter": "Letter",
+      "ticket-80mm": "Thermal roll"
+    },
+    "printing": {
+      "description": "Paper size for the receipts and cards printed from this device.",
+      "paperSize": "Paper size",
+      "title": "Printing"
+    },
     "subtitle": "App preferences and your account details",
     "themes": {
       "dark": "Dark",
