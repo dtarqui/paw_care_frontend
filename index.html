@@ -1,10 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PawCare</title>
+
+    <!-- Iconos. El SVG lo usan los navegadores modernos; el .ico y los PNG son el
+         respaldo, y apple-touch-icon es obligatorio para iOS, que no lee SVG: sin él,
+         "Agregar a inicio" en un iPhone guarda una captura de la página en vez del logo. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <title>PawCare — Sistema de gestión veterinaria</title>
+    <meta name="description" content="Agenda, historial clínico, inventario con control de lotes, cobros y recordatorios por WhatsApp. Sistema de gestión para clínicas veterinarias en Bolivia." />
+    <meta name="theme-color" content="#7c3aed" />
+
+    <!-- Vista previa al compartir el enlace. Sin esto, mandar la URL por WhatsApp
+         mostraba una burbuja de texto pelada, sin imagen ni descripción.
+         og:url y twitter:image piden URL absoluta: cambiala por la del despliegue. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PawCare" />
+    <meta property="og:locale" content="es_BO" />
+    <meta property="og:title" content="PawCare — La clínica entera, en un solo lugar" />
+    <meta property="og:description" content="Agenda, historial clínico, inventario con control de lotes, cobros y recordatorios por WhatsApp. Para clínicas veterinarias en Bolivia." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PawCare — sistema de gestión veterinaria" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PawCare — La clínica entera, en un solo lugar" />
+    <meta name="twitter:description" content="Agenda, historial clínico, inventario, cobros y recordatorios. Para clínicas veterinarias en Bolivia." />
+    <meta name="twitter:image" content="/og-image.png" />
     <script>
       // Aplica el tema de color antes del primer paint, para evitar un parpadeo
       // al color por defecto (violeta) cuando el usuario ya eligió otro.
