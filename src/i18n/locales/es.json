@@ -159,6 +159,11 @@
     }
   },
   "errors": {
+    "boundaryDescription": "No pudimos mostrar el contenido. Volvé a cargar la página; si vuelve a pasar, avisale a quien administra el sistema.",
+    "boundaryRetry": "Recargar la página",
+    "boundaryTitle": "Algo salió mal en esta pantalla",
+    "downloadFailed": "No se pudo descargar el archivo",
+    "moduleForbidden": "No tienes acceso a esa sección",
     "codes": {
       "AppointmentNotFoundError": "La cita solicitada no existe",
       "CurrentAndNewPasswordRequired": "La contraseña actual y la nueva son obligatorias",
@@ -205,9 +210,7 @@
       "VisitAndMethodRequired": "La atención y el método de pago son obligatorios",
       "VisitRequired": "La atención a cobrar es obligatoria",
       "WrongCurrentPasswordError": "La contraseña actual no es correcta"
-    },
-    "downloadFailed": "No se pudo descargar el archivo",
-    "moduleForbidden": "No tienes acceso a esa sección"
+    }
   },
   "forgot": {
     "backToLogin": "Volver a inicio de sesión",

@@ -1,3 +1,4 @@
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AppShell } from "@/components/layout/AppShell";
 import { ModuleRoute } from "@/components/ModuleRoute";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -26,7 +27,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 export function App() {
   return (
     <AuthProvider>
-      <Routes>
+      {/* Envuelve el ruteo entero: un error de render en cualquier pantalla muestra
+          un mensaje con salida, en vez de dejar la pestaña en blanco. */}
+      <ErrorBoundary>
+        <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<VetRegistrationPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -63,8 +67,9 @@ export function App() {
           </Route>
         </Route>
 
-        <Route path="*" element={<Navigate to="/app" replace />} />
-      </Routes>
+          <Route path="*" element={<Navigate to="/app" replace />} />
+        </Routes>
+      </ErrorBoundary>
     </AuthProvider>
   );
 }

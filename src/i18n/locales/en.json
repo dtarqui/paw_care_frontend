@@ -159,6 +159,11 @@
     }
   },
   "errors": {
+    "boundaryDescription": "We couldn't show the content. Reload the page; if it happens again, let your system administrator know.",
+    "boundaryRetry": "Reload page",
+    "boundaryTitle": "Something went wrong on this screen",
+    "downloadFailed": "The file couldn't be downloaded",
+    "moduleForbidden": "You don't have access to that section",
     "codes": {
       "AppointmentNotFoundError": "That appointment doesn't exist",
       "CurrentAndNewPasswordRequired": "The current and the new password are both required",
@@ -205,9 +210,7 @@
       "VisitAndMethodRequired": "The visit and the payment method are required",
       "VisitRequired": "The visit to charge is required",
       "WrongCurrentPasswordError": "The current password isn't correct"
-    },
-    "downloadFailed": "The file couldn't be downloaded",
-    "moduleForbidden": "You don't have access to that section"
+    }
   },
   "forgot": {
     "backToLogin": "Back to sign in",

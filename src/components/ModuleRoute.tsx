@@ -1,3 +1,4 @@
+import { RouteFallback } from "@/components/RouteFallback";
 import { useModules } from "@/features/dashboard/useModules";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -39,7 +40,12 @@ export function ModuleRoute() {
     if (blocked) toast.error(t("errors.moduleForbidden"));
   }, [blocked, t]);
 
-  if (isLoading) return null; // evita un parpadeo de la pantalla antes de saber si toca
+  // Mientras no se sabe si toca, se muestra el esqueleto de la pantalla — no `null`.
+  // Devolver `null` acá dejaba la aplicación **en blanco** todo lo que tardara
+  // `GET /api/dashboard/modules`: un parpadeo en desarrollo, varios segundos contra
+  // una función serverless fría. Y una pantalla en blanco es indistinguible de una
+  // aplicación rota, para una persona y para un agente que la esté grabando.
+  if (isLoading) return <RouteFallback />;
   if (isError) return <Outlet />;
 
   return allowed ? <Outlet /> : <Navigate to={DASHBOARD} replace />;
