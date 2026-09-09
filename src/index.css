@@ -251,3 +251,41 @@
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Fondo de la aplicación autenticada (`components/layout/AppBackground.tsx`).
+
+   Dos capas: un resplandor del color de acento arriba y el rastro de huellas de
+   la esquina inferior derecha. Las dos derivan de `--primary` con `color-mix`,
+   que es lo que hace que el fondo siga al modo claro/oscuro y a los tres
+   acentos (violeta/océano/rosa) sin una sola regla por tema.
+
+   Los porcentajes de claro y de oscuro son distintos a propósito: la misma
+   mezcla sobre negro se ve bastante más presente que sobre blanco. Están
+   calibrados para notarse si se los busca y desaparecer detrás de una tabla —
+   subirlos empieza a competir con los datos, que es lo que este fondo no debe
+   hacer nunca.
+--------------------------------------------------------------------------- */
+.app-bg-glow {
+  background: radial-gradient(
+    72rem 30rem at 50% -6rem,
+    color-mix(in oklab, var(--primary) 13%, transparent),
+    transparent 68%
+  );
+}
+
+.app-bg-paws {
+  color: color-mix(in oklab, var(--primary) 16%, transparent);
+}
+
+.dark .app-bg-glow {
+  background: radial-gradient(
+    72rem 30rem at 50% -6rem,
+    color-mix(in oklab, var(--primary) 10%, transparent),
+    transparent 68%
+  );
+}
+
+.dark .app-bg-paws {
+  color: color-mix(in oklab, var(--primary) 12%, transparent);
+}

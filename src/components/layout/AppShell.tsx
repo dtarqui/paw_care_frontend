@@ -1,5 +1,6 @@
 import { GlobalSearch, useGlobalSearchShortcut } from "@/components/GlobalSearch";
 import { Outlet } from "react-router-dom";
+import { AppBackground } from "./AppBackground";
 import { MobileHeader } from "./MobileHeader";
 import { Sidebar } from "./Sidebar";
 
@@ -16,11 +17,16 @@ export function AppShell() {
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <MobileHeader onOpenSearch={() => setOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto w-full max-w-6xl">
-            <Outlet />
-          </div>
-        </main>
+        {/* El fondo decorativo envuelve solo al área de contenido, no a la cabecera
+            móvil: así queda fijo mientras `main` scrollea, en vez de irse con él. */}
+        <div className="relative flex flex-1 flex-col overflow-hidden">
+          <AppBackground />
+          <main className="relative flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <div className="mx-auto w-full max-w-6xl">
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
 
       <GlobalSearch open={open} onOpenChange={setOpen} />
