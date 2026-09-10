@@ -1,15 +1,19 @@
 /**
- * Fondo decorativo del shell autenticado: dos capas detrás del contenido de
- * `AppShell`, así que se ve en todas las pantallas de `/app/*` y en ninguna de
- * las públicas (login, recuperar contraseña, invitación).
+ * Fondo decorativo compartido: un resplandor del color de acento arriba y un
+ * rastro de huellas cruzando la esquina inferior derecha.
+ *
+ * Lo usan el shell autenticado (`layout/AppShell.tsx`, detrás del área de
+ * contenido de todas las pantallas de `/app/*`) y el login, que es la primera
+ * pantalla del producto. Las demás públicas —recuperar contraseña, invitación,
+ * preregistro— tienen su propio degradado y no lo llevan.
  *
  * Los dos colores salen de `--primary` a través de las clases de `index.css`,
  * no de un hex escrito acá: el fondo acompaña solo al modo claro/oscuro y a los
  * tres acentos (violeta/océano/rosa) sin una regla por tema.
  *
  * Es decoración pura — `aria-hidden` para que ningún lector de pantalla lo
- * anuncie, y `pointer-events-none` para que no se coma un clic de la pantalla
- * que tiene detrás. Es estático a propósito: no hay nada que apagar bajo
+ * anuncie, y `pointer-events-none` para que no se coma un clic de lo que tiene
+ * detrás. Es estático a propósito: no hay nada que apagar bajo
  * `prefers-reduced-motion`.
  */
 export function AppBackground() {
@@ -29,16 +33,17 @@ export function AppBackground() {
  * generado. La opacidad baja con la distancia, así que el rastro se desvanece en
  * vez de cortarse contra el borde.
  *
- * **Desde `sm` para arriba.** Medido a 320px: ahí el área de contenido no tiene
- * un solo pixel libre, y el rastro termina pisando la primera fila de tarjetas
- * en vez de un margen vacío. En un teléfono el fondo es el resplandor solo — que
- * vive detrás del encabezado y no le disputa el lugar a nada.
+ * **El ancho baja bastante en móvil** (`w-44`, poco más de la mitad que en
+ * escritorio en proporción a la pantalla). El rastro se ve completo igual, pero
+ * queda contenido en la banda de abajo a la derecha en vez de repartirse por
+ * todo el alto: a 320px el área de contenido no tiene margen libre, y un rastro
+ * grande termina pisando las tarjetas en vez de acompañarlas.
  */
 function PawTrail() {
   return (
     <svg
       viewBox="0 0 400 300"
-      className="app-bg-paws absolute right-0 bottom-0 hidden w-76 sm:block lg:w-[27rem]"
+      className="app-bg-paws absolute right-0 bottom-0 w-44 sm:w-72 lg:w-[27rem]"
       fill="currentColor"
     >
       {PAW_TRAIL.map((paw, i) => (

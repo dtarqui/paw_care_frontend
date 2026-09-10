@@ -1,6 +1,6 @@
 import { GlobalSearch, useGlobalSearchShortcut } from "@/components/GlobalSearch";
 import { Outlet } from "react-router-dom";
-import { AppBackground } from "./AppBackground";
+import { AppBackground } from "@/components/AppBackground";
 import { MobileHeader } from "./MobileHeader";
 import { Sidebar } from "./Sidebar";
 

@@ -1,3 +1,4 @@
+import { AppBackground } from "@/components/AppBackground";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -134,9 +135,13 @@ export function LoginPage() {
       </aside>
 
       {/* Formulario */}
-      <main className="relative flex items-center justify-center bg-background px-4 py-10 sm:px-6">
-        <LanguageToggle className="absolute right-4 top-4" />
-        <div className="flex w-full max-w-sm flex-col gap-8">
+      <main className="relative flex min-h-svh items-center justify-center bg-background px-4 py-10 sm:px-6 lg:min-h-0">
+        {/* El mismo fondo que el shell autenticado. Va solo de este lado: el panel
+            de marca es `bg-primary` saturado y ya tiene sus propios halos. Por
+            debajo de `lg` el panel no existe, así que esto es todo el login. */}
+        <AppBackground />
+        <LanguageToggle className="absolute right-4 top-4 z-10" />
+        <div className="relative flex w-full max-w-sm flex-col gap-8">
           {/* Cabecera compacta — reemplaza al panel de marca en móvil/tablet */}
           <div className="flex flex-col items-center gap-2 text-center lg:hidden">
             <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
